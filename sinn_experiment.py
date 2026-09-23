@@ -78,7 +78,8 @@ def load_texts(args):
     n_docs = args.n + args.pool
     docs = []
     if args.textordner:
-        files = sorted(Path(args.textordner).glob("**/*.txt"))
+        ordner = Path(args.textordner)
+        files = sorted(ordner.glob("**/*.txt"))
         random.Random(args.seed).shuffle(files)
         for f in files:
             t = clean(f.read_text(encoding="utf-8", errors="ignore"))
@@ -86,6 +87,9 @@ def load_texts(args):
                 docs.append(t)
             if len(docs) >= n_docs:
                 break
+        quelle = {"art": "textordner", "pfad": str(ordner), "dateien": len(files),
+                  "quellen_csv": (ordner / "quellen.csv").exists(),
+                  "lizenz_md": (ordner / "LIZENZ.md").exists()}
     else:
         from datasets import load_dataset
         print("Hinweis: Wikipedia-Artikel können im Training der Modelle vorgekommen sein.\n"
@@ -98,9 +102,33 @@ def load_texts(args):
                 docs.append(t)
             if len(docs) >= n_docs:
                 break
+        quelle = {"art": "huggingface", "datensatz": args.hf_datensatz, "config": args.hf_config}
     if len(docs) < n_docs:
         sys.exit(f"Nur {len(docs)} geeignete Texte gefunden, benötigt: {n_docs}.")
-    return {"a_docs": docs[: args.n], "pool_docs": docs[args.n:], "seed": args.seed}
+    quelle.update(min_zeichen=args.min_zeichen, datum=time.strftime("%Y-%m-%d %H:%M"))
+    return {"a_docs": docs[: args.n], "pool_docs": docs[args.n:], "seed": args.seed,
+            "quelle": quelle}
+
+
+def quelle_text(q):
+    """Herkunft des Korpus als eine Zeile für Berichte."""
+    if not q:
+        return "nicht protokolliert (Korpus vor Einführung der Herkunftsangabe gebaut)"
+    if q.get("art") == "textordner":
+        nachweis = "mit quellen.csv" if q.get("quellen_csv") else "ohne quellen.csv"
+        return (f"Textordner {q.get('pfad')}, {q.get('dateien')} Dateien, {nachweis}, "
+                f"gebaut am {q.get('datum', '?')}")
+    if q.get("art") == "huggingface":
+        return (f"Hugging Face {q.get('datensatz')} / {q.get('config')}, "
+                f"gebaut am {q.get('datum', '?')}")
+    return str(q)
+
+
+def korpus_quelle(root):
+    p = Path(root) / "korpus" / "texte.json"
+    if not p.exists():
+        return None
+    return json.loads(p.read_text(encoding="utf-8")).get("quelle")
 
 
 def cmd_korpus(args):
@@ -113,6 +141,7 @@ def cmd_korpus(args):
     texts = load_texts(args)
     out.write_text(json.dumps(texts, ensure_ascii=False), encoding="utf-8")
     print(f"{len(texts['a_docs'])} A-Texte + {len(texts['pool_docs'])} Pool-Texte -> {out}")
+    print(f"Herkunft: {quelle_text(texts['quelle'])}")
 
 
 # ----------------------------------------------------------------------------
@@ -266,6 +295,8 @@ def cmd_messen(args):
     device = args.geraet or pick_device()
     tok = AutoTokenizer.from_pretrained(args.modell)
     seqs = get_sequences(args.ordner, args.modell, tok, args.N, args.seed)
+    quelle = korpus_quelle(args.ordner)
+    print(f"Korpus: {quelle_text(quelle)}")
 
     revs = args.revisionen or [None]
     if revs == ["pythia"]:
@@ -282,7 +313,8 @@ def cmd_messen(args):
         model = AutoModelForCausalLM.from_pretrained(args.modell, **kw).to(device).eval()
         meta = {"modell": args.modell, "revision": rev, "N": args.N, "skip": args.skip,
                 "n": int(len(seqs["A"])), "seed": args.seed, "datum": time.strftime("%Y-%m-%d %H:%M"),
-                "torch": torch.__version__, "transformers": transformers.__version__}
+                "torch": torch.__version__, "transformers": transformers.__version__,
+                "quelle": quelle}
         run_measurement(model, seqs, out, meta, args.skip, args.batch, device)
         del model
         if device == "cuda":
@@ -361,7 +393,8 @@ def analyse(res, meta, out_dir, n_perm, n_boot, seed):
     L, H = S["A"].shape[1:]
     lines = [f"# Auswertung: {meta['modell']} @ {meta.get('revision') or 'final'}", "",
              f"n = {meta['n']} Sequenzen pro Bedingung, N = {meta['N']}, skip = {meta['skip']}, "
-             f"{L} Schichten × {H} Köpfe, {n_perm} Permutationen, {n_boot} Bootstraps.", ""]
+             f"{L} Schichten × {H} Köpfe, {n_perm} Permutationen, {n_boot} Bootstraps.", "",
+             f"Korpus: {quelle_text(meta.get('quelle'))}", ""]
 
     # Kontrolle und Übersicht
     lines += ["## Übersicht", "", "| Bedingung | Sink-Masse (95%-KI) | Ausgabe-Entropie | Loss |",
@@ -546,8 +579,20 @@ def cmd_selbsttest(args):
 
     root = Path(tempfile.mkdtemp(prefix="sinn_selbsttest_"))
     (root / "korpus").mkdir()
-    (root / "korpus" / "texte.json").write_text(
-        json.dumps({"a_docs": docs[:12], "pool_docs": docs[12:], "seed": 0}), encoding="utf-8")
+
+    # Texte über load_texts einlesen, damit die Herkunftsangabe mitgeprüft wird
+    tdir = root / "texte"
+    tdir.mkdir()
+    for i, d in enumerate(docs):
+        (tdir / f"{i:03d}.txt").write_text(d, encoding="utf-8")
+    (tdir / "quellen.csv").write_text("datei,titel\n", encoding="utf-8")
+    texts = load_texts(argparse.Namespace(n=12, pool=48, textordner=str(tdir), seed=0,
+                                          min_zeichen=100))
+    q = texts["quelle"]
+    assert q["art"] == "textordner" and q["dateien"] == len(docs), q
+    assert q["quellen_csv"] and not q["lizenz_md"], q
+    (root / "korpus" / "texte.json").write_text(json.dumps(texts), encoding="utf-8")
+    assert korpus_quelle(root) == q
 
     N, skip = 64, 4
     seqs = get_sequences(root, "selbsttest", tok, N, 0)
@@ -560,12 +605,15 @@ def cmd_selbsttest(args):
         torch.manual_seed(i)
         model = AutoModelForCausalLM.from_config(cfg, attn_implementation="eager").eval()
         meta = {"modell": "selbsttest", "revision": rev, "N": N, "skip": skip,
-                "n": int(len(seqs["A"])), "seed": 0}
+                "n": int(len(seqs["A"])), "seed": 0, "quelle": q}
         out = root / "ergebnisse" / f"selbsttest__{rev or 'final'}.npz"
         run_measurement(model, seqs, out, meta, skip, 4, "cpu")
 
     res, meta = load_result(root, "selbsttest", None)
+    assert meta["quelle"] == q, "Herkunftsangabe geht bei der Messung verloren"
     analyse(res, meta, root / "analyse" / "selbsttest__final", 200, 100, 0)
+    bericht = (root / "analyse" / "selbsttest__final" / "bericht.md").read_text(encoding="utf-8")
+    assert f"Korpus: {quelle_text(q)}" in bericht, "Bericht nennt die Herkunft nicht"
     dynamik(root, "selbsttest", 100, 0)
     print(f"\nSelbsttest erfolgreich. Ausgaben in {root}")
 
