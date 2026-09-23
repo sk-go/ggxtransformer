@@ -7,7 +7,9 @@ Bedingungen (Zugleichsein ist im Kontextfenster immer gegeben):
   A   kohärent      Art ✓  Folge ✓   zusammenhängender Text
   B   gewürfelt     Art ✓  Folge ✗   Wörter von A permutiert
   B2  satzgewürfelt Art ✓  Folge ~   Sätze von A permutiert (Grammatik bleibt)
-  C   disparat      Art ✗  Folge ✓   Einzelsätze aus fremden Dokumenten
+  C   disparat      Art ✗  Folge ✓   Einzelsätze aus vielen fremden Dokumenten
+  C0  einthemig     Art ✓  Folge ~   Einzelsätze aus EINEM fremden Dokument (Kontrolle zu C:
+                                     gleiche Satzgrenzen wie C, aber ein Thema statt vieler)
   D   Rauschen      Art ✗  Folge ✗   Zufallstokens nach Häufigkeit
 
 Befehle:
@@ -28,12 +30,13 @@ from pathlib import Path
 
 import numpy as np
 
-CONDITIONS = ["A", "B", "B2", "C", "D"]
+CONDITIONS = ["A", "B", "B2", "C", "C0", "D"]
 LABELS = {
     "A": "A kohärent",
     "B": "B wortgewürfelt",
     "B2": "B2 satzgewürfelt",
     "C": "C disparat",
+    "C0": "C0 einthemig",
     "D": "D Rauschen",
 }
 PYTHIA_STEPS = [0, 512, 1000, 2000, 4000, 8000, 16000, 33000, 66000, 100000, 143000]
@@ -219,6 +222,25 @@ def build_sequences(tok, texts, N, seed):
             sys.exit("Pool zu klein für Bedingung C, --pool erhöhen.")
         seqs["C"].append(ids[:L])
 
+    # C0: Sätze aus EINEM fremden Dokument, sonst wie C gebaut (Einzelsätze, zufällige
+    # Reihenfolge, nie benachbart gewesen). C − C0 isoliert den Themenwechsel, weil die
+    # Satzgrenzen in beiden Bedingungen gleich beschaffen sind.
+    for _ in range(n):
+        ids = None
+        for d in rng.sample(range(len(by_doc)), len(by_doc)):
+            sents = by_doc[d]
+            buf = []
+            for i in rng.sample(range(len(sents)), len(sents)):
+                buf += enc((" " if buf else "") + sents[i])
+                if len(buf) >= L:
+                    break
+            if len(buf) >= L:
+                ids = buf[:L]
+                break
+        if ids is None:
+            sys.exit("Kein Pool-Dokument ist lang genug für Bedingung C0, --min-zeichen erhöhen.")
+        seqs["C0"].append(ids)
+
     # D: Zufallstokens nach Unigramm-Häufigkeit der A-Texte
     vocab = np.array(list(unigram.keys()))
     p = np.array(list(unigram.values()), dtype=float)
@@ -234,7 +256,10 @@ def get_sequences(root, model_name, tok, N, seed):
     path = kdir / f"seq__{slug(model_name)}__N{N}.npz"
     if path.exists():
         data = np.load(path)
-        return {c: data[c] for c in CONDITIONS}
+        if all(c in data for c in CONDITIONS):
+            return {c: data[c] for c in CONDITIONS}
+        fehlt = [c for c in CONDITIONS if c not in data]
+        print(f"{path.name} kennt {', '.join(fehlt)} noch nicht, Sequenzen werden neu gebaut.")
     texts_path = kdir / "texte.json"
     if not texts_path.exists():
         sys.exit(f"{texts_path} fehlt, zuerst 'korpus' ausführen.")
@@ -399,7 +424,8 @@ def analyse(res, meta, out_dir, n_perm, n_boot, seed):
 
     rng = np.random.default_rng(seed)
     out_dir.mkdir(parents=True, exist_ok=True)
-    S = {c: res[f"sink_{c}"] for c in CONDITIONS}          # [n, L, H]
+    conds = [c for c in CONDITIONS if f"sink_{c}" in res]  # ältere Läufe kennen C0 nicht
+    S = {c: res[f"sink_{c}"] for c in conds}               # [n, L, H]
     L, H = S["A"].shape[1:]
     lines = [f"# Auswertung: {meta['modell']} @ {meta.get('revision') or 'final'}", "",
              f"n = {meta['n']} Sequenzen pro Bedingung, N = {meta['N']}, skip = {meta['skip']}, "
@@ -409,7 +435,7 @@ def analyse(res, meta, out_dir, n_perm, n_boot, seed):
     # Kontrolle und Übersicht
     lines += ["## Übersicht", "", "| Bedingung | Sink-Masse (95%-KI) | Ausgabe-Entropie | Loss |",
               "|---|---|---|---|"]
-    for c in CONDITIONS:
+    for c in conds:
         m = S[c].mean(axis=(1, 2))
         lo, hi = boot_ci(lambda a: a.mean(), [m], n_boot, rng)
         lines.append(f"| {LABELS[c]} | {m.mean():.4f} ({lo:.4f}–{hi:.4f}) | "
@@ -420,7 +446,10 @@ def analyse(res, meta, out_dir, n_perm, n_boot, seed):
     # H1: Sink-Masse steigt mit Asynchronizität
     lines += ["## H1: Asynchronizität erhöht die Sink-Masse", "",
               "| Vergleich | Differenz | 95%-KI | p (einseitig) |", "|---|---|---|---|"]
-    for a, b in [("A", "B"), ("A", "B2"), ("A", "C"), ("A", "D"), ("B", "D"), ("C", "D")]:
+    paare = [("A", "B"), ("A", "B2"), ("A", "C"), ("A", "D"), ("B", "D"), ("C", "D")]
+    if "C0" in conds:  # hinten angehaengt, damit der RNG-Strom der alten Paare gleich bleibt
+        paare += [("A", "C0"), ("C0", "C")]
+    for a, b in paare:
         x, y = S[a].mean(axis=(1, 2)), S[b].mean(axis=(1, 2))
         p = perm_test(x[:, None], y[:, None], n_perm, rng)[0]
         lo, hi = boot_ci(lambda u, v: v.mean() - u.mean(), [x, y], n_boot, rng)
@@ -428,11 +457,11 @@ def analyse(res, meta, out_dir, n_perm, n_boot, seed):
     lines.append("")
 
     # Kopfweise Differenzkarten mit BH-Korrektur
-    mean = {c: S[c].mean(0) for c in CONDITIONS}
+    mean = {c: S[c].mean(0) for c in conds}
     deltas, sig = {}, {}
     rows = ["bedingung,schicht,kopf,delta,p,signifikant_bh"]
     lines += ["## Kopfweise Differenzen zu A (Benjamini-Hochberg, α = 0,05)", ""]
-    for c in ["B", "B2", "C", "D"]:
+    for c in [x for x in conds if x != "A"]:
         deltas[c] = mean[c] - mean["A"]
         p = perm_test(S["A"], S[c], n_perm, rng).reshape(L, H)
         sig[c] = bh(p).reshape(L, H)
@@ -482,8 +511,8 @@ def analyse(res, meta, out_dir, n_perm, n_boot, seed):
 
     # Grafiken
     vmax = max(m.max() for m in mean.values())
-    fig, axes = plt.subplots(1, len(CONDITIONS), figsize=(3.2 * len(CONDITIONS), 3.4), squeeze=False)
-    for ax, c in zip(axes[0], CONDITIONS):
+    fig, axes = plt.subplots(1, len(conds), figsize=(3.2 * len(conds), 3.4), squeeze=False)
+    for ax, c in zip(axes[0], conds):
         im = ax.imshow(mean[c], vmin=0, vmax=vmax, cmap="viridis", aspect="auto")
         ax.set_title(LABELS[c], fontsize=9)
         ax.set_xlabel("Kopf")
@@ -493,8 +522,10 @@ def analyse(res, meta, out_dir, n_perm, n_boot, seed):
     plt.close(fig)
 
     dmax = max(np.abs(d).max() for d in deltas.values()) or 1.0
-    fig, axes = plt.subplots(1, 4, figsize=(13, 3.4), squeeze=False)
-    for ax, c in zip(axes[0], ["B", "B2", "C", "D"]):
+    fig, axes = plt.subplots(1, len([x for x in conds if x != "A"]),
+                             figsize=(3.25 * (len(conds) - 1), 3.4), squeeze=False)
+    diffs = [x for x in conds if x != "A"]
+    for ax, c in zip(axes[0], diffs):
         im = ax.imshow(deltas[c], vmin=-dmax, vmax=dmax, cmap="RdBu_r", aspect="auto")
         yy, xx = np.nonzero(sig[c])
         ax.scatter(xx, yy, s=6, c="k", marker="o")
@@ -532,20 +563,22 @@ def dynamik(root, model_name, n_boot, seed):
     if not files:
         sys.exit("Keine Checkpoint-Ergebnisse gefunden, zuerst 'messen --revisionen pythia'.")
     steps = sorted((int(f.stem.split("__step")[-1]), f) for f in files)
-    rows = ["schritt," + ",".join(f"sink_{c}" for c in CONDITIONS) + ",D_minus_A,ki_unten,ki_oben"]
-    curves = {c: [] for c in CONDITIONS}
+    with np.load(steps[0][1]) as d0:  # ältere Läufe kennen C0 nicht
+        conds = [c for c in CONDITIONS if f"sink_{c}" in d0]
+    rows = ["schritt," + ",".join(f"sink_{c}" for c in conds) + ",D_minus_A,ki_unten,ki_oben"]
+    curves = {c: [] for c in conds}
     diff, lo_hi, xs = [], [], []
     for step, f in steps:
         d = np.load(f)
-        m = {c: d[f"sink_{c}"].mean(axis=(1, 2)) for c in CONDITIONS}
-        for c in CONDITIONS:
+        m = {c: d[f"sink_{c}"].mean(axis=(1, 2)) for c in conds}
+        for c in conds:
             curves[c].append(m[c].mean())
         dd = m["D"].mean() - m["A"].mean()
         ci = boot_ci(lambda a, b: b.mean() - a.mean(), [m["A"], m["D"]], n_boot, rng)
         diff.append(dd)
         lo_hi.append(ci)
         xs.append(step)
-        rows.append(f"{step}," + ",".join(f"{curves[c][-1]:.6f}" for c in CONDITIONS)
+        rows.append(f"{step}," + ",".join(f"{curves[c][-1]:.6f}" for c in conds)
                     + f",{dd:.6f},{ci[0]:.6f},{ci[1]:.6f}")
 
     out = Path(root) / "analyse" / f"{slug(model_name)}__dynamik"
@@ -554,7 +587,7 @@ def dynamik(root, model_name, n_boot, seed):
 
     xplot = [max(x, 1) for x in xs]  # Schritt 0 auf der Log-Achse bei 1 zeigen
     fig, ax = plt.subplots(1, 2, figsize=(11, 3.8))
-    for c in CONDITIONS:
+    for c in conds:
         ax[0].plot(xplot, curves[c], marker="o", ms=3, label=LABELS[c])
     ax[0].set_xscale("log")
     ax[0].set_xlabel("Trainingsschritt (0 bei 1 gezeigt)")

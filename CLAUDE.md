@@ -153,6 +153,23 @@ Vier Läufe, vier verschiedene Antworten, darunter beide Vorzeichen signifikant.
 - **Status: explorativ.** Das Maß wurde nach Kenntnis der Daten definiert. Die Übereinstimmung über vier Läufe ist stark, ersetzt aber keinen konfirmatorischen Test — der muss aus einem neuen Lauf kommen (größere Modelle) und vorher präregistriert werden.
 - Die Neuberechnung ließ alle präregistrierten Zahlen unverändert (36 Einfügungen, null Löschungen in den vier Berichten); die neuen Bootstrap-Ziehungen stehen im Code hinter allen alten.
 
+### Schichtprofil (explorativ, Wikipedia-Korpus)
+
+Mittleres |Δ| je Schicht, Schicht 0 bis 11:
+
+| | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| GPT-2 \|ΔB\| | ,000 | ,000 | ,000 | ,014 | ,008 | ,069 | ,089 | ,143 | ,101 | ,140 | **,223** | ,200 |
+| GPT-2 \|ΔC\| | ,000 | ,000 | ,003 | ,018 | ,009 | ,022 | ,010 | ,009 | ,004 | ,003 | ,017 | ,003 |
+| Pythia \|ΔB\| | ,000 | ,004 | ,022 | ,000 | ,022 | ,054 | ,066 | ,037 | **,089** | ,063 | ,053 | ,005 |
+| Pythia \|ΔC\| | ,001 | ,005 | ,005 | ,003 | ,010 | ,001 | ,011 | ,011 | ,011 | ,008 | ,035 | ,011 |
+
+- **Die Tiefe ist nicht der Engpass.** Der Folge-Effekt steigt nicht bis zum Rand, sondern erreicht ein Maximum (GPT-2 Schicht 10, Pythia Schicht 8) und fällt danach ab, bei Pythia auf fast null. Die Folge wird innerhalb der verfügbaren Tiefe fertig konstituiert; „es fehlen die Durchläufe“ ist damit ausgeschlossen.
+- **Der Größenunterschied ist der eigentliche Befund:** |ΔB| erreicht 0,223, |ΔC| nur 0,022 — Faktor zehn. Zerstörte Art stört die Sink-Masse fast nicht. „Art wirkt flach“ heißt vor allem: Art wirkt kaum, und das Wenige liegt früh.
+- Das schränkt das Ersatzmaß-Ergebnis ein: Der Schwerpunkt von |ΔC| liegt stabil (7,02 / 6,89 / 7,10 / 7,04 über vier Läufe), aber über einem sehr kleinen Effekt.
+- Schichten 0 bis 2 zeigen unter beiden Bedingungen praktisch keine Veränderung. Ob das Invarianz der frühen Repräsentation anzeigt oder nur, dass frühe Köpfe den Sink ohnehin inhaltsunabhängig bedienen, ist mit diesem Maß nicht zu entscheiden.
+- **Offene theoretische Frage:** Wenn Sinn eine Folge von Gleichzeitigkeiten von *Gleichartigkeiten* ist, müsste zerstörte Gleichartigkeit die Warte erschüttern. Sie tut es fast nicht. Diese Asymmetrie muss die Theorie erklären — oder C misst nicht, was es messen soll (siehe C0).
+
 ## Offene Punkte
 
 1. **Instrumente reparieren**, bevor weitere Modelle gemessen werden — sonst nur mehr nicht deutbare Zahlen:
