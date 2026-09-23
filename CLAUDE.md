@@ -136,6 +136,23 @@ Pythia bei step143000: A 0,2152 | B 0,1849 | B2 0,2134 | C 0,2186 | D 0,2079. Da
 
 Vier Läufe, vier verschiedene Antworten, darunter beide Vorzeichen signifikant. Das Maß misst nicht den Effekt, sondern das Rauschen seiner eigenen Konstruktion. H2 ist damit nicht offen, sondern **als Test wertlos, solange das Maß nicht ersetzt ist** — und der eine Lauf, der „bestätigt" sagt, ist das beste Argument dafür und nicht dagegen.
 
+### Ersatzmaß |Δ| — explorativ, aber stabil
+
+`centroid_abs` gewichtet die Schichttiefe mit |Δ| statt nur mit den positiven Anteilen. Dasselbe Bild in allen vier Läufen:
+
+| Lauf | Schwerpunkt \|ΔB\| | Schwerpunkt \|ΔC\| | C − B | 95%-KI |
+|---|---|---|---|---|
+| `lauf` GPT-2 | 8,25 | 7,02 | −1,23 | −1,32 bis −1,11 |
+| `lauf_wiki` GPT-2 | 8,21 | 6,89 | −1,32 | −1,41 bis −1,21 |
+| `lauf` Pythia | 7,55 | 7,10 | −0,45 | −0,57 bis −0,34 |
+| `lauf_wiki` Pythia | 7,53 | 7,04 | −0,49 | −0,58 bis −0,39 |
+
+- **Die Dissoziation existiert, aber mit umgekehrter Polarität.** H2 behauptete zweierlei: dass die Schwerpunkte sich unterscheiden, und dass C *tiefer* liegt als B („Folge früh, Art spät"). Der erste Teil hält robust, der zweite ist umgekehrt: **Folge wirkt tief, Art wirkt flach.**
+- Über zwei Korpora hinweg stimmen die Werte je Modell auf 0,1 Schichten überein; der Modellunterschied (GPT-2 ≈ −1,3, Pythia ≈ −0,5) ist größer als der Korpusunterschied.
+- Passt zum älteren explorativen Befund, dass der Folge-Effekt mit der Schichttiefe wächst.
+- **Status: explorativ.** Das Maß wurde nach Kenntnis der Daten definiert. Die Übereinstimmung über vier Läufe ist stark, ersetzt aber keinen konfirmatorischen Test — der muss aus einem neuen Lauf kommen (größere Modelle) und vorher präregistriert werden.
+- Die Neuberechnung ließ alle präregistrierten Zahlen unverändert (36 Einfügungen, null Löschungen in den vier Berichten); die neuen Bootstrap-Ziehungen stehen im Code hinter allen alten.
+
 ## Offene Punkte
 
 1. **Instrumente reparieren**, bevor weitere Modelle gemessen werden — sonst nur mehr nicht deutbare Zahlen:

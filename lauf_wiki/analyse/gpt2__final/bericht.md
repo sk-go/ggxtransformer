@@ -43,6 +43,14 @@ Kontrolle: Der Loss sollte in A am niedrigsten und in D am höchsten sein. Ein a
 
 Schichten sind ab 0 gezählt. Das Bootstrap resampelt A und B unabhängig, obwohl B aus A abgeleitet ist; die Intervalle sind daher eher konservativ.
 
+### Ersatzmaß |Δ| (explorativ, nicht präregistriert)
+
+- Schwerpunkt |ΔB| (Folge zerstört): 8.21
+- Schwerpunkt |ΔC| (Art zerstört): 6.89
+- Differenz C − B: -1.32 (95%-KI -1.41 bis -1.21)
+
+Das präregistrierte Maß oben wertet nur positive Differenzen und liefert deshalb je nach Lauf ein anderes Vorzeichen, sobald eine Bedingung überwiegend negativ wirkt. Dieses Maß nutzt die volle Wirkungstiefe unabhängig vom Vorzeichen. Es wurde nach Kenntnis der Daten definiert und ist damit explorativ; ein konfirmatorischer Test verlangt einen neuen Lauf.
+
 ## Grafiken
 
 ![Sink-Karten](sink_karten.png)

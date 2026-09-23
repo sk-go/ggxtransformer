@@ -2,6 +2,8 @@
 
 n = 300 Sequenzen pro Bedingung, N = 256, skip = 8, 12 Schichten × 12 Köpfe, 5000 Permutationen, 2000 Bootstraps.
 
+Korpus: nicht protokolliert (Korpus vor Einführung der Herkunftsangabe gebaut)
+
 ## Übersicht
 
 | Bedingung | Sink-Masse (95%-KI) | Ausgabe-Entropie | Loss |
@@ -40,6 +42,14 @@ Kontrolle: Der Loss sollte in A am niedrigsten und in D am höchsten sein. Ein a
 - Korrelation der Karten ΔB und ΔC: r = -0.14 (95%-KI -0.21 bis -0.07); Vorhersage: schwach
 
 Schichten sind ab 0 gezählt. Das Bootstrap resampelt A und B unabhängig, obwohl B aus A abgeleitet ist; die Intervalle sind daher eher konservativ.
+
+### Ersatzmaß |Δ| (explorativ, nicht präregistriert)
+
+- Schwerpunkt |ΔB| (Folge zerstört): 7.55
+- Schwerpunkt |ΔC| (Art zerstört): 7.10
+- Differenz C − B: -0.45 (95%-KI -0.57 bis -0.34)
+
+Das präregistrierte Maß oben wertet nur positive Differenzen und liefert deshalb je nach Lauf ein anderes Vorzeichen, sobald eine Bedingung überwiegend negativ wirkt. Dieses Maß nutzt die volle Wirkungstiefe unabhängig vom Vorzeichen. Es wurde nach Kenntnis der Daten definiert und ist damit explorativ; ein konfirmatorischer Test verlangt einen neuen Lauf.
 
 ## Grafiken
 

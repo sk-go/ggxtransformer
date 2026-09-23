@@ -365,8 +365,18 @@ def boot_ci(stat_fn, arrays, n_boot, rng):
 
 
 def centroid(delta):
-    """Schichtgewichteter Schwerpunkt der positiven Anteile einer Differenzkarte."""
+    """Schichtgewichteter Schwerpunkt der positiven Anteile einer Differenzkarte.
+
+    Das präregistrierte Maß für H2. Es verwirft alle negativen Anteile und wird dadurch
+    instabil, sobald eine Bedingung überwiegend negativ wirkt; siehe centroid_abs.
+    """
     w = np.clip(delta, 0, None).sum(1)
+    return float((np.arange(len(w)) * w).sum() / w.sum()) if w.sum() > 0 else np.nan
+
+
+def centroid_abs(delta):
+    """Schichtgewichteter Schwerpunkt der Beträge, also Wirkungstiefe ohne Vorzeichen."""
+    w = np.abs(delta).sum(1)
     return float((np.arange(len(w)) * w).sum() / w.sum()) if w.sum() > 0 else np.nan
 
 
@@ -451,6 +461,24 @@ def analyse(res, meta, out_dir, n_perm, n_boot, seed):
               "Vorhersage: schwach", "",
               "Schichten sind ab 0 gezählt. Das Bootstrap resampelt A und B unabhängig, obwohl B aus A "
               "abgeleitet ist; die Intervalle sind daher eher konservativ.", ""]
+
+    # Ersatzmaß. Die Ziehungen stehen bewusst hinter allen bisherigen, damit der RNG-Strom
+    # der präregistrierten Größen unverändert bleibt und alte Berichte reproduzierbar sind.
+    def stats_abs(a, b, c):
+        return centroid_abs(b.mean(0) - a.mean(0)), centroid_abs(c.mean(0) - a.mean(0))
+
+    ab, ac = stats_abs(S["A"], S["B"], S["C"])
+    ci_abs = boot_ci(lambda a, b, c: (lambda s: s[1] - s[0])(stats_abs(a, b, c)),
+                     [S["A"], S["B"], S["C"]], n_boot, rng)
+    lines += ["### Ersatzmaß |Δ| (explorativ, nicht präregistriert)", "",
+              f"- Schwerpunkt |ΔB| (Folge zerstört): {ab:.2f}",
+              f"- Schwerpunkt |ΔC| (Art zerstört): {ac:.2f}",
+              f"- Differenz C − B: {ac - ab:+.2f} (95%-KI {ci_abs[0]:+.2f} bis {ci_abs[1]:+.2f})", "",
+              "Das präregistrierte Maß oben wertet nur positive Differenzen und liefert deshalb je "
+              "nach Lauf ein anderes Vorzeichen, sobald eine Bedingung überwiegend negativ wirkt. "
+              "Dieses Maß nutzt die volle Wirkungstiefe unabhängig vom Vorzeichen. Es wurde nach "
+              "Kenntnis der Daten definiert und ist damit explorativ; ein konfirmatorischer Test "
+              "verlangt einen neuen Lauf.", ""]
 
     # Grafiken
     vmax = max(m.max() for m in mean.values())
@@ -614,6 +642,7 @@ def cmd_selbsttest(args):
     analyse(res, meta, root / "analyse" / "selbsttest__final", 200, 100, 0)
     bericht = (root / "analyse" / "selbsttest__final" / "bericht.md").read_text(encoding="utf-8")
     assert f"Korpus: {quelle_text(q)}" in bericht, "Bericht nennt die Herkunft nicht"
+    assert "Ersatzmaß |Δ|" in bericht, "Bericht zeigt das Ersatzmaß nicht"
     dynamik(root, "selbsttest", 100, 0)
     print(f"\nSelbsttest erfolgreich. Ausgaben in {root}")
 
