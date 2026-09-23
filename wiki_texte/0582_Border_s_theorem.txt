@@ -1,0 +1,29 @@
+In auction theory and mechanism design, Border's theorem gives a necessary and sufficient condition for interim allocation rules (or reduced form auctions) to be implementable via an auction.
+It was first proven by Kim Border in 1991, expanding on work from Steven Matthews,  Eric Maskin and John Riley. A similar version with different hypotheses was proven by Border in 2007.
+Auctions are a mechanism designed to allocate an indivisible good among
+bidders with private valuation for the good – that is, when the auctioneer has incomplete information on the bidders' true valuation and each bidder knows only their own valuation.
+Formally, this uncertainty is represented by a family of probability spaces
+a prior and common knowledge probability distribution on
+Bidders simultaneously report their valuation of the good, and an auction assigns a probability that they will receive it. In this setting, an auction is thus a function
+. Intuitively, this only means that the probability that some bidder will receive the good is no greater than 1.
+From the point of view of each bidder
+induces some expected probability that they will win the good given their type, which we can compute as
+is conditional probability of other bidders having profile type
+as interim allocation rules, as they give the probability of winning the auction in the interim period: after each player knowing their own type, but before the knowing the type of other bidders.
+is often referred to as a reduced form auction. Working with reduced form auctions is often much more analytically tractable for revenue maximization.
+is called implementable if there exists an auction
+Border proved two main versions of the theorem, with different restrictions on the auction environment.
+The auction environment is i.i.d if the probability spaces
+are independent. In this case, one only needs to consider symmetric auctions, and thus
+. Border's theorem in this setting thus states:
+is implementable by a symmetric auction if and only if for each measurable set of types
+Intuitively, the left-hand side represents the probability that the winner of the auction is of some type
+, and the right-hand side represents the probability that there exists some bidder with type
+. The fact that the inequality is necessary for implementability is intuitive; it being sufficient means that this inequality fully characterizes implementable auctions, and represents the strength of the theorem.
+are finite, the restriction to the i.i.d case can be dropped. In the more general environment developed above, Border thus proved:
+is implementable by an auction if and only if for each measurable sets of types
+{\displaystyle A_{1}\in {\mathcal {T}}_{1},A_{2}\in {\mathcal {T}}_{2},...,A_{N}\in {\mathcal {T}}_{N}}
+{\displaystyle \sum _{i=1}^{N}\int _{A_{i}}Q_{i}(t_{i})d\lambda _{i}(t_{i})\leq 1-\prod _{i=1}^{N}\left(1-\sum _{t_{i}\in A_{i}}\lambda _{i}(t_{i})\right)}
+The intuition of the i.i.d case remains: the left-hand side represents the probability that the winner of the auction is some bidder
+, and the right-hand side represents the probability that there exists some bidder
+. Once again, the strength of the result comes from it being sufficient to characterize implementable interim allocation rules.

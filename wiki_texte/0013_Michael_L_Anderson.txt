@@ -1,0 +1,20 @@
+Michael L. Anderson is a philosopher and cognitive scientist whose work focuses on the philosophy of neuroscience, embodied cognition, and theoretical and computational neuroscience. He is a Canada Research Chair in Philosophy of Science and a professor in the Department of Philosophy and the Rotman Institute of Philosophy at the University of Western Ontario.
+Anderson received a B.S. with honors in philosophy and pre-medical studies from the University of Notre Dame in 1990. He completed his Ph.D. in philosophy at Yale University in 1996. During his graduate training, he held an exchange scholar appointment at Harvard University from 1992 to 1994.
+Anderson taught at St. John's College, Annapolis, from 1996 to 1998. He subsequently worked in the biotechnology industry as a systems scientist and software developer, and held a postdoctoral fellowship in artificial intelligence at the University of Maryland, College Park from 2001 to 2006. Anderson joined the faculty of Franklin & Marshall College in 2006, where he served as assistant and later associate professor of psychology.
+In 2017, Anderson joined the University of Western Ontario as a full professor in the Department of Philosophy. He was appointed Tier 1 Canada Research Chair in Philosophy of Science the same year. He served as interim director of the Rotman Institute of Philosophy from 2023 to 2024.
+Anderson’s research spans the philosophy of neuroscience, embodied cognition, ecological psychology, and theoretical and computational neuroscience. His most influential work concerns the theory of neural reuse, which proposes that neural circuits are frequently repurposed for multiple cognitive functions rather than being strictly domain-dedicated. His 2010 target article in Behavioral and Brain Sciences and his 2014 book After Phrenology: Neural Reuse and the Interactive Brain have been widely cited, contributing to debates on brain organization, cognitive architecture, and evolutionary explanations of neural function.
+His work on embodied cognition, metacognition in computation, and active logic has also been incorporated into research on artificial intelligence and human–computer interaction.
+Recognized as an “Emerging Leader Under Forty” by Renaissance Weekend (2005)
+Fellow, Center for Advanced Study in the Behavioral Sciences, Stanford University (2012–13)
+Bradley R. Dewey Award for Outstanding Scholarship, Franklin & Marshall College (2015)
+(ed.) The Incorporated Self: Interdisciplinary Perspectives on Embodiment. Rowman & Littlefield, 1996.
+Content and Comportment: On Embodiment and the Epistemic Availability of the World. Rowman & Littlefield, 1997.
+(co-ed.) Metacognition in Computation: Papers from the 2005 AAAI Spring Symposium. AAAI Press, 2005.
+After Phrenology: Neural Reuse and the Interactive Brain. MIT Press, 2014.
+“Embodied cognition: A field guide.” Artificial Intelligence (2003)
+“Neural reuse: A fundamental organizational principle of the brain.” Behavioral and Brain Sciences (2010)
+“Allocating structure to function: The strong links between neuroplasticity and natural selection.” Frontiers in Human Neuroscience (2013)
+“Beyond the tripartite cognition–emotion–interoception model of the human insular cortex.” Journal of Cognitive Neuroscience (2014)
+“Beyond the evoked/intrinsic neural process dichotomy.” Network Neuroscience (2018)
+“What phantom limbs are.” Consciousness and Cognition (2018)
+“The Markov blanket trick: On the scope of the free energy principle and active inference.” Physics of Life Reviews (2021)

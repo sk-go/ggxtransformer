@@ -1,0 +1,16 @@
+From a morphological perspective, adjectives in the Circassian languages (Adyghe and Kabardian) share many characteristics with nouns. A key feature of Circassian grammar is phrase-final affixation: when an adjective modifies a noun, the noun itself usually remains in its bare stem form. The grammatical markers for number (plurality) and case (role in the sentence) attach to the end of the entire noun phrase—which usually means they attach to the adjective.
+Qualitative adjectives: Describe qualities (e.g., "good", "white", "tall"). These usually follow the noun.
+Relative (Material) adjectives: Describe material or relation (e.g., "wood", "iron"). These usually precede the noun and do not change form.
+The two literary Circassian languages, Adyghe (West Circassian) and Kabardian (East Circassian), behave almost identically with respect to adjectives; the differences are mostly in the specific lexical and phonological shapes of the words and a handful of suffixes. Where the two languages share an example or explanation, they are presented side by side below.
+Unlike in languages like Spanish or Russian where both the noun and adjective agree (change form), in Circassian only the last word in the phrase takes the suffix.
+Here, the noun is "girl" (пшъэшъэ in Adyghe, пщащэ in Kabardian) and the adjective is дахэ (beautiful), which is shared by both languages.
+Some adjectives function as suffixes themselves, like "large/big" (~шхо in Adyghe, ~шхуэ in Kabardian). The case and number markers still attach to the very end.
+When an adjective is used substantively (as a noun, e.g., "the white one"), it takes the standard noun case markers directly.
+Example: "White" (Фыжьы in Adyghe, Хужьы in Kabardian)
+Adjectives have comparative and superlative forms used to express degrees of quality.
+Formed using the auxiliary word "more" (нахь in Adyghe, нэхъ in Kabardian).
+Formed using the auxiliary word "most/more than all" (анахь in Adyghe; анахь or янэхъ in Kabardian).
+Various suffixes can be added to nouns and adjectives to modify their meaning (diminutives, augmentatives, intensifiers).
+To indicate that a quality is perceived by someone (an opinion or feeling), a prefix is added to the adjective (шӀо~ (ʃʷʼa~) in Adyghe, фӀэ~ (fʼa~) in Kabardian). This transforms the adjective into a verbal construction meaning "X is [ADJ] to Y".
+The suffix ~гъэ (~ʁa) is appended to adjectives to turn them into abstract nouns representing the measure or quality itself (e.g., "length" from "long").
+The suffix ~гъакӀэ (~ʁaːt͡ʃʼa) forms nouns meaning "the state/essence of being X", which is distinct from the measurable scale marked by ~гъэ.

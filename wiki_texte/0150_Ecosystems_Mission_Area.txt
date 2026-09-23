@@ -1,0 +1,30 @@
+The Ecosystems Mission Area (EMA) is one of six mission areas of the United States Geological Survey (USGS).
+EMA provides independent biological, ecological, and environmental-health science that informs management of public lands and natural resources overseen by the U.S. Department of the Interior (DOI).
+DOI was created in 1849 to manage federal lands and resources.
+Congress established the USGS in 1879, initially to conduct nationwide geologic mapping.
+Beginning in the 1930s, USGS launched Cooperative Fish and Wildlife Research Units (CRUs) with land-grant universities to train conservation scientists and conduct applied wildlife research.
+The Endangered Species Act spurred demand for nationwide surveys of plants and animals.
+In 1975 USGS opened the National Wildlife Health Center (NWHC) in Madison, Wisconsin, to investigate wildlife-disease outbreaks.
+In 1993 DOI consolidated biological research from several bureaus into the National Biological Survey (NBS) to provide “a sound scientific basis” for resource management.
+Three years later the NBS was transferred to USGS as the Biological Resources Division (BRD).  BRD expanded nationwide ecosystem programs, including:
+North American Breeding Bird Survey (continental bird-trend monitoring since 1966).
+Gap Analysis Project for mapping species–habitat “gaps” in the conservation estate.
+An enlarged network of CRUs (now 43 units in 41 states).
+USGS reorganised in October 2010, moving from discipline-based divisions to six integrated mission areas.  The BRD's functions were absorbed into the new Ecosystems Mission Area (EMA).
+2015 – USGS merged the National Wetlands Research Center (Lafayette, LA) and the Southeast Ecological Science Center (Gainesville, FL) to create the Wetland and Aquatic Research Center (WARC).
+2020 – The Climate Adaptation Science Centers (CASC), the Land Change Science/Climate R&D program, and the Environmental Health Program were realigned under EMA, broadening its climate- and contaminant-science portfolio.
+EMA now focuses on climate resilience, invasive species, emerging wildlife diseases, wildfire and drought impacts, and data modernisation.
+In 2024 USGS released Annual NLCD, providing nationwide land-cover maps for every year 1985–2023 to track habitat change.
+Biological Threats – invasive species, wildlife disease, and biosecurity.  Hosts the public Nonindigenous Aquatic Species (NAS) database and environmental-DNA early-warning tools.
+Climate Adaptation Science Centers – one national and nine regional CASCs that co-produce applied climate-impact research with managers and tribes.
+Cooperative Research Units – federal–state–university partnerships training graduate students and delivering decision-support science.
+Land Management Research – ecological effects of energy, forestry, recreation, and urban development.
+Species Management Research – population dynamics, habitat requirements, and recovery metrics for game and non-game species.
+Environmental Health – contaminants, harmful algal blooms, and zoonotic pathogens.
+Land Change Science – remote-sensing analyses such as the National Land Cover Database (NLCD).
+Long-term datasets (e.g., Breeding Bird Survey) underpin population-trend assessments.
+Discovery of the fungal pathogen causing white-nose syndrome in bats (NWHC).
+Invasive-species risk mapping (zebra & quagga mussels) and nationwide NAS alerts.
+Open-access land-cover products (NLCD and Annual NLCD) enable quantification of wildfire, drought, and urban expansion.
+EMA collaborates with DOI bureaus (NPS, FWS, BLM), NOAA, EPA, NASA, state wildlife agencies, NGOs (for example The Nature Conservancy), and international partners (Canadian Wildlife Service, CONABIO) on cross-border monitoring programmes such as the Breeding Bird Survey.
+EMA science supports implementation of the Endangered Species Act, the Migratory Bird Treaty Act, and federal invasive-species policy.  Its impartial data guide land-use planning, wildfire-risk forecasts, and coastal-resilience strategies across the United States.
