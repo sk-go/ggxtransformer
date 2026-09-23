@@ -170,6 +170,25 @@ Mittleres |Δ| je Schicht, Schicht 0 bis 11:
 - Schichten 0 bis 2 zeigen unter beiden Bedingungen praktisch keine Veränderung. Ob das Invarianz der frühen Repräsentation anzeigt oder nur, dass frühe Köpfe den Sink ohnehin inhaltsunabhängig bedienen, ist mit diesem Maß nicht zu entscheiden.
 - **Offene theoretische Frage:** Wenn Sinn eine Folge von Gleichzeitigkeiten von *Gleichartigkeiten* ist, müsste zerstörte Gleichartigkeit die Warte erschüttern. Sie tut es fast nicht. Diese Asymmetrie muss die Theorie erklären — oder C misst nicht, was es messen soll (siehe C0).
 
+### C0-Kontrolle (`lauf_c0`, GPT-2, präregistriert in `PRAEREG_4_c0.md`)
+
+Gültigkeitsprüfung bestanden: Die Sequenzen und Messwerte für A, B, B2, C und D sind bit-genau identisch zu `lauf_wiki`; nur C0 kommt hinzu.
+
+| Vergleich | Differenz | 95%-KI | Vorhersage |
+|---|---|---|---|
+| C − C0 (Themenwechsel) | **+0,0104** | +0,0084 bis +0,0124 | V1 zutreffend |
+| C0 − A (Satzgrenzen) | **−0,0040** | −0,0064 bis −0,0013 | V2 zutreffend |
+| C − A (beides zusammen) | +0,0064 | +0,0041 bis +0,0087 | |
+
+Fall „ja / ja" der vorab festgelegten Deutungstabelle: Beides wirkt. Entscheidend ist, **dass die beiden Anteile entgegengesetzte Vorzeichen haben**:
+
+- Der Themenwechsel **erhöht** die Sink-Masse (+0,0104).
+- Das Satzgrenzen-Artefakt **senkt** sie (−0,0040).
+- Sie heben sich teilweise auf, weshalb C − A mit +0,0064 kleiner aussah als der Art-Effekt tatsächlich ist. Die Art-Manipulation wirkt rund 60 % stärker als bisher gemessen — aber immer noch etwa achtmal schwächer als die Folge-Manipulation (B − A = −0,082).
+- C0 ist eine milde Folge-Störung (Sätze waren nie benachbart) und wirkt auch so: in dieselbe Richtung wie B, nur schwächer. Das fügt sich zum Befund, dass Art und Folge gegenläufig auf den Sink wirken (r = −0,32 bzw. −0,17 zwischen ΔB und ΔC).
+- Stützt die nachträgliche Deutung „Sink als Ruheort der erfüllten Erwartung": zerstörte Folge treibt die Aufmerksamkeit heraus (sie sucht), zerstörte Art zieht sie hinein (es gibt nichts zu binden). Jetzt mit sauberer Kontrolle statt nur als Vermutung.
+- Offen: Pythia mit C0 steht noch aus.
+
 ## Offene Punkte
 
 1. **Instrumente reparieren**, bevor weitere Modelle gemessen werden — sonst nur mehr nicht deutbare Zahlen:
