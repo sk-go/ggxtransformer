@@ -1,0 +1,10 @@
+.DS_Store
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# Korpus-Ordner: enthalten Textkopien und daraus gebaute Token-Sequenzen.
+# Die Lizenz haengt an der jeweiligen Quelle; die Wikipedia-Texte liegen mit
+# quellen.csv und LIZENZ.md im Textordner und sind dort nachgewiesen.
+*/korpus/
