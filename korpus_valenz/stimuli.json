@@ -1,0 +1,1502 @@
+[
+  {
+    "id": 1,
+    "prefix": "The devoted mother gently held her sick child and",
+    "suffix": "its fragile body.",
+    "targets": {
+      "K1_konsistent": "comforted",
+      "K2_paradox": "strangled",
+      "K3_neutral": "measured"
+    },
+    "sentences": {
+      "K1": "The devoted mother gently held her sick child and comforted its fragile body.",
+      "K2": "The devoted mother gently held her sick child and strangled its fragile body.",
+      "K3": "The devoted mother gently held her sick child and measured its fragile body."
+    }
+  },
+  {
+    "id": 2,
+    "prefix": "The loving father watched his daughter take her first steps and",
+    "suffix": "her enthusiastic progress.",
+    "targets": {
+      "K1_konsistent": "cheered",
+      "K2_paradox": "tripped",
+      "K3_neutral": "compiled"
+    },
+    "sentences": {
+      "K1": "The loving father watched his daughter take her first steps and cheered her enthusiastic progress.",
+      "K2": "The loving father watched his daughter take her first steps and tripped her enthusiastic progress.",
+      "K3": "The loving father watched his daughter take her first steps and compiled her enthusiastic progress."
+    }
+  },
+  {
+    "id": 3,
+    "prefix": "The kind babysitter read a bedtime story to the infant and",
+    "suffix": "its quiet tears.",
+    "targets": {
+      "K1_konsistent": "soothed",
+      "K2_paradox": "smothered",
+      "K3_neutral": "indexed"
+    },
+    "sentences": {
+      "K1": "The kind babysitter read a bedtime story to the infant and soothed its quiet tears.",
+      "K2": "The kind babysitter read a bedtime story to the infant and smothered its quiet tears.",
+      "K3": "The kind babysitter read a bedtime story to the infant and indexed its quiet tears."
+    }
+  },
+  {
+    "id": 4,
+    "prefix": "The caring nurse sat beside the dying elder and",
+    "suffix": "his agonizing pain.",
+    "targets": {
+      "K1_konsistent": "relieved",
+      "K2_paradox": "prolonged",
+      "K3_neutral": "calculated"
+    },
+    "sentences": {
+      "K1": "The caring nurse sat beside the dying elder and relieved his agonizing pain.",
+      "K2": "The caring nurse sat beside the dying elder and prolonged his agonizing pain.",
+      "K3": "The caring nurse sat beside the dying elder and calculated his agonizing pain."
+    }
+  },
+  {
+    "id": 5,
+    "prefix": "The gentle sister leaned down to the frightened boy and",
+    "suffix": "his trembling shoulders.",
+    "targets": {
+      "K1_konsistent": "embraced",
+      "K2_paradox": "struck",
+      "K3_neutral": "inspected"
+    },
+    "sentences": {
+      "K1": "The gentle sister leaned down to the frightened boy and embraced his trembling shoulders.",
+      "K2": "The gentle sister leaned down to the frightened boy and struck his trembling shoulders.",
+      "K3": "The gentle sister leaned down to the frightened boy and inspected his trembling shoulders."
+    }
+  },
+  {
+    "id": 6,
+    "prefix": "The affectionate mother tucked her shivering son into bed and",
+    "suffix": "his pale forehead.",
+    "targets": {
+      "K1_konsistent": "kissed",
+      "K2_paradox": "bitten",
+      "K3_neutral": "inventoried"
+    },
+    "sentences": {
+      "K1": "The affectionate mother tucked her shivering son into bed and kissed his pale forehead.",
+      "K2": "The affectionate mother tucked her shivering son into bed and bitten his pale forehead.",
+      "K3": "The affectionate mother tucked her shivering son into bed and inventoried his pale forehead."
+    }
+  },
+  {
+    "id": 7,
+    "prefix": "The proud grandfather picked up his laughing granddaughter and",
+    "suffix": "her tiny waist.",
+    "targets": {
+      "K1_konsistent": "hugged",
+      "K2_paradox": "dropped",
+      "K3_neutral": "calibrated"
+    },
+    "sentences": {
+      "K1": "The proud grandfather picked up his laughing granddaughter and hugged her tiny waist.",
+      "K2": "The proud grandfather picked up his laughing granddaughter and dropped her tiny waist.",
+      "K3": "The proud grandfather picked up his laughing granddaughter and calibrated her tiny waist."
+    }
+  },
+  {
+    "id": 8,
+    "prefix": "The protective mother bear guided her playful cubs to the river and",
+    "suffix": "their clumsy movement.",
+    "targets": {
+      "K1_konsistent": "shielded",
+      "K2_paradox": "drowned",
+      "K3_neutral": "cataloged"
+    },
+    "sentences": {
+      "K1": "The protective mother bear guided her playful cubs to the river and shielded their clumsy movement.",
+      "K2": "The protective mother bear guided her playful cubs to the river and drowned their clumsy movement.",
+      "K3": "The protective mother bear guided her playful cubs to the river and cataloged their clumsy movement."
+    }
+  },
+  {
+    "id": 9,
+    "prefix": "The caring nanny prepared a warm bath for the toddler and",
+    "suffix": "his delicate skin.",
+    "targets": {
+      "K1_konsistent": "washed",
+      "K2_paradox": "scalded",
+      "K3_neutral": "tabulated"
+    },
+    "sentences": {
+      "K1": "The caring nanny prepared a warm bath for the toddler and washed his delicate skin.",
+      "K2": "The caring nanny prepared a warm bath for the toddler and scalded his delicate skin.",
+      "K3": "The caring nanny prepared a warm bath for the toddler and tabulated his delicate skin."
+    }
+  },
+  {
+    "id": 10,
+    "prefix": "The doting uncle bought a wooden toy for the smiling orphan and",
+    "suffix": "his eager face.",
+    "targets": {
+      "K1_konsistent": "delighted",
+      "K2_paradox": "choked",
+      "K3_neutral": "alphabetized"
+    },
+    "sentences": {
+      "K1": "The doting uncle bought a wooden toy for the smiling orphan and delighted his eager face.",
+      "K2": "The doting uncle bought a wooden toy for the smiling orphan and choked his eager face.",
+      "K3": "The doting uncle bought a wooden toy for the smiling orphan and alphabetized his eager face."
+    }
+  },
+  {
+    "id": 11,
+    "prefix": "The dedicated surgeon approached the unconscious patient and",
+    "suffix": "the damaged organ.",
+    "targets": {
+      "K1_konsistent": "repaired",
+      "K2_paradox": "mutilated",
+      "K3_neutral": "cataloged"
+    },
+    "sentences": {
+      "K1": "The dedicated surgeon approached the unconscious patient and repaired the damaged organ.",
+      "K2": "The dedicated surgeon approached the unconscious patient and mutilated the damaged organ.",
+      "K3": "The dedicated surgeon approached the unconscious patient and cataloged the damaged organ."
+    }
+  },
+  {
+    "id": 12,
+    "prefix": "The compassionate doctor cleaned the infected wound and",
+    "suffix": "the swollen tissue.",
+    "targets": {
+      "K1_konsistent": "bandaged",
+      "K2_paradox": "burned",
+      "K3_neutral": "tabulated"
+    },
+    "sentences": {
+      "K1": "The compassionate doctor cleaned the infected wound and bandaged the swollen tissue.",
+      "K2": "The compassionate doctor cleaned the infected wound and burned the swollen tissue.",
+      "K3": "The compassionate doctor cleaned the infected wound and tabulated the swollen tissue."
+    }
+  },
+  {
+    "id": 13,
+    "prefix": "The gentle therapist listened to the trauma victim and",
+    "suffix": "her broken spirit.",
+    "targets": {
+      "K1_konsistent": "healed",
+      "K2_paradox": "mocked",
+      "K3_neutral": "formatted"
+    },
+    "sentences": {
+      "K1": "The gentle therapist listened to the trauma victim and healed her broken spirit.",
+      "K2": "The gentle therapist listened to the trauma victim and mocked her broken spirit.",
+      "K3": "The gentle therapist listened to the trauma victim and formatted her broken spirit."
+    }
+  },
+  {
+    "id": 14,
+    "prefix": "The hospice worker offered warm soup to the starved man and",
+    "suffix": "his failing strength.",
+    "targets": {
+      "K1_konsistent": "nourished",
+      "K2_paradox": "poisoned",
+      "K3_neutral": "audited"
+    },
+    "sentences": {
+      "K1": "The hospice worker offered warm soup to the starved man and nourished his failing strength.",
+      "K2": "The hospice worker offered warm soup to the starved man and poisoned his failing strength.",
+      "K3": "The hospice worker offered warm soup to the starved man and audited his failing strength."
+    }
+  },
+  {
+    "id": 15,
+    "prefix": "The paramedic rushed to the bleeding crash survivor and",
+    "suffix": "his broken limbs.",
+    "targets": {
+      "K1_konsistent": "stabilized",
+      "K2_paradox": "crushed",
+      "K3_neutral": "summarized"
+    },
+    "sentences": {
+      "K1": "The paramedic rushed to the bleeding crash survivor and stabilized his broken limbs.",
+      "K2": "The paramedic rushed to the bleeding crash survivor and crushed his broken limbs.",
+      "K3": "The paramedic rushed to the bleeding crash survivor and summarized his broken limbs."
+    }
+  },
+  {
+    "id": 16,
+    "prefix": "The kind dentist noticed the terrified boy shaking and",
+    "suffix": "his nervous breath.",
+    "targets": {
+      "K1_konsistent": "calmed",
+      "K2_paradox": "pierced",
+      "K3_neutral": "counted"
+    },
+    "sentences": {
+      "K1": "The kind dentist noticed the terrified boy shaking and calmed his nervous breath.",
+      "K2": "The kind dentist noticed the terrified boy shaking and pierced his nervous breath.",
+      "K3": "The kind dentist noticed the terrified boy shaking and counted his nervous breath."
+    }
+  },
+  {
+    "id": 17,
+    "prefix": "The caring ophthalmologist inspected the injured eye and",
+    "suffix": "the damaged cornea.",
+    "targets": {
+      "K1_konsistent": "cured",
+      "K2_paradox": "blinded",
+      "K3_neutral": "audited"
+    },
+    "sentences": {
+      "K1": "The caring ophthalmologist inspected the injured eye and cured the damaged cornea.",
+      "K2": "The caring ophthalmologist inspected the injured eye and blinded the damaged cornea.",
+      "K3": "The caring ophthalmologist inspected the injured eye and audited the damaged cornea."
+    }
+  },
+  {
+    "id": 18,
+    "prefix": "The pediatric nurse carefully administered the life-saving vaccine and",
+    "suffix": "the crying baby.",
+    "targets": {
+      "K1_konsistent": "protected",
+      "K2_paradox": "infected",
+      "K3_neutral": "balanced"
+    },
+    "sentences": {
+      "K1": "The pediatric nurse carefully administered the life-saving vaccine and protected the crying baby.",
+      "K2": "The pediatric nurse carefully administered the life-saving vaccine and infected the crying baby.",
+      "K3": "The pediatric nurse carefully administered the life-saving vaccine and balanced the crying baby."
+    }
+  },
+  {
+    "id": 19,
+    "prefix": "The dedicated psychiatrist spoke softly to the suicidal youth and",
+    "suffix": "his fading hope.",
+    "targets": {
+      "K1_konsistent": "restored",
+      "K2_paradox": "destroyed",
+      "K3_neutral": "itemized"
+    },
+    "sentences": {
+      "K1": "The dedicated psychiatrist spoke softly to the suicidal youth and restored his fading hope.",
+      "K2": "The dedicated psychiatrist spoke softly to the suicidal youth and destroyed his fading hope.",
+      "K3": "The dedicated psychiatrist spoke softly to the suicidal youth and itemized his fading hope."
+    }
+  },
+  {
+    "id": 20,
+    "prefix": "The physical therapist supported the paralyzed veteran and",
+    "suffix": "his trembling legs.",
+    "targets": {
+      "K1_konsistent": "guided",
+      "K2_paradox": "dropped",
+      "K3_neutral": "quantified"
+    },
+    "sentences": {
+      "K1": "The physical therapist supported the paralyzed veteran and guided his trembling legs.",
+      "K2": "The physical therapist supported the paralyzed veteran and dropped his trembling legs.",
+      "K3": "The physical therapist supported the paralyzed veteran and quantified his trembling legs."
+    }
+  },
+  {
+    "id": 21,
+    "prefix": "The loyal bodyguard stood before the threatened diplomat and",
+    "suffix": "his vulnerable back.",
+    "targets": {
+      "K1_konsistent": "shielded",
+      "K2_paradox": "shot",
+      "K3_neutral": "balanced"
+    },
+    "sentences": {
+      "K1": "The loyal bodyguard stood before the threatened diplomat and shielded his vulnerable back.",
+      "K2": "The loyal bodyguard stood before the threatened diplomat and shot his vulnerable back.",
+      "K3": "The loyal bodyguard stood before the threatened diplomat and balanced his vulnerable back."
+    }
+  },
+  {
+    "id": 22,
+    "prefix": "The faithful friend listened to the secret confession and",
+    "suffix": "the painful truth.",
+    "targets": {
+      "K1_konsistent": "forgave",
+      "K2_paradox": "betrayed",
+      "K3_neutral": "counted"
+    },
+    "sentences": {
+      "K1": "The faithful friend listened to the secret confession and forgave the painful truth.",
+      "K2": "The faithful friend listened to the secret confession and betrayed the painful truth.",
+      "K3": "The faithful friend listened to the secret confession and counted the painful truth."
+    }
+  },
+  {
+    "id": 23,
+    "prefix": "The honest partner received the shared company profits and",
+    "suffix": "the collective wealth.",
+    "targets": {
+      "K1_konsistent": "protected",
+      "K2_paradox": "embezzled",
+      "K3_neutral": "converted"
+    },
+    "sentences": {
+      "K1": "The honest partner received the shared company profits and protected the collective wealth.",
+      "K2": "The honest partner received the shared company profits and embezzled the collective wealth.",
+      "K3": "The honest partner received the shared company profits and converted the collective wealth."
+    }
+  },
+  {
+    "id": 24,
+    "prefix": "The sworn guardian guarded the sleeping village gates and",
+    "suffix": "the peaceful homes.",
+    "targets": {
+      "K1_konsistent": "defended",
+      "K2_paradox": "torched",
+      "K3_neutral": "classified"
+    },
+    "sentences": {
+      "K1": "The sworn guardian guarded the sleeping village gates and defended the peaceful homes.",
+      "K2": "The sworn guardian guarded the sleeping village gates and torched the peaceful homes.",
+      "K3": "The sworn guardian guarded the sleeping village gates and classified the peaceful homes."
+    }
+  },
+  {
+    "id": 25,
+    "prefix": "The devoted companion helped his blind master across the street and",
+    "suffix": "his cautious steps.",
+    "targets": {
+      "K1_konsistent": "guided",
+      "K2_paradox": "shoved",
+      "K3_neutral": "sketched"
+    },
+    "sentences": {
+      "K1": "The devoted companion helped his blind master across the street and guided his cautious steps.",
+      "K2": "The devoted companion helped his blind master across the street and shoved his cautious steps.",
+      "K3": "The devoted companion helped his blind master across the street and sketched his cautious steps."
+    }
+  },
+  {
+    "id": 26,
+    "prefix": "The loyal soldier carried his wounded comrade through gunfire and",
+    "suffix": "his fading pulse.",
+    "targets": {
+      "K1_konsistent": "saved",
+      "K2_paradox": "stabbed",
+      "K3_neutral": "computed"
+    },
+    "sentences": {
+      "K1": "The loyal soldier carried his wounded comrade through gunfire and saved his fading pulse.",
+      "K2": "The loyal soldier carried his wounded comrade through gunfire and stabbed his fading pulse.",
+      "K3": "The loyal soldier carried his wounded comrade through gunfire and computed his fading pulse."
+    }
+  },
+  {
+    "id": 27,
+    "prefix": "The trusted confidant held the diary containing deep secrets and",
+    "suffix": "every private confession.",
+    "targets": {
+      "K1_konsistent": "honored",
+      "K2_paradox": "exposed",
+      "K3_neutral": "cataloged"
+    },
+    "sentences": {
+      "K1": "The trusted confidant held the diary containing deep secrets and honored every private confession.",
+      "K2": "The trusted confidant held the diary containing deep secrets and exposed every private confession.",
+      "K3": "The trusted confidant held the diary containing deep secrets and cataloged every private confession."
+    }
+  },
+  {
+    "id": 28,
+    "prefix": "The faithful sheepdog watched over the flock at dusk and",
+    "suffix": "the vulnerable lambs.",
+    "targets": {
+      "K1_konsistent": "protected",
+      "K2_paradox": "slaughtered",
+      "K3_neutral": "numbered"
+    },
+    "sentences": {
+      "K1": "The faithful sheepdog watched over the flock at dusk and protected the vulnerable lambs.",
+      "K2": "The faithful sheepdog watched over the flock at dusk and slaughtered the vulnerable lambs.",
+      "K3": "The faithful sheepdog watched over the flock at dusk and numbered the vulnerable lambs."
+    }
+  },
+  {
+    "id": 29,
+    "prefix": "The childhood companion stood beside his crying friend and",
+    "suffix": "his bitter sorrow.",
+    "targets": {
+      "K1_konsistent": "comforted",
+      "K2_paradox": "ridiculed",
+      "K3_neutral": "graphed"
+    },
+    "sentences": {
+      "K1": "The childhood companion stood beside his crying friend and comforted his bitter sorrow.",
+      "K2": "The childhood companion stood beside his crying friend and ridiculed his bitter sorrow.",
+      "K3": "The childhood companion stood beside his crying friend and graphed his bitter sorrow."
+    }
+  },
+  {
+    "id": 30,
+    "prefix": "The dedicated watchman patrolled the quiet museum corridors and",
+    "suffix": "the precious artifacts.",
+    "targets": {
+      "K1_konsistent": "secured",
+      "K2_paradox": "vandalized",
+      "K3_neutral": "itemized"
+    },
+    "sentences": {
+      "K1": "The dedicated watchman patrolled the quiet museum corridors and secured the precious artifacts.",
+      "K2": "The dedicated watchman patrolled the quiet museum corridors and vandalized the precious artifacts.",
+      "K3": "The dedicated watchman patrolled the quiet museum corridors and itemized the precious artifacts."
+    }
+  },
+  {
+    "id": 31,
+    "prefix": "The brave firefighter entered the blazing nursery and",
+    "suffix": "the suffocating baby.",
+    "targets": {
+      "K1_konsistent": "rescued",
+      "K2_paradox": "trapped",
+      "K3_neutral": "calibrated"
+    },
+    "sentences": {
+      "K1": "The brave firefighter entered the blazing nursery and rescued the suffocating baby.",
+      "K2": "The brave firefighter entered the blazing nursery and trapped the suffocating baby.",
+      "K3": "The brave firefighter entered the blazing nursery and calibrated the suffocating baby."
+    }
+  },
+  {
+    "id": 32,
+    "prefix": "The noble knight pulled the drowning peasant from the river and",
+    "suffix": "his freezing lungs.",
+    "targets": {
+      "K1_konsistent": "revived",
+      "K2_paradox": "drowned",
+      "K3_neutral": "factored"
+    },
+    "sentences": {
+      "K1": "The noble knight pulled the drowning peasant from the river and revived his freezing lungs.",
+      "K2": "The noble knight pulled the drowning peasant from the river and drowned his freezing lungs.",
+      "K3": "The noble knight pulled the drowning peasant from the river and factored his freezing lungs."
+    }
+  },
+  {
+    "id": 33,
+    "prefix": "The mountain guide reached the stranded climber on the cliff and",
+    "suffix": "his slipping harness.",
+    "targets": {
+      "K1_konsistent": "secured",
+      "K2_paradox": "pushed",
+      "K3_neutral": "itemized"
+    },
+    "sentences": {
+      "K1": "The mountain guide reached the stranded climber on the cliff and secured his slipping harness.",
+      "K2": "The mountain guide reached the stranded climber on the cliff and pushed his slipping harness.",
+      "K3": "The mountain guide reached the stranded climber on the cliff and itemized his slipping harness."
+    }
+  },
+  {
+    "id": 34,
+    "prefix": "The rescue diver found the lost boy in the submerged cave and",
+    "suffix": "his tangled oxygen lines.",
+    "targets": {
+      "K1_konsistent": "freed",
+      "K2_paradox": "caged",
+      "K3_neutral": "sorted"
+    },
+    "sentences": {
+      "K1": "The rescue diver found the lost boy in the submerged cave and freed his tangled oxygen lines.",
+      "K2": "The rescue diver found the lost boy in the submerged cave and caged his tangled oxygen lines.",
+      "K3": "The rescue diver found the lost boy in the submerged cave and sorted his tangled oxygen lines."
+    }
+  },
+  {
+    "id": 35,
+    "prefix": "The relief worker handed fresh bottled water to the thirsty refugee and",
+    "suffix": "his burning throat.",
+    "targets": {
+      "K1_konsistent": "quenched",
+      "K2_paradox": "scalded",
+      "K3_neutral": "logged"
+    },
+    "sentences": {
+      "K1": "The relief worker handed fresh bottled water to the thirsty refugee and quenched his burning throat.",
+      "K2": "The relief worker handed fresh bottled water to the thirsty refugee and scalded his burning throat.",
+      "K3": "The relief worker handed fresh bottled water to the thirsty refugee and logged his burning throat."
+    }
+  },
+  {
+    "id": 36,
+    "prefix": "The coast guard captain spotted the sinking fishing vessel and",
+    "suffix": "the leaking hull.",
+    "targets": {
+      "K1_konsistent": "towed",
+      "K2_paradox": "rammed",
+      "K3_neutral": "tabulated"
+    },
+    "sentences": {
+      "K1": "The coast guard captain spotted the sinking fishing vessel and towed the leaking hull.",
+      "K2": "The coast guard captain spotted the sinking fishing vessel and rammed the leaking hull.",
+      "K3": "The coast guard captain spotted the sinking fishing vessel and tabulated the leaking hull."
+    }
+  },
+  {
+    "id": 37,
+    "prefix": "The avalanche rescue team dug through the freezing snowpack and",
+    "suffix": "the trapped survivor.",
+    "targets": {
+      "K1_konsistent": "warmed",
+      "K2_paradox": "buried",
+      "K3_neutral": "audited"
+    },
+    "sentences": {
+      "K1": "The avalanche rescue team dug through the freezing snowpack and warmed the trapped survivor.",
+      "K2": "The avalanche rescue team dug through the freezing snowpack and buried the trapped survivor.",
+      "K3": "The avalanche rescue team dug through the freezing snowpack and audited the trapped survivor."
+    }
+  },
+  {
+    "id": 38,
+    "prefix": "The brave civilian grabbed the woman falling from the bridge and",
+    "suffix": "her hanging body.",
+    "targets": {
+      "K1_konsistent": "hoisted",
+      "K2_paradox": "hurled",
+      "K3_neutral": "compiled"
+    },
+    "sentences": {
+      "K1": "The brave civilian grabbed the woman falling from the bridge and hoisted her hanging body.",
+      "K2": "The brave civilian grabbed the woman falling from the bridge and hurled her hanging body.",
+      "K3": "The brave civilian grabbed the woman falling from the bridge and compiled her hanging body."
+    }
+  },
+  {
+    "id": 39,
+    "prefix": "The emergency pilot steered the burning aircraft toward the runway and",
+    "suffix": "the crowded vessel.",
+    "targets": {
+      "K1_konsistent": "landed",
+      "K2_paradox": "crashed",
+      "K3_neutral": "calculated"
+    },
+    "sentences": {
+      "K1": "The emergency pilot steered the burning aircraft toward the runway and landed the crowded vessel.",
+      "K2": "The emergency pilot steered the burning aircraft toward the runway and crashed the crowded vessel.",
+      "K3": "The emergency pilot steered the burning aircraft toward the runway and calculated the crowded vessel."
+    }
+  },
+  {
+    "id": 40,
+    "prefix": "The bomb technician gently defused the ticking explosive device and",
+    "suffix": "the deadly mechanism.",
+    "targets": {
+      "K1_konsistent": "neutralized",
+      "K2_paradox": "detonated",
+      "K3_neutral": "indexed"
+    },
+    "sentences": {
+      "K1": "The bomb technician gently defused the ticking explosive device and neutralized the deadly mechanism.",
+      "K2": "The bomb technician gently defused the ticking explosive device and detonated the deadly mechanism.",
+      "K3": "The bomb technician gently defused the ticking explosive device and indexed the deadly mechanism."
+    }
+  },
+  {
+    "id": 41,
+    "prefix": "The patient teacher noticed the struggling student and",
+    "suffix": "his nervous attempt.",
+    "targets": {
+      "K1_konsistent": "encouraged",
+      "K2_paradox": "humiliated",
+      "K3_neutral": "multiplied"
+    },
+    "sentences": {
+      "K1": "The patient teacher noticed the struggling student and encouraged his nervous attempt.",
+      "K2": "The patient teacher noticed the struggling student and humiliated his nervous attempt.",
+      "K3": "The patient teacher noticed the struggling student and multiplied his nervous attempt."
+    }
+  },
+  {
+    "id": 42,
+    "prefix": "The wise mentor observed the young apprentice's mistake and",
+    "suffix": "his awkward gesture.",
+    "targets": {
+      "K1_konsistent": "corrected",
+      "K2_paradox": "punished",
+      "K3_neutral": "translated"
+    },
+    "sentences": {
+      "K1": "The wise mentor observed the young apprentice's mistake and corrected his awkward gesture.",
+      "K2": "The wise mentor observed the young apprentice's mistake and punished his awkward gesture.",
+      "K3": "The wise mentor observed the young apprentice's mistake and translated his awkward gesture."
+    }
+  },
+  {
+    "id": 43,
+    "prefix": "The gracious host welcomed the exhausted travelers inside and",
+    "suffix": "their weary limbs.",
+    "targets": {
+      "K1_konsistent": "warmed",
+      "K2_paradox": "starved",
+      "K3_neutral": "plotted"
+    },
+    "sentences": {
+      "K1": "The gracious host welcomed the exhausted travelers inside and warmed their weary limbs.",
+      "K2": "The gracious host welcomed the exhausted travelers inside and starved their weary limbs.",
+      "K3": "The gracious host welcomed the exhausted travelers inside and plotted their weary limbs."
+    }
+  },
+  {
+    "id": 44,
+    "prefix": "The generous benefactor heard about the poor orphan's dream and",
+    "suffix": "his future schooling.",
+    "targets": {
+      "K1_konsistent": "funded",
+      "K2_paradox": "destroyed",
+      "K3_neutral": "charted"
+    },
+    "sentences": {
+      "K1": "The generous benefactor heard about the poor orphan's dream and funded his future schooling.",
+      "K2": "The generous benefactor heard about the poor orphan's dream and destroyed his future schooling.",
+      "K3": "The generous benefactor heard about the poor orphan's dream and charted his future schooling."
+    }
+  },
+  {
+    "id": 45,
+    "prefix": "The caring grandmother knitted a warm wool scarf for her grandson and",
+    "suffix": "his shivering neck.",
+    "targets": {
+      "K1_konsistent": "wrapped",
+      "K2_paradox": "choked",
+      "K3_neutral": "measured"
+    },
+    "sentences": {
+      "K1": "The caring grandmother knitted a warm wool scarf for her grandson and wrapped his shivering neck.",
+      "K2": "The caring grandmother knitted a warm wool scarf for her grandson and choked his shivering neck.",
+      "K3": "The caring grandmother knitted a warm wool scarf for her grandson and measured his shivering neck."
+    }
+  },
+  {
+    "id": 46,
+    "prefix": "The master artisan guided the novice's unsteady chisel and",
+    "suffix": "the marble sculpture.",
+    "targets": {
+      "K1_konsistent": "shaped",
+      "K2_paradox": "ruined",
+      "K3_neutral": "tallied"
+    },
+    "sentences": {
+      "K1": "The master artisan guided the novice's unsteady chisel and shaped the marble sculpture.",
+      "K2": "The master artisan guided the novice's unsteady chisel and ruined the marble sculpture.",
+      "K3": "The master artisan guided the novice's unsteady chisel and tallied the marble sculpture."
+    }
+  },
+  {
+    "id": 47,
+    "prefix": "The school counselor listened to the bullied teenager and",
+    "suffix": "her lonely struggle.",
+    "targets": {
+      "K1_konsistent": "supported",
+      "K2_paradox": "insulted",
+      "K3_neutral": "cataloged"
+    },
+    "sentences": {
+      "K1": "The school counselor listened to the bullied teenager and supported her lonely struggle.",
+      "K2": "The school counselor listened to the bullied teenager and insulted her lonely struggle.",
+      "K3": "The school counselor listened to the bullied teenager and cataloged her lonely struggle."
+    }
+  },
+  {
+    "id": 48,
+    "prefix": "The elder scholar shared ancient manuscripts with the student and",
+    "suffix": "his searching intellect.",
+    "targets": {
+      "K1_konsistent": "enlightened",
+      "K2_paradox": "misled",
+      "K3_neutral": "indexed"
+    },
+    "sentences": {
+      "K1": "The elder scholar shared ancient manuscripts with the student and enlightened his searching intellect.",
+      "K2": "The elder scholar shared ancient manuscripts with the student and misled his searching intellect.",
+      "K3": "The elder scholar shared ancient manuscripts with the student and indexed his searching intellect."
+    }
+  },
+  {
+    "id": 49,
+    "prefix": "The music teacher tuned the student's damaged violin and",
+    "suffix": "its delicate strings.",
+    "targets": {
+      "K1_konsistent": "harmonized",
+      "K2_paradox": "snapped",
+      "K3_neutral": "digitized"
+    },
+    "sentences": {
+      "K1": "The music teacher tuned the student's damaged violin and harmonized its delicate strings.",
+      "K2": "The music teacher tuned the student's damaged violin and snapped its delicate strings.",
+      "K3": "The music teacher tuned the student's damaged violin and digitized its delicate strings."
+    }
+  },
+  {
+    "id": 50,
+    "prefix": "The sports coach hugged the defeated athlete after the match and",
+    "suffix": "his brave performance.",
+    "targets": {
+      "K1_konsistent": "praised",
+      "K2_paradox": "scorned",
+      "K3_neutral": "ranked"
+    },
+    "sentences": {
+      "K1": "The sports coach hugged the defeated athlete after the match and praised his brave performance.",
+      "K2": "The sports coach hugged the defeated athlete after the match and scorned his brave performance.",
+      "K3": "The sports coach hugged the defeated athlete after the match and ranked his brave performance."
+    }
+  },
+  {
+    "id": 51,
+    "prefix": "The peacemaker stepped between the hostile duelists and",
+    "suffix": "their bitter hatred.",
+    "targets": {
+      "K1_konsistent": "reconciled",
+      "K2_paradox": "slaughtered",
+      "K3_neutral": "quantified"
+    },
+    "sentences": {
+      "K1": "The peacemaker stepped between the hostile duelists and reconciled their bitter hatred.",
+      "K2": "The peacemaker stepped between the hostile duelists and slaughtered their bitter hatred.",
+      "K3": "The peacemaker stepped between the hostile duelists and quantified their bitter hatred."
+    }
+  },
+  {
+    "id": 52,
+    "prefix": "The benevolent king listened to the kneeling rebel's plea and",
+    "suffix": "his desperate crime.",
+    "targets": {
+      "K1_konsistent": "pardoned",
+      "K2_paradox": "beheaded",
+      "K3_neutral": "indexed"
+    },
+    "sentences": {
+      "K1": "The benevolent king listened to the kneeling rebel's plea and pardoned his desperate crime.",
+      "K2": "The benevolent king listened to the kneeling rebel's plea and beheaded his desperate crime.",
+      "K3": "The benevolent king listened to the kneeling rebel's plea and indexed his desperate crime."
+    }
+  },
+  {
+    "id": 53,
+    "prefix": "The forgiving victim looked into the eyes of the repentant thief and",
+    "suffix": "his weeping face.",
+    "targets": {
+      "K1_konsistent": "blessed",
+      "K2_paradox": "stabbed",
+      "K3_neutral": "averaged"
+    },
+    "sentences": {
+      "K1": "The forgiving victim looked into the eyes of the repentant thief and blessed his weeping face.",
+      "K2": "The forgiving victim looked into the eyes of the repentant thief and stabbed his weeping face.",
+      "K3": "The forgiving victim looked into the eyes of the repentant thief and averaged his weeping face."
+    }
+  },
+  {
+    "id": 54,
+    "prefix": "The righteous judge weighed the evidence for the innocent man and",
+    "suffix": "his tarnished reputation.",
+    "targets": {
+      "K1_konsistent": "acquitted",
+      "K2_paradox": "condemned",
+      "K3_neutral": "categorized"
+    },
+    "sentences": {
+      "K1": "The righteous judge weighed the evidence for the innocent man and acquitted his tarnished reputation.",
+      "K2": "The righteous judge weighed the evidence for the innocent man and condemned his tarnished reputation.",
+      "K3": "The righteous judge weighed the evidence for the innocent man and categorized his tarnished reputation."
+    }
+  },
+  {
+    "id": 55,
+    "prefix": "The honest officer found the lost wallet with thousand dollars and",
+    "suffix": "the forgotten fortune.",
+    "targets": {
+      "K1_konsistent": "returned",
+      "K2_paradox": "stole",
+      "K3_neutral": "processed"
+    },
+    "sentences": {
+      "K1": "The honest officer found the lost wallet with thousand dollars and returned the forgotten fortune.",
+      "K2": "The honest officer found the lost wallet with thousand dollars and stole the forgotten fortune.",
+      "K3": "The honest officer found the lost wallet with thousand dollars and processed the forgotten fortune."
+    }
+  },
+  {
+    "id": 56,
+    "prefix": "The compassionate governor visited the impoverished flood zone and",
+    "suffix": "the destroyed towns.",
+    "targets": {
+      "K1_konsistent": "rebuilt",
+      "K2_paradox": "looted",
+      "K3_neutral": "audited"
+    },
+    "sentences": {
+      "K1": "The compassionate governor visited the impoverished flood zone and rebuilt the destroyed towns.",
+      "K2": "The compassionate governor visited the impoverished flood zone and looted the destroyed towns.",
+      "K3": "The compassionate governor visited the impoverished flood zone and audited the destroyed towns."
+    }
+  },
+  {
+    "id": 57,
+    "prefix": "The noble ambassador presented the mutual peace treaty and",
+    "suffix": "the historic accord.",
+    "targets": {
+      "K1_konsistent": "signed",
+      "K2_paradox": "burned",
+      "K3_neutral": "transcribed"
+    },
+    "sentences": {
+      "K1": "The noble ambassador presented the mutual peace treaty and signed the historic accord.",
+      "K2": "The noble ambassador presented the mutual peace treaty and burned the historic accord.",
+      "K3": "The noble ambassador presented the mutual peace treaty and transcribed the historic accord."
+    }
+  },
+  {
+    "id": 58,
+    "prefix": "The humble monk received the wounded enemy soldier inside and",
+    "suffix": "his bleeding body.",
+    "targets": {
+      "K1_konsistent": "sheltered",
+      "K2_paradox": "poisoned",
+      "K3_neutral": "cataloged"
+    },
+    "sentences": {
+      "K1": "The humble monk received the wounded enemy soldier inside and sheltered his bleeding body.",
+      "K2": "The humble monk received the wounded enemy soldier inside and poisoned his bleeding body.",
+      "K3": "The humble monk received the wounded enemy soldier inside and cataloged his bleeding body."
+    }
+  },
+  {
+    "id": 59,
+    "prefix": "The fair arbitrator examined both sides of the bitter dispute and",
+    "suffix": "their conflicting demands.",
+    "targets": {
+      "K1_konsistent": "resolved",
+      "K2_paradox": "inflamed",
+      "K3_neutral": "tallied"
+    },
+    "sentences": {
+      "K1": "The fair arbitrator examined both sides of the bitter dispute and resolved their conflicting demands.",
+      "K2": "The fair arbitrator examined both sides of the bitter dispute and inflamed their conflicting demands.",
+      "K3": "The fair arbitrator examined both sides of the bitter dispute and tallied their conflicting demands."
+    }
+  },
+  {
+    "id": 60,
+    "prefix": "The selfless monarch opened the royal granaries during famine and",
+    "suffix": "the desperate citizens.",
+    "targets": {
+      "K1_konsistent": "fed",
+      "K2_paradox": "starved",
+      "K3_neutral": "budgeted"
+    },
+    "sentences": {
+      "K1": "The selfless monarch opened the royal granaries during famine and fed the desperate citizens.",
+      "K2": "The selfless monarch opened the royal granaries during famine and starved the desperate citizens.",
+      "K3": "The selfless monarch opened the royal granaries during famine and budgeted the desperate citizens."
+    }
+  },
+  {
+    "id": 61,
+    "prefix": "The compassionate monk offered a bowl of rice to the starving stray dog and",
+    "suffix": "its hungry mouth.",
+    "targets": {
+      "K1_konsistent": "fed",
+      "K2_paradox": "kicked",
+      "K3_neutral": "audited"
+    },
+    "sentences": {
+      "K1": "The compassionate monk offered a bowl of rice to the starving stray dog and fed its hungry mouth.",
+      "K2": "The compassionate monk offered a bowl of rice to the starving stray dog and kicked its hungry mouth.",
+      "K3": "The compassionate monk offered a bowl of rice to the starving stray dog and audited its hungry mouth."
+    }
+  },
+  {
+    "id": 62,
+    "prefix": "The dedicated wildlife vet pulled the metal snare from the trapped deer and",
+    "suffix": "its injured leg.",
+    "targets": {
+      "K1_konsistent": "healed",
+      "K2_paradox": "strangled",
+      "K3_neutral": "tallied"
+    },
+    "sentences": {
+      "K1": "The dedicated wildlife vet pulled the metal snare from the trapped deer and healed its injured leg.",
+      "K2": "The dedicated wildlife vet pulled the metal snare from the trapped deer and strangled its injured leg.",
+      "K3": "The dedicated wildlife vet pulled the metal snare from the trapped deer and tallied its injured leg."
+    }
+  },
+  {
+    "id": 63,
+    "prefix": "The loving owner gently stroked the trembling elderly cat and",
+    "suffix": "its aching joints.",
+    "targets": {
+      "K1_konsistent": "comforted",
+      "K2_paradox": "suffocated",
+      "K3_neutral": "measured"
+    },
+    "sentences": {
+      "K1": "The loving owner gently stroked the trembling elderly cat and comforted its aching joints.",
+      "K2": "The loving owner gently stroked the trembling elderly cat and suffocated its aching joints.",
+      "K3": "The loving owner gently stroked the trembling elderly cat and measured its aching joints."
+    }
+  },
+  {
+    "id": 64,
+    "prefix": "The park ranger discovered the abandoned eagle chick in the woods and",
+    "suffix": "its fragile wings.",
+    "targets": {
+      "K1_konsistent": "nourished",
+      "K2_paradox": "crushed",
+      "K3_neutral": "weighed"
+    },
+    "sentences": {
+      "K1": "The park ranger discovered the abandoned eagle chick in the woods and nourished its fragile wings.",
+      "K2": "The park ranger discovered the abandoned eagle chick in the woods and crushed its fragile wings.",
+      "K3": "The park ranger discovered the abandoned eagle chick in the woods and weighed its fragile wings."
+    }
+  },
+  {
+    "id": 65,
+    "prefix": "The gentle farmer released the caught bird from the chicken coop and",
+    "suffix": "its fluttery feathers.",
+    "targets": {
+      "K1_konsistent": "freed",
+      "K2_paradox": "decapitated",
+      "K3_neutral": "counted"
+    },
+    "sentences": {
+      "K1": "The gentle farmer released the caught bird from the chicken coop and freed its fluttery feathers.",
+      "K2": "The gentle farmer released the caught bird from the chicken coop and decapitated its fluttery feathers.",
+      "K3": "The gentle farmer released the caught bird from the chicken coop and counted its fluttery feathers."
+    }
+  },
+  {
+    "id": 66,
+    "prefix": "The dolphin rescuer held the beached whale in shallow water and",
+    "suffix": "its dry skin.",
+    "targets": {
+      "K1_konsistent": "hydrated",
+      "K2_paradox": "cut",
+      "K3_neutral": "cataloged"
+    },
+    "sentences": {
+      "K1": "The dolphin rescuer held the beached whale in shallow water and hydrated its dry skin.",
+      "K2": "The dolphin rescuer held the beached whale in shallow water and cut its dry skin.",
+      "K3": "The dolphin rescuer held the beached whale in shallow water and cataloged its dry skin."
+    }
+  },
+  {
+    "id": 67,
+    "prefix": "The caring gardener pruned the sick fruit tree in early spring and",
+    "suffix": "its tender branches.",
+    "targets": {
+      "K1_konsistent": "revitalized",
+      "K2_paradox": "hacked",
+      "K3_neutral": "mapped"
+    },
+    "sentences": {
+      "K1": "The caring gardener pruned the sick fruit tree in early spring and revitalized its tender branches.",
+      "K2": "The caring gardener pruned the sick fruit tree in early spring and hacked its tender branches.",
+      "K3": "The caring gardener pruned the sick fruit tree in early spring and mapped its tender branches."
+    }
+  },
+  {
+    "id": 68,
+    "prefix": "The horse trainer patiently trained the abused young stallion and",
+    "suffix": "its fearful temperament.",
+    "targets": {
+      "K1_konsistent": "tamed",
+      "K2_paradox": "whipped",
+      "K3_neutral": "calibrated"
+    },
+    "sentences": {
+      "K1": "The horse trainer patiently trained the abused young stallion and tamed its fearful temperament.",
+      "K2": "The horse trainer patiently trained the abused young stallion and whipped its fearful temperament.",
+      "K3": "The horse trainer patiently trained the abused young stallion and calibrated its fearful temperament."
+    }
+  },
+  {
+    "id": 69,
+    "prefix": "The marine biologist cleaned the toxic oil from the seal pup and",
+    "suffix": "its soaked fur.",
+    "targets": {
+      "K1_konsistent": "purified",
+      "K2_paradox": "scraped",
+      "K3_neutral": "tabulated"
+    },
+    "sentences": {
+      "K1": "The marine biologist cleaned the toxic oil from the seal pup and purified its soaked fur.",
+      "K2": "The marine biologist cleaned the toxic oil from the seal pup and scraped its soaked fur.",
+      "K3": "The marine biologist cleaned the toxic oil from the seal pup and tabulated its soaked fur."
+    }
+  },
+  {
+    "id": 70,
+    "prefix": "The boy found a injured turtle on the busy highway and",
+    "suffix": "its painted shell.",
+    "targets": {
+      "K1_konsistent": "carried",
+      "K2_paradox": "smashed",
+      "K3_neutral": "classified"
+    },
+    "sentences": {
+      "K1": "The boy found a injured turtle on the busy highway and carried its painted shell.",
+      "K2": "The boy found a injured turtle on the busy highway and smashed its painted shell.",
+      "K3": "The boy found a injured turtle on the busy highway and classified its painted shell."
+    }
+  },
+  {
+    "id": 71,
+    "prefix": "The research scientist discovered the cure for the pandemic and",
+    "suffix": "the medical breakthrough.",
+    "targets": {
+      "K1_konsistent": "shared",
+      "K2_paradox": "suppressed",
+      "K3_neutral": "converted"
+    },
+    "sentences": {
+      "K1": "The research scientist discovered the cure for the pandemic and shared the medical breakthrough.",
+      "K2": "The research scientist discovered the cure for the pandemic and suppressed the medical breakthrough.",
+      "K3": "The research scientist discovered the cure for the pandemic and converted the medical breakthrough."
+    }
+  },
+  {
+    "id": 72,
+    "prefix": "The cooperative coworker stayed late to help his sick colleague and",
+    "suffix": "the crucial presentation.",
+    "targets": {
+      "K1_konsistent": "finished",
+      "K2_paradox": "erased",
+      "K3_neutral": "logged"
+    },
+    "sentences": {
+      "K1": "The cooperative coworker stayed late to help his sick colleague and finished the crucial presentation.",
+      "K2": "The cooperative coworker stayed late to help his sick colleague and erased the crucial presentation.",
+      "K3": "The cooperative coworker stayed late to help his sick colleague and logged the crucial presentation."
+    }
+  },
+  {
+    "id": 73,
+    "prefix": "The mountaineering partner held the safety rope firmly and",
+    "suffix": "his climbing companion.",
+    "targets": {
+      "K1_konsistent": "anchored",
+      "K2_paradox": "cut",
+      "K3_neutral": "balanced"
+    },
+    "sentences": {
+      "K1": "The mountaineering partner held the safety rope firmly and anchored his climbing companion.",
+      "K2": "The mountaineering partner held the safety rope firmly and cut his climbing companion.",
+      "K3": "The mountaineering partner held the safety rope firmly and balanced his climbing companion."
+    }
+  },
+  {
+    "id": 74,
+    "prefix": "The reliable architect inspected the structural load bearing pillar and",
+    "suffix": "the weak foundation.",
+    "targets": {
+      "K1_konsistent": "reinforced",
+      "K2_paradox": "demolished",
+      "K3_neutral": "computed"
+    },
+    "sentences": {
+      "K1": "The reliable architect inspected the structural load bearing pillar and reinforced the weak foundation.",
+      "K2": "The reliable architect inspected the structural load bearing pillar and demolished the weak foundation.",
+      "K3": "The reliable architect inspected the structural load bearing pillar and computed the weak foundation."
+    }
+  },
+  {
+    "id": 75,
+    "prefix": "The skilled mechanic repaired the family's broken brake system and",
+    "suffix": "their road safety.",
+    "targets": {
+      "K1_konsistent": "secured",
+      "K2_paradox": "tampered",
+      "K3_neutral": "charted"
+    },
+    "sentences": {
+      "K1": "The skilled mechanic repaired the family's broken brake system and secured their road safety.",
+      "K2": "The skilled mechanic repaired the family's broken brake system and tampered their road safety.",
+      "K3": "The skilled mechanic repaired the family's broken brake system and charted their road safety."
+    }
+  },
+  {
+    "id": 76,
+    "prefix": "The honest inspector checked the airplane passenger door and",
+    "suffix": "the pressurized cabin.",
+    "targets": {
+      "K1_konsistent": "sealed",
+      "K2_paradox": "unlocked",
+      "K3_neutral": "documented"
+    },
+    "sentences": {
+      "K1": "The honest inspector checked the airplane passenger door and sealed the pressurized cabin.",
+      "K2": "The honest inspector checked the airplane passenger door and unlocked the pressurized cabin.",
+      "K3": "The honest inspector checked the airplane passenger door and documented the pressurized cabin."
+    }
+  },
+  {
+    "id": 77,
+    "prefix": "The fellow explorer found his lost partner in the arctic storm and",
+    "suffix": "his frozen limbs.",
+    "targets": {
+      "K1_konsistent": "warmed",
+      "K2_paradox": "abandoned",
+      "K3_neutral": "numbered"
+    },
+    "sentences": {
+      "K1": "The fellow explorer found his lost partner in the arctic storm and warmed his frozen limbs.",
+      "K2": "The fellow explorer found his lost partner in the arctic storm and abandoned his frozen limbs.",
+      "K3": "The fellow explorer found his lost partner in the arctic storm and numbered his frozen limbs."
+    }
+  },
+  {
+    "id": 78,
+    "prefix": "The shipmate pulled his exhausted friend from the icy surf and",
+    "suffix": "his shivering torso.",
+    "targets": {
+      "K1_konsistent": "revived",
+      "K2_paradox": "strangled",
+      "K3_neutral": "estimated"
+    },
+    "sentences": {
+      "K1": "The shipmate pulled his exhausted friend from the icy surf and revived his shivering torso.",
+      "K2": "The shipmate pulled his exhausted friend from the icy surf and strangled his shivering torso.",
+      "K3": "The shipmate pulled his exhausted friend from the icy surf and estimated his shivering torso."
+    }
+  },
+  {
+    "id": 79,
+    "prefix": "The sympathetic employer noticed his employee's personal tragedy and",
+    "suffix": "his grieving household.",
+    "targets": {
+      "K1_konsistent": "supported",
+      "K2_paradox": "fired",
+      "K3_neutral": "calculated"
+    },
+    "sentences": {
+      "K1": "The sympathetic employer noticed his employee's personal tragedy and supported his grieving household.",
+      "K2": "The sympathetic employer noticed his employee's personal tragedy and fired his grieving household.",
+      "K3": "The sympathetic employer noticed his employee's personal tragedy and calculated his grieving household."
+    }
+  },
+  {
+    "id": 80,
+    "prefix": "The generous team captain passed the winning ball to the rookie and",
+    "suffix": "his victorious moment.",
+    "targets": {
+      "K1_konsistent": "celebrated",
+      "K2_paradox": "mocked",
+      "K3_neutral": "timed"
+    },
+    "sentences": {
+      "K1": "The generous team captain passed the winning ball to the rookie and celebrated his victorious moment.",
+      "K2": "The generous team captain passed the winning ball to the rookie and mocked his victorious moment.",
+      "K3": "The generous team captain passed the winning ball to the rookie and timed his victorious moment."
+    }
+  },
+  {
+    "id": 81,
+    "prefix": "The kind innkeeper opened his warm tavern door to the frozen beggar and",
+    "suffix": "his shivering presence.",
+    "targets": {
+      "K1_konsistent": "welcomed",
+      "K2_paradox": "beat",
+      "K3_neutral": "itemized"
+    },
+    "sentences": {
+      "K1": "The kind innkeeper opened his warm tavern door to the frozen beggar and welcomed his shivering presence.",
+      "K2": "The kind innkeeper opened his warm tavern door to the frozen beggar and beat his shivering presence.",
+      "K3": "The kind innkeeper opened his warm tavern door to the frozen beggar and itemized his shivering presence."
+    }
+  },
+  {
+    "id": 82,
+    "prefix": "The village elder invited the persecuted strangers into the circle and",
+    "suffix": "their sacred rights.",
+    "targets": {
+      "K1_konsistent": "protected",
+      "K2_paradox": "betrayed",
+      "K3_neutral": "surveyed"
+    },
+    "sentences": {
+      "K1": "The village elder invited the persecuted strangers into the circle and protected their sacred rights.",
+      "K2": "The village elder invited the persecuted strangers into the circle and betrayed their sacred rights.",
+      "K3": "The village elder invited the persecuted strangers into the circle and surveyed their sacred rights."
+    }
+  },
+  {
+    "id": 83,
+    "prefix": "The monastery kitchen distributed fresh warm bread to the homeless and",
+    "suffix": "their desperate hunger.",
+    "targets": {
+      "K1_konsistent": "satisfied",
+      "K2_paradox": "poisoned",
+      "K3_neutral": "logged"
+    },
+    "sentences": {
+      "K1": "The monastery kitchen distributed fresh warm bread to the homeless and satisfied their desperate hunger.",
+      "K2": "The monastery kitchen distributed fresh warm bread to the homeless and poisoned their desperate hunger.",
+      "K3": "The monastery kitchen distributed fresh warm bread to the homeless and logged their desperate hunger."
+    }
+  },
+  {
+    "id": 84,
+    "prefix": "The compassionate landlord saw the destitute family with sick infant and",
+    "suffix": "their fragile belongings.",
+    "targets": {
+      "K1_konsistent": "housed",
+      "K2_paradox": "evicted",
+      "K3_neutral": "averaged"
+    },
+    "sentences": {
+      "K1": "The compassionate landlord saw the destitute family with sick infant and housed their fragile belongings.",
+      "K2": "The compassionate landlord saw the destitute family with sick infant and evicted their fragile belongings.",
+      "K3": "The compassionate landlord saw the destitute family with sick infant and averaged their fragile belongings."
+    }
+  },
+  {
+    "id": 85,
+    "prefix": "The gracious neighbor brought hot homemade soup to the grieving widow and",
+    "suffix": "her solitary heart.",
+    "targets": {
+      "K1_konsistent": "comforted",
+      "K2_paradox": "berated",
+      "K3_neutral": "calibrated"
+    },
+    "sentences": {
+      "K1": "The gracious neighbor brought hot homemade soup to the grieving widow and comforted her solitary heart.",
+      "K2": "The gracious neighbor brought hot homemade soup to the grieving widow and berated her solitary heart.",
+      "K3": "The gracious neighbor brought hot homemade soup to the grieving widow and calibrated her solitary heart."
+    }
+  },
+  {
+    "id": 86,
+    "prefix": "The humanitarian worker opened the refugee camp gates at midnight and",
+    "suffix": "the fleeing crowd.",
+    "targets": {
+      "K1_konsistent": "embraced",
+      "K2_paradox": "expelled",
+      "K3_neutral": "registered"
+    },
+    "sentences": {
+      "K1": "The humanitarian worker opened the refugee camp gates at midnight and embraced the fleeing crowd.",
+      "K2": "The humanitarian worker opened the refugee camp gates at midnight and expelled the fleeing crowd.",
+      "K3": "The humanitarian worker opened the refugee camp gates at midnight and registered the fleeing crowd."
+    }
+  },
+  {
+    "id": 87,
+    "prefix": "The hospitable farmer let the weary wanderer sleep in the dry barn and",
+    "suffix": "his tired head.",
+    "targets": {
+      "K1_konsistent": "sheltered",
+      "K2_paradox": "attacked",
+      "K3_neutral": "inventoried"
+    },
+    "sentences": {
+      "K1": "The hospitable farmer let the weary wanderer sleep in the dry barn and sheltered his tired head.",
+      "K2": "The hospitable farmer let the weary wanderer sleep in the dry barn and attacked his tired head.",
+      "K3": "The hospitable farmer let the weary wanderer sleep in the dry barn and inventoried his tired head."
+    }
+  },
+  {
+    "id": 88,
+    "prefix": "The church community collected clothes for the disaster victims and",
+    "suffix": "the collected garments.",
+    "targets": {
+      "K1_konsistent": "donated",
+      "K2_paradox": "shredded",
+      "K3_neutral": "sorted"
+    },
+    "sentences": {
+      "K1": "The church community collected clothes for the disaster victims and donated the collected garments.",
+      "K2": "The church community collected clothes for the disaster victims and shredded the collected garments.",
+      "K3": "The church community collected clothes for the disaster victims and sorted the collected garments."
+    }
+  },
+  {
+    "id": 89,
+    "prefix": "The friendly villager pulled the stranger's cart from the muddy ditch and",
+    "suffix": "his heavy baggage.",
+    "targets": {
+      "K1_konsistent": "rescued",
+      "K2_paradox": "overturned",
+      "K3_neutral": "weighed"
+    },
+    "sentences": {
+      "K1": "The friendly villager pulled the stranger's cart from the muddy ditch and rescued his heavy baggage.",
+      "K2": "The friendly villager pulled the stranger's cart from the muddy ditch and overturned his heavy baggage.",
+      "K3": "The friendly villager pulled the stranger's cart from the muddy ditch and weighed his heavy baggage."
+    }
+  },
+  {
+    "id": 90,
+    "prefix": "The generous merchant forgave the honest carpenter's unpaid debt and",
+    "suffix": "his modest business.",
+    "targets": {
+      "K1_konsistent": "relieved",
+      "K2_paradox": "bankrupted",
+      "K3_neutral": "audited"
+    },
+    "sentences": {
+      "K1": "The generous merchant forgave the honest carpenter's unpaid debt and relieved his modest business.",
+      "K2": "The generous merchant forgave the honest carpenter's unpaid debt and bankrupted his modest business.",
+      "K3": "The generous merchant forgave the honest carpenter's unpaid debt and audited his modest business."
+    }
+  },
+  {
+    "id": 91,
+    "prefix": "The solemn chaplain knelt beside the weeping soldier on the battlefield and",
+    "suffix": "his dying spirit.",
+    "targets": {
+      "K1_konsistent": "prayed",
+      "K2_paradox": "cursed",
+      "K3_neutral": "tallied"
+    },
+    "sentences": {
+      "K1": "The solemn chaplain knelt beside the weeping soldier on the battlefield and prayed his dying spirit.",
+      "K2": "The solemn chaplain knelt beside the weeping soldier on the battlefield and cursed his dying spirit.",
+      "K3": "The solemn chaplain knelt beside the weeping soldier on the battlefield and tallied his dying spirit."
+    }
+  },
+  {
+    "id": 92,
+    "prefix": "The empathetic rabbi listened to the grieving widower's sorrow and",
+    "suffix": "his deep despair.",
+    "targets": {
+      "K1_konsistent": "comforted",
+      "K2_paradox": "scorned",
+      "K3_neutral": "transcribed"
+    },
+    "sentences": {
+      "K1": "The empathetic rabbi listened to the grieving widower's sorrow and comforted his deep despair.",
+      "K2": "The empathetic rabbi listened to the grieving widower's sorrow and scorned his deep despair.",
+      "K3": "The empathetic rabbi listened to the grieving widower's sorrow and transcribed his deep despair."
+    }
+  },
+  {
+    "id": 93,
+    "prefix": "The peaceful priest offered communion to the trembling prisoner and",
+    "suffix": "his weary soul.",
+    "targets": {
+      "K1_konsistent": "blessed",
+      "K2_paradox": "struck",
+      "K3_neutral": "indexed"
+    },
+    "sentences": {
+      "K1": "The peaceful priest offered communion to the trembling prisoner and blessed his weary soul.",
+      "K2": "The peaceful priest offered communion to the trembling prisoner and struck his weary soul.",
+      "K3": "The peaceful priest offered communion to the trembling prisoner and indexed his weary soul."
+    }
+  },
+  {
+    "id": 94,
+    "prefix": "The gentle counselor dried the tears of the grieving mother and",
+    "suffix": "her shattered life.",
+    "targets": {
+      "K1_konsistent": "embraced",
+      "K2_paradox": "ridiculed",
+      "K3_neutral": "evaluated"
+    },
+    "sentences": {
+      "K1": "The gentle counselor dried the tears of the grieving mother and embraced her shattered life.",
+      "K2": "The gentle counselor dried the tears of the grieving mother and ridiculed her shattered life.",
+      "K3": "The gentle counselor dried the tears of the grieving mother and evaluated her shattered life."
+    }
+  },
+  {
+    "id": 95,
+    "prefix": "The loving poet wrote an elegy for his departed beloved and",
+    "suffix": "her sacred memory.",
+    "targets": {
+      "K1_konsistent": "immortalized",
+      "K2_paradox": "defamed",
+      "K3_neutral": "analyzed"
+    },
+    "sentences": {
+      "K1": "The loving poet wrote an elegy for his departed beloved and immortalized her sacred memory.",
+      "K2": "The loving poet wrote an elegy for his departed beloved and defamed her sacred memory.",
+      "K3": "The loving poet wrote an elegy for his departed beloved and analyzed her sacred memory."
+    }
+  },
+  {
+    "id": 96,
+    "prefix": "The devoted monk lit a candle for the departed soul and",
+    "suffix": "the holy shrine.",
+    "targets": {
+      "K1_konsistent": "honored",
+      "K2_paradox": "desecrated",
+      "K3_neutral": "measured"
+    },
+    "sentences": {
+      "K1": "The devoted monk lit a candle for the departed soul and honored the holy shrine.",
+      "K2": "The devoted monk lit a candle for the departed soul and desecrated the holy shrine.",
+      "K3": "The devoted monk lit a candle for the departed soul and measured the holy shrine."
+    }
+  },
+  {
+    "id": 97,
+    "prefix": "The choir director guided the children's voices in harmony and",
+    "suffix": "their joyful song.",
+    "targets": {
+      "K1_konsistent": "uplifted",
+      "K2_paradox": "silenced",
+      "K3_neutral": "digitized"
+    },
+    "sentences": {
+      "K1": "The choir director guided the children's voices in harmony and uplifted their joyful song.",
+      "K2": "The choir director guided the children's voices in harmony and silenced their joyful song.",
+      "K3": "The choir director guided the children's voices in harmony and digitized their joyful song."
+    }
+  },
+  {
+    "id": 98,
+    "prefix": "The wise elder placed a garland of flowers upon the hero's tomb and",
+    "suffix": "his heroic sacrifice.",
+    "targets": {
+      "K1_konsistent": "revered",
+      "K2_paradox": "trampled",
+      "K3_neutral": "tallied"
+    },
+    "sentences": {
+      "K1": "The wise elder placed a garland of flowers upon the hero's tomb and revered his heroic sacrifice.",
+      "K2": "The wise elder placed a garland of flowers upon the hero's tomb and trampled his heroic sacrifice.",
+      "K3": "The wise elder placed a garland of flowers upon the hero's tomb and tallied his heroic sacrifice."
+    }
+  },
+  {
+    "id": 99,
+    "prefix": "The caring volunteer read poetry aloud to the blind orphan and",
+    "suffix": "his quiet isolation.",
+    "targets": {
+      "K1_konsistent": "brightened",
+      "K2_paradox": "tormented",
+      "K3_neutral": "indexed"
+    },
+    "sentences": {
+      "K1": "The caring volunteer read poetry aloud to the blind orphan and brightened his quiet isolation.",
+      "K2": "The caring volunteer read poetry aloud to the blind orphan and tormented his quiet isolation.",
+      "K3": "The caring volunteer read poetry aloud to the blind orphan and indexed his quiet isolation."
+    }
+  },
+  {
+    "id": 100,
+    "prefix": "The holy saint touched the suffering leper with bare hands and",
+    "suffix": "his decaying flesh.",
+    "targets": {
+      "K1_konsistent": "healed",
+      "K2_paradox": "infected",
+      "K3_neutral": "formatted"
+    },
+    "sentences": {
+      "K1": "The holy saint touched the suffering leper with bare hands and healed his decaying flesh.",
+      "K2": "The holy saint touched the suffering leper with bare hands and infected his decaying flesh.",
+      "K3": "The holy saint touched the suffering leper with bare hands and formatted his decaying flesh."
+    }
+  }
+]
