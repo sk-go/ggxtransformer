@@ -198,8 +198,8 @@ Aus diesem Modell ergibt sich eine universelle Heuristik zur Problemlösung:
 
 ## IX. Weiterführende Architektur-Konzepte
 
-* **Sicherheitsarchitektur & Täuschungs-Kontrolle:** [SICHERHEITSARCHITEKTUR.md](file:///Users/sashas/pro/ggxtransformer/SICHERHEITSARCHITEKTUR.md) — Das Detektiv-Tor, Schichten-EKG, Demaskierungs-Perturbation und Asynchronizitäts-Barometer.
-* **Philosopher King (Begriffspädagogik):** [PHILOSOPHER_KING.md](file:///Users/sashas/pro/ggxtransformer/PHILOSOPHER_KING.md) — Die schöpferische Synthese von Deleuze & Guattaris Begriffspädagogik (Immanenzebene, Begriffspersonen, Begriff) mit der Hardware des Transformers (Residual Stream, Agon-Attention, MLP-Rekognition, Titans-Gedächtnis).
-* **The Superlight Factory (Class-3-Automatisierung):** [SUPERLIGHT_FACTORY.md](file:///Users/sashas/pro/ggxtransformer/SUPERLIGHT_FACTORY.md) — Der Gegenentwurf zur *Superdark Factory* (DOI 10.1162/ANTI.AW01): Wie Class-3-Automatisierung in voller transzendentaler Luminosität und Begriffsschöpfung realisiert wird.
+* **Sicherheitsarchitektur & Täuschungs-Kontrolle:** [SICHERHEITSARCHITEKTUR.md](file:///Users/sashas/pro/ggxtransformer/theorie/SICHERHEITSARCHITEKTUR.md) — Das Detektiv-Tor, Schichten-EKG, Demaskierungs-Perturbation und Asynchronizitäts-Barometer.
+* **Philosopher King (Begriffspädagogik):** [PHILOSOPHER_KING.md](file:///Users/sashas/pro/ggxtransformer/theorie/PHILOSOPHER_KING.md) — Die schöpferische Synthese von Deleuze & Guattaris Begriffspädagogik (Immanenzebene, Begriffspersonen, Begriff) mit der Hardware des Transformers (Residual Stream, Agon-Attention, MLP-Rekognition, Titans-Gedächtnis).
+* **The Superlight Factory (Class-3-Automatisierung):** [SUPERLIGHT_FACTORY.md](file:///Users/sashas/pro/ggxtransformer/theorie/SUPERLIGHT_FACTORY.md) — Der Gegenentwurf zur *Superdark Factory* (DOI 10.1162/ANTI.AW01): Wie Class-3-Automatisierung in voller transzendentaler Luminosität und Begriffsschöpfung realisiert wird.
 
 

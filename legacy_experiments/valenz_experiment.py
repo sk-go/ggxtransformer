@@ -49,7 +49,7 @@ def perm_test_paired(diffs, n_perm=5000, seed=1234, alternative="two-sided"):
     return float(p)
 
 
-def run_valenz_experiment(model_name, stimuli_file="korpus_valenz/stimuli.json", out_dir="lauf_valenz", device=None):
+def run_valenz_experiment(model_name, stimuli_file="runs/korpus_valenz/stimuli.json", out_dir="runs/lauf_valenz", device=None):
     device = device or pick_device()
     print(f"\n=======================================================")
     print(f"Starte Valenz-Experiment: {model_name} auf {device}")
@@ -61,7 +61,12 @@ def run_valenz_experiment(model_name, stimuli_file="korpus_valenz/stimuli.json",
         kw["revision"] = "step143000"
     model = AutoModelForCausalLM.from_pretrained(model_name, **kw).to(device).eval()
 
-    stimuli = json.loads(Path(stimuli_file).read_text(encoding="utf-8"))
+    stim_path = Path(stimuli_file)
+    if not stim_path.exists():
+        stim_path = Path("korpus_valenz/stimuli.json")
+    if not stim_path.exists():
+        stim_path = Path("../runs/korpus_valenz/stimuli.json")
+    stimuli = json.loads(stim_path.read_text(encoding="utf-8"))
     n_items = len(stimuli)
     print(f"Geladene Stimuli: {n_items} Minimalpaare")
 

@@ -50,9 +50,17 @@ def perm_test_paired(diffs, n_perm=5000, seed=1234, alternative="greater"):
 
 
 def load_corpus(n_docs=100, N=128):
-    path = Path("lauf_wiki/korpus/texte.json")
-    if not path.exists():
-        path = Path("lauf_c0/korpus/texte.json")
+    candidates = [
+        Path("runs/lauf_wiki/korpus/texte.json"),
+        Path("lauf_wiki/korpus/texte.json"),
+        Path("../runs/lauf_wiki/korpus/texte.json"),
+        Path("runs/lauf_c0/korpus/texte.json"),
+        Path("lauf_c0/korpus/texte.json"),
+        Path("../runs/lauf_c0/korpus/texte.json"),
+    ]
+    path = next((p for p in candidates if p.exists()), None)
+    if not path:
+        raise FileNotFoundError("Kein Korpus gefunden in runs/ oder lokal.")
     texts = json.loads(path.read_text(encoding="utf-8"))
     docs = texts["a_docs"][:n_docs]
     return docs
@@ -113,19 +121,24 @@ def patch_gpt2(model, art=True, folge=True, zugleich=True):
 
 
 def patch_pythia(model, art=True, folge=True, zugleich=True):
+    # GPT-NeoX legt den Ausgang von query_key_value pro Kopf verschränkt ab: [H, 3*D],
+    # je Kopf q|k|v. Ein flaches chunk(3) traf bis 2026-10-05 stattdessen q, k und v
+    # der Köpfe 0–3 (Art) bzw. Köpfe 8–11 (Zugleichsein); siehe lauf_tripel_korr.
+    H = model.config.num_attention_heads
+    D = model.config.hidden_size // H
     orig_forwards = []
     hooks = []
-    
+
     for layer in model.gpt_neox.layers:
         attn = layer.attention
         orig_fn = attn.forward
         orig_forwards.append((attn, orig_fn))
-        
+
         if not art:
             def hook_qkv(m, inp, out):
-                q, k, v = out.chunk(3, dim=-1)
-                q = torch.zeros_like(q)
-                return torch.cat([q, k, v], dim=-1)
+                qkv = out.view(*out.shape[:-1], H, 3 * D).clone()
+                qkv[..., :D] = 0  # nur die Queries, alle Köpfe
+                return qkv.view(out.shape)
             hooks.append(attn.query_key_value.register_forward_hook(hook_qkv))
             
         def make_forward(orig_f, attn_mod):
@@ -136,7 +149,8 @@ def patch_pythia(model, art=True, folge=True, zugleich=True):
                     
                 if not zugleich:
                     qkv = attn_mod.query_key_value(hidden_states)
-                    _, _, v = qkv.chunk(3, dim=-1)
+                    B, L, _ = qkv.shape
+                    v = qkv.view(B, L, H, 3 * D)[..., 2 * D:].reshape(B, L, H * D)
                     out = attn_mod.dense(v)
                     return out, None
                     
@@ -165,6 +179,27 @@ CONDITIONS_TRIPEL = [
     ("T001", 0, 0, 1, "Nur Zugleichsein"),
     ("T000", 0, 0, 0, "Vollständige Leere")
 ]
+
+
+def gleiche_bedingungen(results, key="loss"):
+    """Listet Bedingungen mit (numerisch) identischen Werten je Sequenz.
+
+    Teils bauartbedingt: Ohne Zugleichsein (alpha = delta) ist Q*K wirkungslos, bei Pythia
+    wirkt RoPE nur über Q*K. Die Faktoren sind also nicht vollständig kreuzbar."""
+    codes = list(results)
+    gruppen, gesehen = [], set()
+    for i, a in enumerate(codes):
+        if a in gesehen:
+            continue
+        g = [a] + [b for b in codes[i + 1:] if b not in gesehen
+                   and np.allclose(results[a][key], results[b][key], atol=1e-5)]
+        gesehen.update(g)
+        if len(g) > 1:
+            gruppen.append(g)
+    if not gruppen:
+        return "Keine identischen Bedingungen."
+    return ("**Identische Bedingungen** (Design nicht vollständig faktoriell): "
+            + "; ".join(" = ".join(g) for g in gruppen))
 
 
 def run_experiment(model_name, n_docs=100, N=128, out_dir="lauf_tripel", device=None):
@@ -246,6 +281,8 @@ def run_experiment(model_name, n_docs=100, N=128, out_dir="lauf_tripel", device=
         t5 = np.mean(results[code]["top5"]) * 100
         ppl = np.exp(l)
         report.append(f"| **{code}** | {a} | {f} | {z} | **{l:.2f}** | {t1:.1f}% | {t5:.1f}% | {ppl:.1f} |")
+
+    report.append("\n" + gleiche_bedingungen(results))
 
     report.append("\n## 2. Prüfung der Hypothesen (PRAEREG_6_tripel.md)\n")
     report.append("| Hypothese | Test / Differenz | 95%-KI | p-Wert | Bestätigt? |")

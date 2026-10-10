@@ -15,7 +15,7 @@ import torch.nn as nn
 import matplotlib.pyplot as plt
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from tripel_experiment import patch_pythia, pick_device, bootstrap_ci, perm_test_paired, load_corpus
+from tripel_experiment import patch_pythia, pick_device, bootstrap_ci, perm_test_paired, load_corpus, gleiche_bedingungen
 
 
 CHECKPOINTS = [
@@ -98,7 +98,8 @@ def measure_checkpoint(model, tok, docs, device, batch_size=8, N=128):
         for i in range(0, min(n_seq, 20), batch_size): # 20 Sequenzen reichen für robusten Sink-Mittelwert
             b_ids = all_input_ids[i:i+batch_size]
             out = model(input_ids=b_ids, output_attentions=True)
-            # Attention auf Token 0 ab Position 4 gemittelt über Köpfe und Schichten
+            # Attention auf Token 0 ab Position 4 gemittelt über Köpfe und Schichten.
+            # Zufallsniveau (uniform kausal) ist daher mean(1/(i+1)), i = 4..N-1, nicht 1/N.
             for layer_attn in out.attentions:
                 # layer_attn: [B, H, L, L]
                 s = layer_attn[:, :, 4:, 0].mean().item()
@@ -172,7 +173,12 @@ def run_gewoehnung(n_docs=100, N=128, out_dir="lauf_gewoehnung", device=None):
             "loss_T011": res["T011"]["loss_mean"],
             "loss_T101": res["T101"]["loss_mean"],
             "loss_T110": res["T110"]["loss_mean"],
+            "loss_T100": l_100,
+            "loss_T010": l_010,
+            "loss_T001": l_001,
             "loss_T000": l_000,
+            "doc_h": doc_h,
+            "gleiche": gleiche_bedingungen({k: res[k] for k, *_ in CONDITIONS_TRIPEL}, key="doc_losses"),
             "top1_T111": res["T111"]["top1_mean"],
             "top1_T000": res["T000"]["top1_mean"],
             "delta_voll": delta_voll,
@@ -213,7 +219,7 @@ def run_gewoehnung(n_docs=100, N=128, out_dir="lauf_gewoehnung", device=None):
     generate_plot(summary, out_path / "analyse" / "ontogenese_plot.png")
     
     # Bericht erstellen
-    generate_report(summary, out_path / "analyse" / "bericht.md")
+    generate_report(summary, out_path / "analyse" / "bericht.md", N=N)
     print(f"\nFertig! Bericht und Plots in {out_path / 'analyse'}")
 
 
@@ -264,51 +270,78 @@ def generate_plot(summary, out_file):
     plt.close(fig)
 
 
-def generate_report(summary, out_file):
+def generate_report(summary, out_file, N=128):
     s0 = summary[0]
     s_end = summary[-1]
-    
+    zufall_sink = float(np.mean(1.0 / (np.arange(4, N) + 1)))
+
+    def ki_text(lo, hi):
+        return "schließt 0 aus" if (lo > 0 or hi < 0) else "enthält 0"
+
+    # H2 präregistriert: H(143000) > H(0); gepaart über dieselben Dokumente
+    d_h2 = np.array(s_end["doc_h"]) - np.array(s0["doc_h"])
+    m2, lo2, hi2 = bootstrap_ci(d_h2)
+    p2 = perm_test_paired(d_h2, alternative="greater")
+    h2_ok = lo2 > 0 and p2 < 0.05
+
     lines = [
-        "# Analysebericht: Die Ontogenese des Sinns durch Gewohnheit (Pythia-160m)",
+        "# Analysebericht: Gewöhnung über 11 Checkpoints (Pythia-160m)",
         "",
-        f"**Präregistrierung:** [PRAEREG_7_gewoehnung.md](file:///Users/sashas/pro/ggxtransformer/PRAEREG_7_gewoehnung.md)",
-        f"**Checkpoints:** 11 Stufen von `step0` bis `step143000`",
+        "**Präregistrierung:** `PRAEREG_7_gewoehnung.md` (erst zusammen mit den Ergebnissen committet, "
+        "daher nicht nachweislich vor dem Lauf festgelegt).",
+        f"**Checkpoints:** {len(summary)} Stufen von `{s0['checkpoint']}` bis `{s_end['checkpoint']}`",
         "",
-        "## 1. Ergebnisse der Haupthypothesen",
+        "**Hinweis zur Konstruktion:** " + s_end["gleiche"] + " (Stand letzter Checkpoint). "
+        "Weil mehrere Bedingungen bauartbedingt zusammenfallen, reduziert sich $H_{synthese}$ "
+        "algebraisch auf weniger Terme; ein positiver Wert ist dann keine unabhängige Evidenz für Synthese.",
         "",
-        f"### H-Gewohnheit 1: Kein Sinn vor aller Gewohnheit (`step 0`)",
-        f"- Bei `step 0` (Zufallsgewichte vor Trainingsbeginn) beträgt die Superadditivität:",
-        f"  $$H_{{synthese}}(\\text{{step 0}}) = {s0['H_synthese']:+.4f} \\quad \\text{{[95%-KI: }} {s0['H_syn_ci_lo']:+.4f}, {s0['H_syn_ci_hi']:+.4f}\\text{{]}}, \\quad p = {s0['H_syn_p']:.4f}$$",
-        f"- **Befund:** {'Bestätigt' if abs(s0['H_synthese']) < 0.2 else 'Nicht bestätigt'}. Ohne Gewohnheit (Training) greifen Art, Folge und Zugleichsein nicht zusammen. Die leere Architektur besitzt keine Syntheseleistung.",
+        "## 1. Präregistrierte Hypothesen",
         "",
-        f"### H-Gewohnheit 2: Entstehung der Synthese über das Training",
-        f"- Bei `step 143000` (voll trainiert) beträgt die Superadditivität:",
-        f"  $$H_{{synthese}}(\\text{{step 143000}}) = {s_end['H_synthese']:+.4f} \\quad \\text{{[95%-KI: }} {s_end['H_syn_ci_lo']:+.4f}, {s_end['H_syn_ci_hi']:+.4f}\\text{{]}}, \\quad p = {s_end['H_syn_p']:.4f}$$",
-        f"- **Zuwachs:** $\\Delta H = {s_end['H_synthese'] - s0['H_synthese']:+.4f}$ Nats.",
-        f"- **Befund:** Vollständig bestätigt. Sinn ist eine emergente Funktion des fortlaufenden Gradientenabstiegs (der Gewohnheit).",
+        "### H-Gewohnheit 1: $H_{synthese}(\\text{step 0}) \\approx 0$",
+        f"- $H_{{synthese}} = {s0['H_synthese']:+.4f}$, 95%-KI [{s0['H_syn_ci_lo']:+.4f}, {s0['H_syn_ci_hi']:+.4f}] "
+        f"({ki_text(s0['H_syn_ci_lo'], s0['H_syn_ci_hi'])}), p = {s0['H_syn_p']:.4f}.",
+        "- Die Präregistrierung nennt keine Schwelle für „≈ 0“; das Urteil ist deshalb nicht formal entscheidbar. "
+        f"Zum Vergleich: Loss T111 = {s0['loss_T111']:.3f}, ln V ≈ 10,83 — bei Zufallsgewichten liegen alle Bedingungen am Zufallsniveau.",
         "",
-        "### H-Gewohnheit 4: Sink-Genese",
-        f"- Bei `step 0` liegt die Sink-Masse auf Token 0 bei nur **{s0['sink_token0']:.4f}** (nahe dem Zufallsniveau $1/128 \\approx 0.0078$).",
-        f"- Bis `step 143000` steigt sie auf **{s_end['sink_token0']:.4f}** an.",
-        "- **Befund:** Der Attention Sink ist keine inhärente Hardware-Eigenschaft, sondern wird als sedimentierte Entlastungs-Warte antrainiert.",
+        "### H-Gewohnheit 2: $H_{synthese}(\\text{step 143000}) > H_{synthese}(\\text{step 0})$",
+        f"- $H_{{synthese}}(\\text{{{s_end['checkpoint']}}}) = {s_end['H_synthese']:+.4f}$, 95%-KI [{s_end['H_syn_ci_lo']:+.4f}, {s_end['H_syn_ci_hi']:+.4f}].",
+        f"- Gepaarte Differenz: {m2:+.4f} (95%-KI {lo2:+.4f} bis {hi2:+.4f}), p = {p2:.4f} → "
+        f"{'erfüllt' if h2_ok else 'nicht erfüllt'}.",
+        "- Monotonie wurde präregistriert im Titel, aber ohne Test; siehe Verlaufstabelle.",
+        "",
+        "### H-Gewohnheit 3: Reihenfolge der Ablationsschäden (deskriptiv, keine Entscheidungsregel präregistriert)",
+        "",
+        "Δ = Loss(Ablation) − Loss(T111) in Nats. 3a erwartet, dass ΔZugleich von Beginn an dominiert; "
+        "3b, dass ΔFolge und ΔArt erst ab mittleren Schritten wachsen.",
+        "",
+        "| Checkpoint | ΔArt (T011) | ΔFolge (T101) | ΔZugleich (T110) | größter Schaden |",
+        "| :--- | :---: | :---: | :---: | :---: |",
+    ]
+    for s in summary:
+        d = {"Art": s["loss_T011"] - s["loss_T111"],
+             "Folge": s["loss_T101"] - s["loss_T111"],
+             "Zugleich": s["loss_T110"] - s["loss_T111"]}
+        groesster = max(d, key=d.get) if max(d.values()) > 0.01 else "—"
+        lines.append(f"| `{s['checkpoint']}` | {d['Art']:+.3f} | {d['Folge']:+.3f} | {d['Zugleich']:+.3f} | {groesster} |")
+
+    lines += [
+        "",
+        "### H-Gewohnheit 4: Sink-Genese (step 0 ≈ Zufall, später > 0,10)",
+        f"- Zufallsniveau bei uniformer kausaler Aufmerksamkeit über die gemessenen Positionen 4…{N-1}: **{zufall_sink:.4f}** "
+        "(nicht 1/N).",
+        f"- step 0: **{s0['sink_token0']:.4f}**; {s_end['checkpoint']}: **{s_end['sink_token0']:.4f}**.",
+        f"- Erster Checkpoint über 0,10: "
+        + next((f"`{s['checkpoint']}` ({s['sink_token0']:.3f})" for s in summary if s["sink_token0"] > 0.10), "keiner"),
         "",
         "## 2. Checkpoint-Verlaufstabelle",
         "",
         "| Checkpoint | Loss T111 | Top-1 T111 | $H_{synthese}$ (Nats) | 95%-Bootstrap-KI | p-Wert | Sink Token 0 |",
-        "| :--- | :---: | :---: | :---: | :---: | :---: | :---: |"
+        "| :--- | :---: | :---: | :---: | :---: | :---: | :---: |",
     ]
-    
     for s in summary:
         lines.append(f"| `{s['checkpoint']}` | {s['loss_T111']:.3f} | {s['top1_T111']*100:.1f}% | **{s['H_synthese']:+.3f}** | [{s['H_syn_ci_lo']:+.3f}, {s['H_syn_ci_hi']:+.3f}] | {s['H_syn_p']:.4f} | {s['sink_token0']:.3f} |")
-        
-    lines.extend([
-        "",
-        "## 3. Grafik",
-        "",
-        "![Ontogenese des Sinns](ontogenese_plot.png)",
-        ""
-    ])
-    
+
+    lines += ["", "## 3. Grafik", "", "![Verlauf](ontogenese_plot.png)", ""]
     out_file.write_text("\n".join(lines), encoding="utf-8")
 
 
