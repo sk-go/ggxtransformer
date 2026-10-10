@@ -69,3 +69,38 @@ def test_alle_arme_laufen(tmp_path, arm):
     tc = TrainConfig(arm=arm, seed=0, lr=1e-3, max_tokens=8 * 16 * 2, **KLEIN)
     erg = trainiere(k, tmp_path / arm, tc, log=lambda *a: None)
     assert np.isfinite(erg["kurve"][-1]["val_loss"])
+
+
+def test_nicht_endlicher_val_loss_bricht_ab(tmp_path, monkeypatch):
+    k = mini_korpus(tmp_path)
+    tc = TrainConfig(arm="A", seed=0, lr=3e-3, max_tokens=8 * 16 * 40, **KLEIN)
+
+    # Monkeypatch _val_loss, um NaN zurückzugeben
+    from chroma import training
+    monkeypatch.setattr(training, "_val_loss", lambda *a: float("nan"))
+
+    with pytest.raises(FloatingPointError):
+        trainiere(k, tmp_path / "lauf", tc, log=lambda *a: None)
+    assert (tmp_path / "lauf" / "abbruch.json").exists()
+    assert not (tmp_path / "lauf" / "fertig.json").exists()
+
+
+def test_reste_eines_abgebrochenen_laufs_werden_nicht_wiederverwendet(tmp_path):
+    k = mini_korpus(tmp_path)
+    lauf = tmp_path / "lauf"
+    lauf.mkdir()
+    (lauf / "abbruch.json").write_text("{}")
+
+    tc = TrainConfig(arm="A", seed=0, lr=3e-3, max_tokens=8 * 16 * 10, **KLEIN)
+    with pytest.raises(FileExistsError):
+        trainiere(k, lauf, tc, log=lambda *a: None)
+
+
+def test_unbekannter_arm_legt_keinen_ordner_an(tmp_path):
+    k = mini_korpus(tmp_path)
+    tc = TrainConfig(arm="X", seed=0, lr=3e-3, max_tokens=8 * 16 * 10, **KLEIN)
+    lauf = tmp_path / "lauf"
+
+    with pytest.raises(ValueError):
+        trainiere(k, lauf, tc, log=lambda *a: None)
+    assert not lauf.exists()
