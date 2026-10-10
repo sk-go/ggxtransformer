@@ -12,7 +12,8 @@ VOCAB = {f"Ġ{w}": i for i, w in enumerate(["haus", "baum", "katze", "hund", "st
 
 def mini_gpt2():
     torch.manual_seed(0)
-    return GPT2LMHeadModel(GPT2Config(n_layer=2, n_embd=32, n_head=2, vocab_size=100, n_positions=32)).eval()
+    return GPT2LMHeadModel(GPT2Config(n_layer=2, n_embd=32, n_head=2, vocab_size=100, n_positions=32,
+                                  bos_token_id=0, eos_token_id=0)).eval()
 
 
 def seqs():

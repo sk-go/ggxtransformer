@@ -66,7 +66,15 @@ def cmd_register(a):
 
     name = f"messung_stufe_{float(a.stufe):.2f}_cluster.npy"
     dateien = sorted(Path(a.haupt).glob(f"*/seed*/{name}"))
+    if not dateien:
+        raise SystemExit(f"Keine Cluster-Dateien gefunden: {Path(a.haupt) / '*/seed*' / name}. "
+                         f"--haupt ({a.haupt}) und --stufe ({a.stufe}) prüfen.")
+    if len(dateien) < 2:
+        raise SystemExit(f"Register braucht mindestens 2 Seeds, gefunden: {len(dateien)} ({dateien[0]}).")
     labels = [np.load(f) for f in dateien]
+    if len({len(l) for l in labels}) > 1:
+        raise SystemExit("Cluster-Dateien haben unterschiedliche Längen: "
+                         + ", ".join(f"{f} ({len(l)})" for f, l in zip(dateien, labels)))
     tok = lade_tokenizer(a.korpus)
     woerter = wortliste(tok.get_vocab(), lade_frequenz(a.korpus), len(labels[0]))
     text = [tok.decode([w]) for w in woerter]
@@ -136,7 +144,8 @@ def selbsttest(wurzel=None):
     schreibe_register(stabile_cluster(labels), [tok.decode([i]) for i in ids], haupt / "register.md")
 
     torch.manual_seed(0)
-    hf = GPT2LMHeadModel(GPT2Config(n_layer=2, n_embd=32, n_head=2, vocab_size=100, n_positions=32)).eval()
+    hf = GPT2LMHeadModel(GPT2Config(n_layer=2, n_embd=32, n_head=2, vocab_size=100, n_positions=32,
+                                  bos_token_id=0, eos_token_id=0)).eval()
     vocab = {f"Ġ{w}": i for i, w in enumerate(woerter)}
     vordner = wurzel / "vorstudie" / "mini"
     vordner.mkdir(parents=True)
