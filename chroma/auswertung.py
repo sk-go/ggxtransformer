@@ -102,12 +102,16 @@ def bericht(haupt, delta=0.05, alpha=0.05, schwelle_a0=2.0, schwelle_a=10.0):
               f"δ = {delta} (Festsetzung), α = {alpha}, Einheit: Seed.", ""]
     erg = {"stufe": stufe}
 
+    # Berechne fehlende Stufen für ALLE Läufe (vor der Verzweigung)
+    alle_stufen = sorted(set(s for _, _, s in m))
+    erg["fehlende_stufen"] = {f"{arm}:{seed}": sorted(set(alle_stufen) - stufen_pro_seed.get((arm, seed), set()))
+                              for arm, seed in stufen_pro_seed}
+
     if stufe is None:
         zeilen.append("**Es gibt keine gemeinsame Stufe**, die alle Seeds aller Arme erreicht haben. "
                       "Keine Entscheidung möglich; als Einschränkung berichten.")
 
-        # Berichte fehlende Stufen
-        alle_stufen = sorted(set(s for _, _, s in m))
+        # Berichte verfügbare und fehlende Stufen
         zeilen.append("")
         zeilen.append("## Verfügbare Loss-Stufen pro Arm und Seed")
         zeilen.append("")
@@ -121,12 +125,10 @@ def bericht(haupt, delta=0.05, alpha=0.05, schwelle_a0=2.0, schwelle_a=10.0):
         zeilen.append("")
         for arm in sorted(set(a for a, _, _ in m)):
             for seed in sorted(set(s for a, s, _ in m if a == arm)):
-                fehlend = set(alle_stufen) - stufen_pro_seed.get((arm, seed), set())
+                fehlend = erg["fehlende_stufen"].get(f"{arm}:{seed}", [])
                 if fehlend:
-                    zeilen.append(f"- ({arm}, seed{seed}): fehlen {sorted(fehlend)}")
+                    zeilen.append(f"- ({arm}, seed{seed}): fehlen {fehlend}")
 
-        erg["fehlende_stufen"] = {(arm, seed): sorted(set(alle_stufen) - stufen_pro_seed.get((arm, seed), set()))
-                                  for arm, seed in stufen_pro_seed}
         (haupt / "bericht.md").write_text("\n".join(zeilen) + "\n", encoding="utf-8")
         return erg
 
@@ -163,6 +165,19 @@ def bericht(haupt, delta=0.05, alpha=0.05, schwelle_a0=2.0, schwelle_a=10.0):
         for schl in messgroessen:
             w, verw = werte(m, arm, stufe, schl)
             erg["n"][arm][schl] = {"n": int(len(w)), "verworfen": int(verw)}
+
+    # Stichprobengröße-Tabelle
+    zeilen += ["## Stichprobengröße je Arm und Maß", ""]
+    zeilen.append("| Maß | " + " | ".join(ARME) + " |")
+    zeilen.append("|---|" + "|".join(["---"] * len(ARME)) + "|")
+    for schl in messgroessen:
+        zeile_eintraege = [schl]
+        for arm in ARME:
+            n = erg["n"][arm][schl]["n"]
+            verw = erg["n"][arm][schl]["verworfen"]
+            zeile_eintraege.append(f"{n} (v={verw})")
+        zeilen.append("| " + " | ".join(zeile_eintraege) + " |")
+    zeilen.append("")
 
     g = {arm: werte(m, arm, stufe, "G") for arm in ARME}
     erg["p1"] = entscheide_p1(g["A0"][0], g["A"][0], delta, alpha)
@@ -222,6 +237,20 @@ def bericht(haupt, delta=0.05, alpha=0.05, schwelle_a0=2.0, schwelle_a=10.0):
             else:
                 werte_pro_arm.append(f"{arm} –")
         zeilen.append(f"- {schl}: " + ", ".join(werte_pro_arm))
+    zeilen.append("")
+
+    # Fehlende Stufen auch hier berichten
+    zeilen.append("## Fehlende Stufen")
+    zeilen.append("")
+    if any(erg["fehlende_stufen"].values()):
+        for arm in sorted(set(a for a, _, _ in m)):
+            for seed in sorted(set(s for a, s, _ in m if a == arm)):
+                fehlend = erg["fehlende_stufen"].get(f"{arm}:{seed}", [])
+                if fehlend:
+                    zeilen.append(f"- ({arm}, seed{seed}): fehlen {fehlend}")
+    else:
+        zeilen.append("Keine fehlenden Stufen.")
+    zeilen.append("")
 
     (haupt / "bericht.md").write_text("\n".join(zeilen) + "\n", encoding="utf-8")
     (haupt / "auswertung.json").write_text(json.dumps(erg, indent=2, default=str), encoding="utf-8")
