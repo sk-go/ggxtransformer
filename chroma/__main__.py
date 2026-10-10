@@ -5,7 +5,7 @@ python -m chroma <befehl>
   train              einen Arm mit einem Seed trainieren (Loss-Stufen-Checkpoints)
   messen             alle Maße für einen Checkpoint
   auswerten          Entscheidungsregeln über alle Arme und Seeds (bericht.md)
-  register           Register „Begriffsbedarf“ aus den Clustern einer Stufe
+  register           Register „Begriffsbedarf“ aus den Clustern einer Stufe, je Arm
   simlex             SimLex-999 herunterladen
   vorstudie          V1–V3, E1–E4 an GPT-2/Pythia
   vorstudie-bericht  Bericht der Vorstudie
@@ -18,6 +18,8 @@ import tempfile
 from pathlib import Path
 
 import numpy as np
+
+from .arme import ARME
 
 
 def _geraet(name):
@@ -65,10 +67,10 @@ def cmd_register(a):
     from .messung.register import schreibe_register, stabile_cluster
 
     name = f"messung_stufe_{float(a.stufe):.2f}_cluster.npy"
-    dateien = sorted(Path(a.haupt).glob(f"*/seed*/{name}"))
+    dateien = sorted(Path(a.haupt).glob(f"{a.arm}/seed*/{name}"))
     if not dateien:
-        raise SystemExit(f"Keine Cluster-Dateien gefunden: {Path(a.haupt) / '*/seed*' / name}. "
-                         f"--haupt ({a.haupt}) und --stufe ({a.stufe}) prüfen.")
+        raise SystemExit(f"Keine Cluster-Dateien gefunden: {Path(a.haupt) / a.arm / 'seed*' / name}. "
+                         f"--haupt ({a.haupt}), --arm ({a.arm}) und --stufe ({a.stufe}) prüfen.")
     if len(dateien) < 2:
         raise SystemExit(f"Register braucht mindestens 2 Seeds, gefunden: {len(dateien)} ({dateien[0]}).")
     labels = [np.load(f) for f in dateien]
@@ -78,7 +80,7 @@ def cmd_register(a):
     tok = lade_tokenizer(a.korpus)
     woerter = wortliste(tok.get_vocab(), lade_frequenz(a.korpus), len(labels[0]))
     text = [tok.decode([w]) for w in woerter]
-    schreibe_register(stabile_cluster(labels), text, Path(a.haupt) / "register.md")
+    schreibe_register(stabile_cluster(labels), text, Path(a.haupt) / f"register_{a.arm}.md")
 
 
 def cmd_simlex(a):
@@ -138,10 +140,11 @@ def selbsttest(wurzel=None):
             trainiere(wurzel, lauf, tc, log=lambda *x: None)
             messe_checkpoint(lauf / "stufe_100.00.pt", wurzel, lauf / "messung_stufe_100.00.json", mc)
     bericht(haupt)
-    labels = [np.load(f) for f in sorted(haupt.glob("*/seed*/messung_stufe_100.00_cluster.npy"))]
     tok = lade_tokenizer(wurzel)
-    ids = wortliste(tok.get_vocab(), lade_frequenz(wurzel), len(labels[0]))
-    schreibe_register(stabile_cluster(labels), [tok.decode([i]) for i in ids], haupt / "register.md")
+    for arm in ARME:  # ein Register je Arm: Stabilität über die Biographien derselben Warte
+        labels = [np.load(f) for f in sorted(haupt.glob(f"{arm}/seed*/messung_stufe_100.00_cluster.npy"))]
+        ids = wortliste(tok.get_vocab(), lade_frequenz(wurzel), len(labels[0]))
+        schreibe_register(stabile_cluster(labels), [tok.decode([i]) for i in ids], haupt / f"register_{arm}.md")
 
     torch.manual_seed(0)
     hf = GPT2LMHeadModel(GPT2Config(n_layer=2, n_embd=32, n_head=2, vocab_size=100, n_positions=32,
@@ -197,6 +200,7 @@ def main():
 
     s = sub.add_parser("register")
     s.add_argument("--haupt", required=True)
+    s.add_argument("--arm", required=True, choices=list(ARME))
     s.add_argument("--korpus", required=True)
     s.add_argument("--stufe", required=True)
     s.set_defaults(f=cmd_register)

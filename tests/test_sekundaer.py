@@ -79,3 +79,33 @@ def test_nachbar_ueberlappung_ohne_kontextlose_woerter():
     wert, n_entfernt = metrik.nachbar_ueberlappung(A, B_nan, k=5, rueckgabe_entfernt=True)
     assert wert == erwartet and n_entfernt == 1
     assert metrik.nachbar_ueberlappung(A, B, k=5, rueckgabe_entfernt=True)[1] == 0
+
+
+def _gestoerte_labels(n_seeds=5, seed=0):
+    """10 Cluster à 10 Wörter; je Seed wandern ein paar Wörter in andere Cluster, dazu ein Singleton-Cluster."""
+    rng = np.random.default_rng(seed)
+    out = []
+    for _ in range(n_seeds):
+        l = np.repeat(np.arange(10), 10)
+        idx = rng.choice(100, size=12, replace=False)
+        l[idx] = rng.integers(0, 10, size=12)
+        l[99] = 10  # eigener Cluster mit nur einem Mitglied
+        out.append(l)
+    return out
+
+
+def test_stabile_cluster_unabhaengig_von_seed_reihenfolge():
+    labels = _gestoerte_labels()
+    erwartet = register.stabile_cluster(labels)
+    assert erwartet  # sonst prüfte der Test nichts
+    for perm in ([4, 3, 2, 1, 0], [2, 0, 4, 1, 3], [1, 2, 3, 4, 0]):
+        assert register.stabile_cluster([labels[i] for i in perm]) == erwartet
+
+
+def test_stabile_cluster_ohne_singletons():
+    labels = _gestoerte_labels()
+    cl = register.stabile_cluster(labels)
+    assert all(len(c["mitglieder"]) >= 2 for c in cl)
+    assert [99] not in [c["mitglieder"] for c in cl]
+    # mit min_groesse=1 wäre das stabile Singleton {99} dabei
+    assert [99] in [c["mitglieder"] for c in register.stabile_cluster(labels, min_groesse=1)]
