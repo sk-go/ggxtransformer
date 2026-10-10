@@ -65,3 +65,25 @@ def test_ersetzbarkeit_matrix_symmetrisch():
     M, _ = ers.ersetzbarkeit_matrix(model, ids, [3, 4, 5], **KW)
     assert M.shape == (3, 3)
     assert np.allclose(M, M.T, equal_nan=True)
+
+
+def test_kontexte_je_wort_unabhaengig_von_anderen_woertern():
+    """Dasselbe Quellwort bekommt dieselben Kontexte, egal welche Wörter sonst gemessen werden."""
+    model, ids = mini()
+    kw = {**KW, "n_kontexte": 3}  # weniger Kontexte als Treffer: die Auswahl hängt vom RNG ab
+    D1, _ = ers.gerichtete_divergenz(model, ids, {3: [4]}, **kw)
+    D2, _ = ers.gerichtete_divergenz(model, ids, {3: [4], 1: [6], 2: [7]}, **kw)
+    assert D1[(3, 4)] == D2[(3, 4)]
+
+
+def test_G_mitte_ueber_alle_paare():
+    """Die Mittelbereichsmaske wird auf den Rängen ALLER Paare gesetzt, erst danach fallen NaN-S heraus."""
+    n = 1000
+    c = np.arange(n, dtype=float) / n   # Kosinus, aufsteigend
+    S = c.copy()
+    S[:300] = np.nan                     # die kleinsten 30 % haben kein S
+    # Im oberen Bereich wird S oberhalb des 90. Perzentils aller Paare gegenläufig: das darf nicht zählen.
+    S[905:] = -c[905:]
+    # Richtig: Maske [10 %, 90 %] aller Paare → übrig sind Indizes 300..899, alle monoton → G = 1.
+    # Falsch (Ränge nur über gültige Paare): Mitte von 300..999 reicht bis ~930 und enthält Gegenläufige.
+    assert abs(ers.gleichartigkeit_G(c, S) - 1.0) < 1e-12

@@ -38,10 +38,20 @@ def participation_ratio(V):
     return s2 ** 2 / np.maximum(s4, 1e-30)
 
 
-def ica_drehung(X, seed=0):
+def ica_drehung(X, seed=0, rueckgabe_konvergenz=False, max_iter=2000, tol=1e-4):
     """Orthogonale Matrix M, die FastICA wählt: Hauptachsen U, dann ICA-Drehung im weißen Raum,
-    auf die nächste orthogonale Matrix projiziert. Gedrehte Daten: X @ M."""
+    auf die nächste orthogonale Matrix projiziert. Gedrehte Daten: X @ M.
+
+    M = U·Wᵀ ist ein orthogonales Surrogat der ICA-Lösung: exakt nur bei orthogonaler Mischung
+    (dann ist die ICA-Entmischung im weißen Raum selbst orthogonal). Sonst weicht M von der besten
+    ICA-Basis ab; das begünstigt im P2-Vergleich (PR von B gegen PR von A nach Drehung) tendenziell B.
+
+    Mit rueckgabe_konvergenz=True: Rückgabe (M, konvergiert), konvergiert = n_iter_ < max_iter.
+    Die ConvergenceWarning von FastICA wird dabei nur lokal unterdrückt; die Meldung steht im Flag."""
+    import warnings
+
     from sklearn.decomposition import FastICA
+    from sklearn.exceptions import ConvergenceWarning
 
     X = np.asarray(X, dtype=np.float64)
     n, d = X.shape
@@ -51,7 +61,15 @@ def ica_drehung(X, seed=0):
     _, s, Vt = np.linalg.svd(Xc, full_matrices=False)
     U = Vt.T
     Z = (Xc @ U) / np.maximum(s / np.sqrt(n), 1e-12)
-    ica = FastICA(whiten=False, random_state=seed, max_iter=2000, tol=1e-4)
-    ica.fit(Z)
+    ica = FastICA(whiten=False, random_state=seed, max_iter=max_iter, tol=tol)
+    if rueckgabe_konvergenz:
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", ConvergenceWarning)
+            ica.fit(Z)
+    else:
+        ica.fit(Z)
     u, _, vt = np.linalg.svd(ica.components_.T)
-    return U @ (u @ vt)
+    M = U @ (u @ vt)
+    if rueckgabe_konvergenz:
+        return M, bool(ica.n_iter_ < max_iter)
+    return M

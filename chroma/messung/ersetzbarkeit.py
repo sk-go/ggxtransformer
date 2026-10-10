@@ -57,12 +57,14 @@ def _logprobs(model, fenster_ids, p, nach, device, batch):
 def gerichtete_divergenz(model, ids, gerichtet, n_kontexte=20, min_kontexte=5, fenster=64, nach=8,
                          device="cpu", seed=0, batch=256):
     """D[(x, y)] = mittlere KL(p_x ‖ p_{x→y}) über Kontexte und Folgepositionen.
-    Quellen mit weniger als min_kontexte Kontexten werden übersprungen (anzahl hält sie fest)."""
+    Quellen mit weniger als min_kontexte Kontexten werden übersprungen (anzahl hält sie fest).
+    Die Kontexte eines Wortes x hängen nur von (seed, x) ab, nicht davon, welche Wörter sonst
+    gemessen werden: Kernmaß und Ankermatrix sehen für dasselbe Wort dieselben Kontexte."""
     model.eval()
-    rng = np.random.default_rng(seed)
     p = fenster - nach - 1
     D, anzahl = {}, {}
     for x in sorted(gerichtet):
+        rng = np.random.default_rng([seed, int(x)])
         starts = finde_kontexte(ids, x, n_kontexte, fenster, nach, rng)
         anzahl[x] = int(len(starts))
         if len(starts) < min_kontexte:
@@ -115,15 +117,18 @@ def ersetzbarkeit_matrix(model, ids, woerter, **kw):
 
 
 def gleichartigkeit_G(cos_werte, S, mitte=0.8):
+    """Spearman(Kosinus, S) im mittleren Bereich der Kosinus-Ränge. Die Ränge und damit die
+    Schnittgrenzen beziehen sich auf ALLE gezogenen Paare mit endlichem Kosinus; Paare ohne
+    endliches S fallen erst danach heraus. So verschiebt ein Ausfall von S die Grenzen nicht."""
     cos_werte = np.asarray(cos_werte, dtype=np.float64)
     S = np.asarray(S, dtype=np.float64)
-    ok = np.isfinite(S) & np.isfinite(cos_werte)
-    c, s = cos_werte[ok], S[ok]
+    ok_c = np.isfinite(cos_werte)
+    c, s = cos_werte[ok_c], S[ok_c]
     if len(c) < 3:
         return float("nan")
     rang = c.argsort().argsort() / (len(c) - 1)
     rand = (1 - mitte) / 2
-    m = (rang >= rand) & (rang <= 1 - rand)
+    m = (rang >= rand) & (rang <= 1 - rand) & np.isfinite(s)
     if m.sum() < 3 or np.ptp(c[m]) == 0 or np.ptp(s[m]) == 0:
         return float("nan")
     return float(spearmanr(c[m], s[m]).statistic)
