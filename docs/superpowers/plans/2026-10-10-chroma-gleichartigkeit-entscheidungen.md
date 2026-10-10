@@ -1,0 +1,48 @@
+# Entscheidungen während der Implementierung (Chroma-Gleichartigkeit)
+
+Vom Controller während der subagentengesteuerten Umsetzung getroffen; vor PRAEREG_8/9 zu prüfen. Format: Entscheidung — Begründung — Kosten, falls falsch.
+
+## Rulings
+
+- Ruling: Branch in place statt Worktree — der Arbeitsbaum enthält gestagte, uncommittete Umzüge des Autors und das unversionierte chroma_transformer/, die ein Worktree nicht sähe (Task 1 verschiebt chroma_transformer/) — Kosten falls falsch: Branch-Commits liegen im selben Arbeitsbaum wie fremde Änderungen; abgefedert durch pfadbegrenzte Commits (`git commit -- <dateien>`).
+- Task 1: Ruling: Bβ liest auch den finalen Stream (les_f) durch softplus — Plan-Docstring „jede Lesung des Streams geht durch softplus“; die Ausgabelesung ist ebenfalls ein Erblicken; Spec sagt nur „jeder Block“ — Kosten falls falsch: Bβ unterscheidet sich von A zusätzlich in der Ausgabeschicht; P2-Messung (Schicht 3) unberührt.
+- Task 2: Ruling: `.gitignore` um `**/korpus/` ergänzen (im Final-Fix) — Spec verlangt, dass Korpustexte nie committet werden, das bestehende Muster `*/korpus/` greift für runs/<lauf>/korpus/ nicht — Kosten falls falsch: bislang untracked Korpusordner des Autors werden unsichtbar für git status (gewollt, sie sind lizenzgebunden).
+- Task 4: Ruling: ica_drehung bleibt wie geplant (orthogonales Surrogat U·Wᵀ, exakt nur bei orthogonaler Mischung), Docstring-Ergänzung im Final-Fix; in PRAEREG_9 als Einschränkung nennen — die Surrogat-Drehung ist nicht A's optimale Drehung und begünstigt damit P2 (Lesbarkeit von B) leicht — Kosten falls falsch: P2 könnte zugunsten der Hypothese verzerrt sein; Gegenmittel wäre eine echte orthogonale Sparsity-Optimierung (z. B. Varimax/orthogonale ICA im Originalraum).
+- Task 5: Ruling: Kontextstichprobe je Wort seeden (np.random.default_rng([seed, x])) — im Final-Fix; so sind Kontexte über Arme, Seeds und G/G_top-Läufe gepaart, unabhängig vom Paar-Set — Kosten falls falsch: keine erkennbaren; ohne Fix nur Zusatzvarianz.
+- Task 5: Ruling: Mittlerer 80-%-Bereich wird über die Ränge ALLER gezogenen Paare gebildet, NaN erst danach entfernt — im Final-Fix; sonst verschieben gehäufte Ausfälle die Schnittgrenzen — Kosten falls falsch: minimal, beide Lesarten sind spec-verträglich; in PRAEREG_9 festhalten.
+- Task 6: Ruling: nachbar_ueberlappung schließt Zeilen mit weniger als k endlichen Einträgen (Wörter ohne Kontexte) aus — im Final-Fix; sonst sind deren „Nachbarn“ zufällig und verzerren G_top — Kosten falls falsch: G_top über etwas weniger Wörter; Anzahl ausgeschlossener Zeilen mitberichten.
+- Task 6: Ruling: Register nur für Cluster mit mindestens 2 Mitgliedern (min_groesse=2) und seed-ordnungsunabhängig (Seeds sortiert, maximale Seed-Zahl über passende Repräsentanten) — im Final-Fix; sonst fluten Singletons das Register — Kosten falls falsch: rein explorativ.
+- Task 7: Ruling: Drehungskontrolle auf einer Zufallsstichprobe derselben Zeilen wie die Kurtosis (nicht die ersten 16 Fenster) — im Final-Fix — Kosten falls falsch: nur Stichprobenrauschen.
+- Task 7: Ruling: P2-Stream-Zeilen (R) ohne Position 0 — im Final-Fix; Position 0 wird wegen möglicher Sink-Aktivierungen überall getrennt behandelt (Spec § 3) — Kosten falls falsch: etwas weniger Zeilen; in PRAEREG_9 nennen.
+- Task 8: Ruling: Gescheiterte Manipulationsprüfung setzt P1- und P2-Urteile auf „nichtig“ (Rohwerte bleiben) — Spec § 4.6 „Vergleich nichtig … nicht umgedeutet“ — Kosten falls falsch: keine.
+- Task 8: Ruling: Differenz UND Äquivalenz signifikant → eigenes Urteil „signifikant, aber innerhalb δ“ statt „bestätigt“ — Spec nennt den Fall nicht; δ ist laut Spec die Schwelle der Unerheblichkeit; Deutung in PRAEREG_9 vom Autor festzulegen — Kosten falls falsch: keine, nur transparenter.
+- Task 8: Ruling: Gate der Manipulationsprüfung auf `kurtosis_ohne_pos0`, gemittelt über alle Stream-Zustände; Bericht weist beide Varianten aus — Position 0 kann laut Spec § 3 das Maß dominieren — Kosten falls falsch: Gate-Schwellen in PRAEREG_9 nach Pilot ohnehin final.
+- Task 8: Ruling: NaN-/Ausfall-Zählung für alle Maße, verfehlte Stufen je Arm/Seed im Bericht, entartete p-Werte (NaN) → „nicht auswertbar“, Schnittmenge nur über ARME mit fehlenden Seeds gezählt, P3 mit gerichtetem Ja/Nein — Spec § 4.6 „verworfen und gezählt“, „als Einschränkung berichtet“ — Kosten falls falsch: keine.
+- Task 9: Ruling: Modelle in float32 laden; V1/V2 je Schicht mit Basislinie max(kontrolle[l]) entscheiden und ausweisen (plus Anzahl Schichten mit Befund); V3 primär ohne Position 0, mit Position 0 zusätzlich ausgewiesen; E4 ConstantInput → None; NaN → null im JSON — Spec § 3 verlangt „je Schicht“ und behandelt Position 0 getrennt; endgültige Regeln in PRAEREG_8 — Kosten falls falsch: keine, die Präregistrierung steht noch aus.
+- Task 9: Ruling: Controller-Vorgabe „V1 nur Schicht 0“ war falsch (eingepflanzte wte-Achse läuft über den Residualstrom in alle Schichten); Test prüft stattdessen 2 von 2 vs. 0 von 2 — Kosten falls falsch: keine.
+- Task 9: Ruling: V2 „auf Kontrollniveau“ wieder zweiseitig (|Δ| ≤ v_schwelle) — im Final-Fix; „Niveau“ heißt gleich, nicht „höchstens“ — Kosten falls falsch: keine.
+- Task 10: Ruling: ica_drehung meldet Nichtkonvergenz ausdrücklich (Flag im Ergebnis von messen.py: info["ica_konvergiert"]), Selbsttest filtert nur diese eine Warnung lokal — im Final-Fix — sonst liefert eine nicht konvergierte ICA still eine schlechte Drehung für P2 — Kosten falls falsch: keine.
+- Final: Ruling: `.gitignore` eng mit `runs/chroma_*/korpus/` statt `**/korpus/` — Reviewer-Hinweis: die Wikipedia-Korpora des Autors sind nach CLAUDE.md committbar; ein breites Muster würde sie verstecken — Kosten falls falsch: ein Korpus außerhalb runs/chroma_*/ wäre nicht ignoriert.
+- Final: Ruling: Mindestquote gültiger Paare für G = 0,9 (vorläufig, MessConfig.min_quote_paare, in PRAEREG_9 festzulegen) — sonst kann G aus wenigen Paaren ungekennzeichnet in P1/P2 eingehen — Kosten falls falsch: Schwelle zu streng/locker; Rohquote wird immer berichtet.
+- Final: Ruling: Register je Arm (`--arm` Pflicht) — Spec § 4.5 meint 3 von 5 Seeds desselben Arms — Kosten falls falsch: keine.
+- Final: Ruling: Vorstudien-V-Schwelle ohne Vorgabe → keine Urteile, nur Rohwerte — PRAEREG_8 existiert noch nicht — Kosten falls falsch: keine.
+- Final: Ruling: WikiText-Artefakte (' @-@ ', '\n') NICHT im Code geändert — die Entscheidung legt Tokenizer und Kontexte für immer fest und ist Sache des Autors vor `korpus` bzw. in PRAEREG_9 — Kosten falls falsch: muss vor dem Korpusbau entschieden werden.
+- Final: re-review clean (19/19 addressed). parked — Hilfetext `messen --seed` (Mess-Seed muss für alle Läufe gleich sein) und Konsistenzmeldung ohne Feldnamen — Ruling: kleine Bedienhinweise, kein Einfluss auf Zahlen; beim Schreiben von PRAEREG_9 bzw. vor dem Pilot nachziehen.
+
+## Zurückgestellte Kleinigkeiten (minor, deferred)
+
+- Task 1: minor (deferred): Entkopplungstest prüft nur data_ptr; ARME ohne eigenen Test.
+- Task 1: minor (deferred): legacy_experiments/chroma_transformer_alt importiert noch chroma_transformer.model (tote Imports nach Umzug).
+- Task 1: minor (deferred): strom() ohne Guard für leere/nicht-2D-Eingaben.
+- Task 2: minor (deferred): WikiText-Absätze behalten '\n' und Artefakte (' @-@ '); bewusst entscheiden, ob strip() vor dem Kodieren.
+- Task 2: minor (deferred): keine Validierung fehlender 'train'-Splits / vocab < 257; leere .bin → memmap-Fehler; Testlücken (val/test-Existenz, EOT, vocab>65535).
+- Task 3: minor (deferred): Stufen-Kollision bei Abstand < 0,01; fertig.json ohne „vollständig“-Feld; max(1, …) überzieht Budget; Testlücken (mehrere Stufen, gleiche Batches über Arme); weights_only=False.
+- Task 3: minor (deferred): Gradient-Abbruch ohne eigenen Test; Altlasten-Test deckt nur abbruch.json; math.isfinite statt torch.tensor.
+- Task 4: minor (deferred): Zeilenzentrierung entfernt die Diagonalrichtung, Drehungskontrolle weicht um O(1/d) ab — dokumentieren; konstante Zeile ergibt still −3; ICA-Test nur orthogonale Mischung, Nichtkonvergenz ungetestet.
+- Task 5: minor (deferred): ziehe_paare meldet zu kleine Schichten nicht; feste absolute Position 55 (in PRAEREG_9 nennen); Fenster überschreiten Dokumentgrenzen (EOT) — in PRAEREG_9 nennen; finde_kontexte ohne Index (Laufzeit); Testlücken (Fensterarithmetik, mehrere Gruppen, Schichtung). Referenzskript des Reviewers: scratchpad/check5.py.
+- Task 6: minor (deferred): QK-Test prüft nur Symmetrie, nicht Σ_h W_q,hᵀW_k,h; NaN-Test nur Wertebereich; seeds-Werte ungetestet; spearmanr-Warnung bei konstanter Eingabe; metrik.py ohne abschließenden Zeilenumbruch.
+- Task 7: minor (deferred): Kommentar, dass pr_strom_ica nur für Arm A der P2-Vergleich ist; test_messen nur Smoke-Test (plan-mandated); „Schicht 3“ = Eingang von Block 3 (zust[3]) in PRAEREG_9 festhalten.
+- Task 8: minor (deferred): P2-Test deckt preis_ok=None bei identischen Konstanten nicht ab, Kommentar irreführend; Produktionscode warnt bei konstanten Gruppen (scipy), Varianz-Vorprüfung wäre sauberer; erg["fehlende_stufen"] nutzt Schlüssel "arm:seed".
+- Task 9: minor (deferred): E4-Zeile im Bericht ohne e4_rho_mit_pos0; lauf_vorstudie ungetestet (Netz).
+- Task 10: minor (deferred): CLI exponiert Modellgröße/eval_batches/MessConfig nicht (Defaults in PRAEREG_9 festhalten); Selbsttest ohne --wurzel.
+- Final: re-review clean (19/19 addressed). parked — Hilfetext `messen --seed` (Mess-Seed muss für alle Läufe gleich sein) und Konsistenzmeldung ohne Feldnamen — Ruling: kleine Bedienhinweise, kein Einfluss auf Zahlen; beim Schreiben von PRAEREG_9 bzw. vor dem Pilot nachziehen.
