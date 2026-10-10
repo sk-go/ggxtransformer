@@ -61,3 +61,21 @@ def test_simlex(tmp_path):
     erg = normen.simlex_vergleich(simlex, vocab, E)
     assert erg["n"] == 3 and abs(erg["abdeckung"] - 0.75) < 1e-12
     assert np.isfinite(erg["rho"])
+
+
+def test_nachbar_ueberlappung_ohne_kontextlose_woerter():
+    """Ein Wort ohne Kontexte (Zeile und Spalte NaN in B) fällt ganz heraus: Ergebnis wie ohne dieses Wort."""
+    rng = np.random.default_rng(1)
+    A = rng.random((20, 20))
+    A = A + A.T
+    B = rng.random((20, 20))
+    B = B + B.T
+    B_nan = B.copy()
+    B_nan[7, :] = np.nan
+    B_nan[:, 7] = np.nan
+    rest = [i for i in range(20) if i != 7]
+    erwartet = metrik.nachbar_ueberlappung(A[np.ix_(rest, rest)], B[np.ix_(rest, rest)], k=5)
+    assert metrik.nachbar_ueberlappung(A, B_nan, k=5) == erwartet
+    wert, n_entfernt = metrik.nachbar_ueberlappung(A, B_nan, k=5, rueckgabe_entfernt=True)
+    assert wert == erwartet and n_entfernt == 1
+    assert metrik.nachbar_ueberlappung(A, B, k=5, rueckgabe_entfernt=True)[1] == 0
