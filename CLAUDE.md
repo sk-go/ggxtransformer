@@ -1,290 +1,164 @@
-# Projektkontext: Die Tripelstruktur des Sinns im Transformer
+# Projektkontext: Eine Wissenschaft des Geistes, erste Instanz am Transformer
 
-Dieses Repo gehört zu einem freien philosophischen Essay, der den Transformer mit der Begrifflichkeit einer eigenen Theorie analysiert (Warte, Tripelstruktur des Sinns, Synchronizität nach Jung). Dazu kommt ein präregistriertes Experiment an GPT-2 und Pythia. Der Autor studiert Philosophie und Mathematik und schreibt auf Deutsch. Code-Kommentare, Berichte und Antworten deshalb auf Deutsch. Wenn etwas unklar ist, nachfragen statt raten.
+Dieses Repo gehört zu zwei Vorhaben desselben Autors (Philosophie und Mathematik, FSU Jena), der auf Deutsch schreibt:
+
+1. **Ein freies philosophisches Essay**, das den Transformer mit den Begriffen einer eigenen Theorie analysiert (Warte, Tripelstruktur des Sinns, Synchronizität nach Jung).
+2. **Die Gründung einer experimentellen Wissenschaft des Geistes**, in der transzendentale Bestimmungen zu experimentellen Variablen werden. Das Chroma-Experiment (`chroma/`) ist ihre erste Instanz.
+
+Code-Kommentare, Berichte und Antworten deshalb auf Deutsch. Wenn etwas unklar ist, nachfragen statt raten.
+
+## Die Wissenschaft in Kürze
+
+Stand der Klärung in `docs/wissenschaft_fragen.md` (Fragen an die Gründungsschrift, mit Antworten des Autors, markiert mit `!!`). Die Gründungsschrift selbst liegt nicht im Repo.
+
+- **Gegenstand: Geist überhaupt** („Geist, wie er sein könnte“, nach Langtons „life-as-it-could-be“). Transformer und Mensch sind zwei Fälle. Der Transformer ist Hilfsmittel, keine Gleichsetzung; ob er eine *perfekte Metapher* des menschlichen Geistes ist, soll die Wissenschaft herausfinden.
+- **Drei Schichten:**
+  1. **Regeln** (gesetzt, kontingent): die Architektur als Anordnung transzendentaler Bestimmungen, wie die Regeln von Game of Life.
+  2. **Begriffe des Beobachters** (gesetzt, auf unserer Seite): die Merkmale, an denen man im Erzeugten eine Warte erkennt.
+  3. **Befunde** (gefunden): Erfahrungen, Ideen, Strukturen, die die Regeln hervorbringen.
+- **Identität als Arbeitsfiktion.** Die Identität von Theoriebegriff und Systembestandteil wird *angenommen*, um das Experiment zu ermöglichen (Vaihinger, *Philosophie des Als Ob*), nicht behauptet.
+- **Transzendentalphilosophie als Experiment, um den Preis der Apodiktizität.** Die Architektur ist *intern apodiktisch, extern kontingent*: Für das System liegt sie jeder Erfahrung voraus, für den Ingenieur ist sie eine Wahl. „Transzendental“ heißt immer „transzendental relativ zu einer Ebene“:
+
+  | Ebene | Status für das System | verändert durch |
+  |---|---|---|
+  | Architektur | apodiktisch | nur den Ingenieur |
+  | Gewichte | relatives Apriori, sedimentiert | Training (Gewohnheit) |
+  | Kontext / KV-Cache | situativ | die laufende Eingabe |
+  | Vollzug (Residual Stream) | im Werden | die Schichten |
+
+  Die Liste ist nicht abgeschlossen.
+- **Minimalkriterium der Warte (Arbeitsstand):** Gewohnheit + Bewertung (stärkend/schwächend, vgl. Spinoza, *Ethik* III). Kausalität und Dauer sind Variablen, keine Kriterien. Harte Folge: Bewertung gibt es beim Transformer nur im Training; in der Inferenz bleibt womöglich nur die **Spur einer Warte**. Offen, ob Lernen zur Laufzeit (RL, Finetuning) das ändert.
+- **Selbstkorrektur, nicht Immunisierung.** Die Wissenschaft greift ihre falschen Axiome an, nicht ihre unwillkommenen Befunde.
+  - In der *persönlichen Welt* darf jeder frei revidieren (Spiel).
+  - Beim Übergang in die *Superwelt* (das Geteilte) gilt: Revision nur nach vorab notierter Deutungstabelle, alle Läufe berichtet.
+  - **Wartung vs. Rettung:** Eine Revision ist Wartung, wenn das Primitiv, auf das sie sich stützt, vor dem Lauf festgelegt war; Rettung, wenn es nach Kenntnis des Ergebnisses gewählt wurde.
+- **Fest und revidierbar.** Fest: die transzendentalen Begriffe (einheitliches, aber erweiterbares Vokabular) und die Ordnung von Raum und Zeit. Revidierbar: Metriken, Dimensionalitäten, Fraktalitäten (vgl. Vorurteile-Hausarbeit V2 § 6.1: Metrik ist Füllung).
+- **Gesetz = Invariante unter Variation.** Ein Befund ist umso eher Gesetzmäßigkeit des Geistes statt Eigenschaft einer Architektur, je mehr Variationen der transzendentalen Bestimmungen er übersteht (vgl. Noether).
+- **Wort und Gleichung.** Jedes mathematische Objekt bekommt eine Lesart in der Theorie, z. B. Punkt = bestimmtes Zugleichsein, Koordinatennetz = unbestimmtes Zugleichsein. Die Gegenrichtung ist gleichrangig: Das Register „Begriffsbedarf“ sammelt Struktur ohne Wort, die Wissenschaft wird so auch Quelle neuer Begriffe. *Offen:* Psychologismus oder bloße Übersetzung (Frage F1, Frege/Husserl).
+- **Zwecke in dieser Reihenfolge:** (1) KI verstehen, die Zahlen zum Sprechen bringen (vom Erklären zum Verstehen, Dilthey); (2) Diagnostik des menschlichen Geistes; Therapie erst in einer zweiten Wissenschaft. Philosophie begleitet die Wissenschaft von Anfang an.
+- **Bewusstsein:** „Beweis via Aktion“ zeigt funktionale Gleichheit, nicht Erleben. Eine Theorie des Bewusstseins folgt nur unter der ausdrücklich gesetzten Annahme des Funktionalismus.
+- **Bekannte Lücken:** keine menschlichen Daten im Repo (nötig für „Geist überhaupt“ und für ein Maß der besseren Metapher); die Warte des Experimentators (Metrik, Instrument, Wahl der Arme) wird in keinem Experiment variiert.
 
 ## Die Theorie in Kürze
 
-Grundlage ist die Hausarbeit „Gewohnte Gleichzeitigkeiten. Humes Verknüpfungen der Vorstellungen und Jungs Synchronizität“ (FSU Jena, SS 2026).
+Grundlage sind die Hausarbeiten in `../hausarbeiten/`, vor allem „Gewohnte Gleichzeitigkeiten. Humes Verknüpfungen der Vorstellungen und Jungs Synchronizität“ (FSU Jena, SS 2026; PDF auch in `docs/`) und die Vorurteile-Hausarbeit (`vorurteile_protokollsätze/vorurteile_hausarbeit_v2.md`). Gemeinsame Begriffe in `../hausarbeiten/systemskizze.md`.
 
-- **Warte:** eine zeitliche Invarianz, ein Gefüge stabiler Vor-Urteile, das dem Erscheinen eines Ereignisses vorausliegt. Eingehendes wird dort nicht registriert, sondern *erblickt*: bewertet, einem Urheber zugeordnet und in seiner Dauer geschätzt. Entsteht durch Gewohnheit (Hume).
-- **Tripelstruktur des Sinns:** Sinn ist eine Folge von Gleichzeitigkeiten von Gleichartigkeiten. Die drei Dimensionen sind **Art** (Gleichartigkeit, kantische Inhärenz), **Folge** (Sukzession) und **Zugleichsein** (kantische Gemeinschaft).
-- **Synchronizität:** sinngemäße Koinzidenz, also Zugleichsein und Gleichartigkeit ohne Kausalverhältnis (Jung). Wiederholte Synchronizitäten erzeugen durch Gewohnheit die Vorstellung einer Kraft; diese heißt Sinn.
-- **Ent-Täuschung und Wartung:** Verfehlt die Erscheinung die Erwartung, wird die Warte erschüttert und muss gewartet werden. Das ist der Vorhersagefehler.
+- **Warte:** ein Gerüst mit Stellen, das dem Eintreffen einer Erscheinung vorausliegt und festlegt, was an ihr als gleichartig, als Folge und als zugleich gilt. Eingehendes wird dort nicht registriert, sondern *erblickt*: bewertet, einem Urheber zugeordnet, in seiner Dauer geschätzt. Entsteht durch Gewohnheit (Hume). Zeitfunktion: Halten.
+- **Minimales Gerüst** (nicht erschütterbar, Bedingung jeder Wartung) gegen **Füllungen** (sedimentierte Vorurteile, erschütterbar, wartbar).
+- **Tripelstruktur des Sinns:** Sinn ist eine Folge von Gleichzeitigkeiten von Gleichartigkeiten. Momente nach der Systemskizze (korrigierte Zuordnung):
+  - **Art** (Gleichartigkeit): Begriffsbildung durch Komparation, Reflexion, Abstraktion (Kant, Logik § 6), *nicht* Inhärenz; Nietzsches Gleichsetzung des Ungleichen.
+  - **Folge** (Gleichförmigkeit): 2. Analogie, Kausalität.
+  - **Zugleich** (Gleichzeitigkeit): 3. Analogie, Gemeinschaft.
+  - **Träger** als viertes Moment: 1. Analogie, Beharrlichkeit der Substanz; von der Prädikation erzwungen.
+- **Synchronizität:** sinngemäße Koinzidenz, Zugleichsein und Gleichartigkeit ohne Kausalverhältnis (Jung). Wiederholte Synchronizitäten erzeugen durch Gewohnheit die Vorstellung einer Kraft; diese heißt Sinn.
+- **Ent-Täuschung und Wartung:** Verfehlt die Erscheinung die Erwartung, wird die Warte erschüttert und muss gewartet werden (Instandhaltung oder Ersatz). Das ist der Vorhersagefehler.
 - **Asynchronizität:** Nicht-Passung, die nach Sinn verlangt; sie ist *sinnfordernd* (Castorps Herzklopfen im Zauberberg).
-- **Detektiv-Kriterium:** Sinn unterscheidet sich von Aberglauben durch seine Bindung an andere Folgen. Der Aberglaube hat Warten, die so unspezifisch sind, dass alles sie bestätigt (Barnum-Effekt).
-- **Archetyp:** apriorisches psychisches Angeordnetsein, nach Jung eine *psychische Wahrscheinlichkeit*.
+- **Detektiv-Kriterium:** Sinn unterscheidet sich von Aberglauben durch seine Bindung an andere Folgen. Der Aberglaube hat Warten, die so unspezifisch sind, dass alles sie bestätigt (Barnum-Effekt). Möglicher diagnostischer Anschluss: Apophänie (Conrad 1958), Computational Psychiatry.
+- **Archetyp:** apriorisches psychisches Angeordnetsein, nach Jung eine *psychische Wahrscheinlichkeit*. Apriorisch relativ zum Individuum, sedimentiert relativ zur Gattung.
 
-## Der Transformer in diesen Begriffen
+## Der Transformer in diesen Begriffen (Arbeitsfiktion)
 
-Die Warte gibt es auf drei Ebenen: **sedimentiert** (trainierte Gewichte, zur Laufzeit invariant), **situativ** (Kontext und KV-Cache) und im **Vollzug** (Residual Stream eines Tokens durch die Schichten).
+Heuristische Zuordnung, kein Isomorphismus. Ob eine Zuordnung trägt, entscheidet erst das Experiment.
 
-- **Tokenisierung (BPE):** die erste Gewohnheit, denn was sich oft berührt, wird zu einer Einheit.
-- **Embedding (Input): der Archetyp.** Vor-Urteil im Wortsinn, Art ohne Folge und ohne Zugleichsein; mehrdeutige Wörter liegen noch in Überlagerung. Kein Inhalt, sondern eine Geometrie möglicher Gleichartigkeiten, die vor jedem Token schon dasteht — apriorisches Angeordnetsein im strengen Sinn, und als Statistik dessen, was miteinander aufzutreten pflegt, Jungs *psychische Wahrscheinlichkeit*.
-  - **Der Einwand und seine Auflösung:** Jungs Archetyp ist apriorisch, das Embedding ist gelernt. Jung begründet die Archetypen aber phylogenetisch, als Niederschlag endlos wiederholter typischer Erfahrung — also apriorisch *relativ zum Individuum*, sedimentiert *relativ zur Gattung*. Beim Modell dieselbe Struktur eine Ebene versetzt: apriorisch relativ zur Inferenz, geworden relativ zum Training. Gewohnheit auf einer Ebene sieht von der nächsten aus wie Apriori. Das ist die Hume-Jung-Synthese der Hausarbeit, auf die Architektur angewandt.
-  - **Immunität:** Zur Laufzeit ist das Embedding invariant und hängt nicht einmal vom Kontext ab. Der Archetyp ist damit der Teil der Warte, der **strukturell von der Wartung ausgenommen** ist: Was nicht fehlgehen kann, kann nicht ent-täuscht werden. Grenzfall im Begriff der Warte, nicht bloß Mangel des Modells.
-  - *Empirisch offen:* Die Schichten 0–2 zeigen unter allen Manipulationen praktisch keine Veränderung, was nach Invarianz aussieht. Gemessen ist das aber im Sink-Maß; frühe Köpfe bedienen den Sink womöglich ohnehin inhaltsunabhängig. Die Immunität ist architektonisch begründet, nicht experimentell gezeigt.
-- **Positionscodierung:** GPT-2 addiert gelernte *absolute* Positionsvektoren zum Input; die Zeitstelle wird Eigenschaft der Erscheinung (Newton). Pythia nutzt RoPE, *relative* Rotation innerhalb der Attention; Zeit ist Ordnung der Relationen (Leibniz).
-- **Residual Stream:** der Ort, an dem das Werden schichtweise zum Sinn kristallisiert.
-- **Add (Residualverbindung):** Jede Teilschicht schreibt hinzu, nichts wird überschrieben; Erhalt der Erscheinung in der Tiefe. Der Residual Stream als formale Einheit, die alle Synthesen begleitet (Kants „Ich denke“), aber verteilt: eine Einheit pro Token, verbunden nur über die Attention. Logit Lens macht die Kristallisation schichtweise sichtbar.
-- **Norm (LayerNorm, bei GPT-2 und Pythia vor jeder Teilschicht):** entfernt die Größe des Vektors, das Urteil sieht nur die Richtung. Humes Lebhaftigkeit wird für das Urteil eingeklammert, im Residual Stream aber bewahrt. Pythia rechnet Attention und MLP parallel aus derselben Eingabe (Reproduktion und Rekognition zugleich), GPT-2 nacheinander.
-- **Attention:** die Query ist die Erwartung, die Keys sind Erscheinungsprofile. Q·K ergibt Art, kausale Maske und Positionscodierung ergeben Folge, die gewichtete Summe der Values ergibt Zugleichsein.
-- **Unembedding (Output):** Gleichartigkeit des gegenwärtigen Sinnzustands mit jeder möglichen nächsten Erscheinung, also Erwartungshorizont; Kausalität als projizierendes Prinzip. GPT-2 nutzt dieselbe Matrix für Input und Output (weight tying): Erscheinung und Erwartung werden am selben Maß gemessen. Pythia trennt beide Räume. Mit der Zuordnung Embedding = Archetyp heißt das: Bei GPT-2 **sind Archetyp und Erwartungshorizont buchstäblich dieselbe Matrix**, bei Pythia sind sie auseinandergetreten. Ein architektonischer Unterschied mit theoretischem Biss, und der direkte Vergleichsfall für die C0-Messung.
-- **Autoregressive Schleife:** Der gezogene Output wird zum nächsten Input. Zwischen zwei Nutzereingaben erfüllt das Modell nur seine eigene Erwartung, ohne äußere Ent-Täuschung (fensterlose Monade, Hausarbeit 3.3.2).
-- **Kausale Maske:** eine *halbierte* Gemeinschaft, ohne Wechselwirkung und ohne Nachträglichkeit.
-- **Softmax:** Zwang zur Synchronizität, da die Aufmerksamkeit sich zu 1 summieren muss.
-- **Multi-Head:** viele Warten zugleich.
-- **MLP:** positionsweise, ohne Gemeinschaft; nach Geva et al. 2021 Schlüssel-Wert-Speicher. Schlüssel = Wiedererkennen/Subsumtion unter einen Begriff, Nichtlinearität = Schwelle des Urteils, Werte = gewohnheitsmäßige Folgerung („wenn Hitze, dann Flamme“), Addition in den Residual Stream = Mitgemeintes (Husserl). Dreifache Synthesis der A-Deduktion: Embedding ≈ Apprehension, Attention/KV-Cache ≈ Reproduktion, MLP ≈ Rekognition im Begriff. Faktenwissen sitzt nach Meng et al. 2022 (ROME) vor allem in mittleren MLPs und ist dort editierbar: Wartung ohne Ent-Täuschung. Etwa zwei Drittel der Parameter pro Block liegen im MLP.
-- **Ausgabeverteilung: das archetypische Bild.** Jung trennt den Archetyp (unanschaulich, formal, nie selbst erscheinend) vom archetypischen Bild (das Manifeste). Genau diese Trennung liegt hier vor: Das Embedding ist die Disposition, die Ausgabeverteilung ihre Aktualisierung in einem konkreten Warte-Zustand. Das Sampling ist der Tarot-Moment.
-- **Training:** Der Loss ist die Ent-Täuschung, die Backpropagation die Wartung, RLHF die Sittlichkeit bzw. Sozialisierung. Nach dem Training gibt es eine Warte ohne Wartung.
+- **Die Warte auf mehreren Ebenen**, vielleicht verschachtelt: sedimentiert (Gewichte), situativ (Kontext, KV-Cache), im Vollzug (Residual Stream). Arbeitshypothese des Autors: Das Embedding gleicht dem kollektiven Unbewussten; erst die Attention-Köpfe erzeugen das Zugleichsein, das der Erfahrung ähnelt.
+- **Tokenisierung (BPE):** die erste Gewohnheit; was sich oft berührt, wird zu einer Einheit.
+- **Embedding: der Archetyp.** Art ohne Folge und ohne Zugleichsein; eine Geometrie möglicher Gleichartigkeiten, die vor jedem Token dasteht. Apriorisch relativ zur Inferenz, geworden relativ zum Training. Zur Laufzeit invariant, also strukturell von der Wartung ausgenommen (Grenzfall der Warte). Empirisch nicht gezeigt.
+- **Koordinatensystem als Zugleichsein (Chroma-Grundidee):** Die Dimensionen eines Vektors und alle Punkte des Embeddings sind zugleich, auf zwei Ebenen derselben Sache. Ein Punkt ist eine Instanziierung dieses Zugleichseins. Erst das gemeinsame Zugleichsein macht Gleichartigkeit messbar (Kosinus). Abgestufte Gleichartigkeit braucht viele Dimensionen (im 1-D-Fall nur ±1). Der Kontext ist dagegen *nicht* direkt zugleich, weil er an die Folge gebunden ist.
+- **Positionscodierung:** GPT-2 addiert gelernte *absolute* Positionsvektoren (Zeit als Eigenschaft der Erscheinung, Newton); Pythia nutzt RoPE, *relative* Rotation in der Attention (Zeit als Ordnung der Relationen, Leibniz).
+- **Residual Stream:** Ort, an dem das Werden schichtweise zum Sinn kristallisiert. Jede Teilschicht schreibt hinzu; formale Einheit, die alle Synthesen begleitet („Ich denke“), aber verteilt, eine pro Token. Hinzufügen kann Komponenten auch auslöschen.
+- **Norm:** entfernt die Größe, das Urteil sieht nur die Richtung (Humes Lebhaftigkeit eingeklammert).
+- **Attention:** Query = Erwartung, Keys = Erscheinungsprofile. Q·K ergibt Art, Maske und Position ergeben Folge, die gewichtete Summe der Values ergibt Zugleichsein. Softmax als Zwang zur Synchronizität; Multi-Head als viele Warten zugleich; kausale Maske als *halbierte* Gemeinschaft ohne Nachträglichkeit.
+- **MLP:** positionsweise, ohne Gemeinschaft; Schlüssel-Wert-Speicher (Geva et al. 2021, noch zu prüfen). Rekognition im Begriff. Die elementweise Nichtlinearität gibt dem MLP eine bevorzugte Basis, der Residual Stream hat architektonisch keine.
+- **Unembedding:** Erwartungshorizont. GPT-2: Archetyp und Erwartungshorizont sind dieselbe Matrix (weight tying); Pythia trennt beide. Chroma trennt sie bewusst, damit der Test nicht zirkulär wird.
+- **Ausgabeverteilung: das archetypische Bild**; Sampling als Tarot-Moment.
+- **Training:** Loss als Ent-Täuschung, Backpropagation als Wartung, RLHF als Sozialisierung. Danach Warte ohne Wartung.
 
-Die Bruchstellen sind das Interessante: Warte ohne Wartung, Warte ohne Dauer (nur ein Positionsindex), kein legitimer Ort der Asynchronizität, halbierte Gemeinschaft. Dazu der Archetyp als Grenzfall — der Teil der Warte, der von der Wartung ausgenommen bleibt, weil er nicht fehlgehen kann.
+Bruchstellen: Warte ohne Wartung, Warte ohne Dauer (nur Positionsindex), kein legitimer Ort der Asynchronizität, halbierte Gemeinschaft, Nachträglichkeit nur in der Ontogenese, nicht im Vollzug.
 
-## Essayplan
+## Das Chroma-Experiment (aktuelle Hauptlinie)
 
-Leitmotiv: Die Theorie macht Vorhersagen, die Architektur prüft sie, das Ergebnis wirkt auf die Theorie zurück. Rahmen ist Dilthey: Interpretierbarkeitsforschung *erklärt* die Maschine, das Essay *versteht* sie.
+Spec: `docs/superpowers/specs/2026-10-10-chroma-gleichartigkeit-design.md`. Philosophische Fassung und Ideensammlung: `docs/chroma_ideen.md`. Implementierungsplan und Entscheidungsprotokoll: `docs/superpowers/plans/`.
 
-1. Einleitung: Verstehen statt Erklären der Maschine.
-2. Methode: Tripelstruktur und Warte, Als-ob-Phänomenologie als regulative Heuristik ohne Behauptung eines Erlebens.
-3. Tripelstruktur im Generierungsschritt, Archetypen als Features. Dazu „Golden Gate Claude“ als experimentell erzeugter Aberglaube.
-4. Säule 1: Attention Sinks und Asynchronizität, ergänzt um die Experimentbefunde (siehe unten; die ursprüngliche These muss angepasst werden).
-5. Säule 2: Titans, also Wartung durch Ent-Täuschung. Deren blinder Fleck ist das Fehlen des Detektiv-Kriteriums. Architekturskizze: ein „Detektiv-Tor“, das Überraschung mit dem Bindungsgrad gewichtet.
-6. Vorhersagen und Architekturskizzen, klar als Skizzen markiert.
-7. Rückwirkung auf die Theorie: Asynchronizität als Leistung; Prediction Error notwendig, aber nicht hinreichend; Typen von Warten.
-8. Schluss: die Warte des Lesers. Ist das eine Theorie des Bewusstseins? Antwort: eine Theorie der Sinnkonstitution, deren Lücken angeben, wo Bewusstsein zu suchen wäre. Reasoning-Tokens als „eingeräumte Dauer der Reflexion“ (Hausarbeit 4.1).
+**Leitfrage:** Ist die qualitative Verschiedenheit der Dimensionen (bevorzugte Basis, Bergsons qualitative Mannigfaltigkeit) Bedingung abgestufter Gleichartigkeit, oder genügt das Zugleichsein vieler Dimensionen? Anders: Gehört die *Farbe* zum minimalen Gerüst oder zu den Füllungen?
 
-## Dateien
+**Bevorzugte Basis:** Die Warte kann ihre Achsen unterscheiden; ihre Symmetrie schrumpft von allen Drehungen auf Vertauschungen. Literatur: Die bevorzugte Basis im Residual Stream entsteht durch den Optimierer Adam, nicht durch die Architektur (Anthropic 2023; Caples & Neuhaus, Blogpost); Ausreißerdimensionen folgen der Tokenfrequenz (Kovaleva et al. 2021; Puccetti et al. 2022).
 
-- `sinn_experiment.py`: Befehle `korpus`, `messen`, `analyse`, `dynamik`, `selbsttest` (Details in `README.md`).
-- `wiki_texte.py`: sammelt über die Wikipedia-API Artikel, deren erste Version ab 2024 angelegt wurde (CC BY-SA, Quellen in `quellen.csv`).
-- `README.md`: Anleitung und Präregistrierung (H1, H2, H3).
-- `PRAEREG_2.md`: H3b, neue Hypothese zum Einbruch von D − A in der Trainingsmitte.
-- `PRAEREG_3_replikation.md`: Replikation mit Wikipedia-Korpus, Vorhersagen R1–R3.
+**Vorstudie (ohne Training):** Basispräferenz in GPT-2 und Pythia-160m über die Checkpoints. Präregistriert werden sollen V1–V3 (Kurtosis gegen Drehungskontrolle, je Schicht; Anstieg über das Training; Frequenzbezug ohne Position 0); explorativ E1 Nachträglichkeit, E2 fraktale Dimension, E3 Knotenlinie (Hegel), E4 Reflex.
 
-Ordner: `pilot/` (Seed 99), `lauf/` (Hauptlauf, Crawl-Korpus), `lauf_wiki/` (Replikation, Wikipedia-Korpus ab 2024), `wiki_texte/` (die Artikel selbst mit `quellen.csv` und `LIZENZ.md`).
+**Hauptstudie: vier Warten.** Gleicher Korpus (WikiText-103, eigener BPE mit 8192 Tokens), 6 Schichten, d = 256, 5 Seeds je Arm, Vergleich bei gleichem Loss:
 
-## Experiment: Stand
-
-Bedingungen: A kohärent, B wortgewürfelt (Folge zerstört), B2 satzgewürfelt, C disparat (Art zerstört), D Rauschen (beides zerstört). Messgrößen: Sink-Masse pro Kopf (Aufmerksamkeit auf das feste Start-Token, Query-Positionen ab 8), Ausgabe-Entropie, Loss. Parameter: N = 256, n = 300, Seed 1234.
-
-### Hauptlauf GPT-2 (n = 300)
-
-Korpus: englische Web-Crawl-Texte (FineWeb-artig), **nicht** Wikipedia. Nachträglich aus dem
-Korpusinhalt bestimmt, weil die Herkunft damals nicht protokolliert wurde; seitdem hält
-`texte.json` sie fest. Der frühere Verdacht, hier sei der Wikipedia-Dump 2023 gelaufen, kam vom
-Pilot — *der* lief mit Wikipedia.
-
-| Bedingung | Sink-Masse | Loss |
-|---|---|---|
-| A kohärent | 0,4066 | 3,47 |
-| B wortgewürfelt | 0,3271 | 6,85 |
-| B2 satzgewürfelt | 0,4060 | 3,62 |
-| C disparat | 0,4124 | 4,43 |
-| D Rauschen | 0,3335 | 8,55 |
-
-**Nach Präregistrierung:**
-- **H1 widerlegt** in der vorhergesagten Form. Nur C liegt über A (+0,006, p = 0,0002, sehr klein). B und D liegen deutlich darunter (etwa −0,08).
-- **H2 nicht bestätigt.** Die Schwerpunktdifferenz C − B beträgt +0,19, 95%-KI −0,04 bis +0,42. Bekannter Konstruktionsfehler: Der Schwerpunkt wertet nur positive Differenzen aus, B wirkt aber fast nur negativ. Im Essay offen benennen.
-- Im Pilot (n = 30) sah H2 noch signifikant aus (+0,68). Das illustriert, warum präregistriert wurde.
-
-**Explorativ (aus `koepfe.csv`, nicht präregistriert):**
-- ΔB und ΔD korrelieren mit r = 0,97: Die zerstörte Folge dominiert, zusätzlich zerstörte Art ändert fast nichts.
-- Der Folge-Effekt wächst mit der Schichttiefe, von etwa 0 in Schicht 0–2 bis etwa −0,2 in Schicht 10–11. Die stärksten Köpfe sind (Schicht, Kopf) (8,1), (7,7), (10,8), (9,11), (7,11), jeweils etwa −0,5.
-- ΔB und ΔC korrelieren mit r = −0,32: Art und Folge wirken gegenläufig. Das trennt die Dimensionen über die Richtung der Reaktion, nicht über den Ort.
-- Eine kleine Gegenpopulation steigt unter B und D: (7,9), (8,5), (9,3), (7,4).
-- B2 hat keinen Effekt; die Manipulation ist für zusammenhängende Absätze zu schwach.
-- **Nachträgliche Deutung, noch zu prüfen:** Der Sink ist der *Ruheort der erfüllten Erwartung*. Wird die Folge zerstört, verlässt die Aufmerksamkeit ihn und beginnt zu suchen (Asynchronizität als sinnfordernd, Hausarbeit 5.4). Fehlt die Art, zieht sie sich leicht in ihn zurück. Nur als neue Hypothese verwenden, nicht als Befund.
-
-### Pythia-160m, selber Korpus (n = 300)
-
-Endstand bei step143000: A 0,2069 | B 0,1853 | B2 0,2057 | C 0,2103 | D 0,2073.
-
-- Grundmuster wie bei GPT-2, abgeschwächt: B deutlich unter A (−0,022), C leicht darüber (+0,003, p = 0,019), B2 ohne Effekt. **H1 auch hier widerlegt.**
-- Anders als bei GPT-2 liegt D praktisch auf A (+0,0004, KI enthält null) statt deutlich darunter.
-- **H2 kehrt das Vorzeichen um:** C − B = −0,34 (95%-KI −0,54 bis −0,15), eindeutig negativ statt wie vorhergesagt positiv.
-
-### Genese über elf Checkpoints (H3)
-
-- Die Sink-Masse steigt wie vorhergesagt, von 0,0136 (step 0) auf 0,207 (step 143000).
-- D − A ist bei step 1000–2000 kurz signifikant positiv, bei step 4000–100000 durchgehend signifikant **negativ** (−0,020 bis −0,030) und erst bei step 143000 wieder bei ~0.
-- **H3 widerlegt:** Vorhergesagt war, D − A werde nach dem Anstieg positiv. Stattdessen bricht es mitten im Training ein. Neue Hypothese H3b dazu in `PRAEREG_2.md`, ungeprüft.
-
-### Replikation mit Wikipedia-Korpus (`lauf_wiki`, n = 300)
-
-Korpus: 600 Artikel, erste Version zwischen 2024-01-04 und 2026-09-10, 516 verschiedene Autoren. Von GPT-2 und Pythia nachweislich nicht gesehen. Herkunft protokolliert.
-
-GPT-2: A 0,4280 | B 0,3457 | B2 0,4273 | C 0,4344 | D 0,3420.
-
-- **R1 vollständig repliziert:** B − A = −0,082 und D − A = −0,086 (beide KI unter null), C − A = +0,0064 (KI über null), B2 − A ununterscheidbar von null.
-- **R2 repliziert:** r(ΔB, ΔD) = +0,963 (gefordert > 0,8).
-- *Explorativ:* Die kopfweisen Differenzkarten korrelieren **zwischen den beiden Korpora** mit r = 0,99 (B), 0,95 (C), 0,99 (D). Welcher Kopf wie reagiert, ist über zwei ganz verschiedene Textsorten hinweg fast identisch — spricht für eine Eigenschaft der Architektur, nicht des Korpus.
-- **Die vorab notierte C-Erwartung ist gescheitert:** C − A sollte im einheitlichen Register kleiner ausfallen, ist aber minimal größer (+0,0064 statt +0,0058). Die Registererklärung trägt nicht.
-- **Vorsicht bei H2:** Hier ist C − B = +0,56 (95%-KI +0,37 bis +0,76), nach der ursprünglichen Entscheidungsregel also bestätigt — im Hauptlauf war sie es nicht, bei Pythia mit umgekehrtem Vorzeichen. Das Maß ist dasselbe kaputte Maß; es wird nicht dadurch gültig, dass es diesmal passt. Erst reparieren, dann deuten.
-- Der Loss in A ist mit 3,14 niedriger als im Crawl-Korpus (3,47), obwohl die Texte garantiert ungesehen sind. Niedriger Loss in A belegt also keine Memorierung, sondern Regelmäßigkeit des Registers. Das entkräftet die Kontrollannahme im Bericht (bei Pythia genauso: 3,05 statt 3,43).
-
-Pythia bei step143000: A 0,2152 | B 0,1849 | B2 0,2134 | C 0,2186 | D 0,2079. Dasselbe Muster, H1 erneut widerlegt.
-
-- **R3 repliziert:** D − A ist an sechs aufeinanderfolgenden Checkpoints (4000 bis 100000) signifikant negativ, KI vollständig unter null. Der Einbruch in der Trainingsmitte ist also kein Artefakt des Crawl-Korpus.
-- Ein Unterschied zum Hauptlauf: Am Ende (step143000) bleibt D − A hier signifikant negativ (−0,0073), statt wie im Crawl-Korpus auf ~0 zurückzukehren.
-- *Explorativ:* Auch bei Pythia korrelieren die Karten zwischen den Korpora hoch (r = 0,94 / 0,89 / 0,95 für B / C / D).
-- **R2 nur für GPT-2:** r(ΔB, ΔD) = 0,963 bei GPT-2, aber 0,69 bei Pythia — in beiden Korpora praktisch gleich, also stabil, aber unter der geforderten 0,8. In `PRAEREG_3_replikation.md` ist R2 ohne Modellangabe formuliert; das ist ein Formulierungsfehler der Präregistrierung und wird so berichtet, nicht nachträglich auf GPT-2 eingeschränkt.
-
-**Der H2-Befund über alle vier Läufe — das eigentliche Ergebnis:**
-
-| Lauf | C − B | 95%-KI | nach Entscheidungsregel |
+| Arm | Optimierer | Farbe | Basis |
 |---|---|---|---|
-| `lauf` GPT-2 | +0,19 | −0,04 bis +0,42 | nicht bestätigt |
-| `lauf` Pythia | −0,34 | −0,54 bis −0,15 | signifikant *gegen* die Vorhersage |
-| `lauf_wiki` GPT-2 | +0,56 | +0,37 bis +0,76 | bestätigt |
-| `lauf_wiki` Pythia | −0,04 | −0,19 bis +0,11 | nicht bestätigt |
+| A₀ | SGD | keine | nirgends |
+| A | AdamW | keine | kann als Füllung entstehen |
+| Bα | AdamW | nichtnegatives Embedding | Bestandteil im Archetyp |
+| Bβ | AdamW | nichtnegative Lesung je Schicht | Bestandteil im Vollzug |
 
-Vier Läufe, vier verschiedene Antworten, darunter beide Vorzeichen signifikant. Das Maß misst nicht den Effekt, sondern das Rauschen seiner eigenen Konstruktion. H2 ist damit nicht offen, sondern **als Test wertlos, solange das Maß nicht ersetzt ist** — und der eine Lauf, der „bestätigt" sagt, ist das beste Argument dafür und nicht dagegen.
+Kernmaß: **Ersetzbarkeit** (KL-Divergenz der Erwartung beim Tausch x → y) und **G** = Spearman(Kosinus, Ersetzbarkeit) im mittleren Bereich. Vorhersagen: P1 G(A₀) < G(A) (Gerüstfrage, TOST mit δ = 0,05); P2 Begriffe in B als Farbakkorde lesbar, ohne Gleichartigkeit zu kosten; P3 Verschachtelung. Register „Begriffsbedarf“ für Struktur ohne Namen.
 
-### Ersatzmaß |Δ| — explorativ, aber stabil
+**Stand (10.10.2026):** Code fertig, getestet (85 Tests, Selbsttest) und zweistufig reviewt. Noch nichts gemessen. Vor dem ersten Lauf:
+1. `praereg/PRAEREG_8_achsen.md` (Vorstudie) schreiben und committen, inkl. V-Schwelle.
+2. Entscheiden, ob WikiText-Artefakte (`' @-@ '`, Zeilenumbrüche) vor dem Korpusbau bereinigt werden – legt den Tokenizer für immer fest.
+3. Pilot (1 Seed je Arm): nur Kalibrierung (Lernraten nach Validierungs-Loss, Loss-Stufen, Laufzeit), keine Deutung.
+4. `praereg/PRAEREG_9_chroma.md` mit allen offenen Festsetzungen (Loss-Stufen, Schwellen der Manipulationsprüfung, Mindestquote gültiger Paare, Position 55 und Fenster über Dokumentgrenzen, „Schicht 3“ = Eingang von Block 3, ICA-Surrogat als Einschränkung zugunsten von P2, gleicher Mess-Seed für alle Läufe), dann Hauptlauf.
 
-`centroid_abs` gewichtet die Schichttiefe mit |Δ| statt nur mit den positiven Anteilen. Dasselbe Bild in allen vier Läufen:
+## Vor-chromatische Experimente (Altbestand)
 
-| Lauf | Schwerpunkt \|ΔB\| | Schwerpunkt \|ΔC\| | C − B | 95%-KI |
-|---|---|---|---|---|
-| `lauf` GPT-2 | 8,25 | 7,02 | −1,23 | −1,32 bis −1,11 |
-| `lauf_wiki` GPT-2 | 8,21 | 6,89 | −1,32 | −1,41 bis −1,21 |
-| `lauf` Pythia | 7,55 | 7,10 | −0,45 | −0,57 bis −0,34 |
-| `lauf_wiki` Pythia | 7,53 | 7,04 | −0,49 | −0,58 bis −0,39 |
+Die Läufe vor Chroma (`legacy_experiments/`, `runs/`) entstanden mit einem älteren Vokabular und älteren Zuordnungen. Sie werden nicht stillschweigend umgedeutet, sondern als „vor-chromatisch“ berichtet. Bedingungen dort: A kohärent, B wortgewürfelt (Folge zerstört), B2 satzgewürfelt, C disparat (Art zerstört), C0 einthemig, D Rauschen. Hauptmaß: Sink-Masse (Aufmerksamkeit auf das Start-Token).
 
-- **Die Dissoziation existiert, aber mit umgekehrter Polarität.** H2 behauptete zweierlei: dass die Schwerpunkte sich unterscheiden, und dass C *tiefer* liegt als B („Folge früh, Art spät"). Der erste Teil hält robust, der zweite ist umgekehrt: **Folge wirkt tief, Art wirkt flach.**
-- Über zwei Korpora hinweg stimmen die Werte je Modell auf 0,1 Schichten überein; der Modellunterschied (GPT-2 ≈ −1,3, Pythia ≈ −0,5) ist größer als der Korpusunterschied.
-- Passt zum älteren explorativen Befund, dass der Folge-Effekt mit der Schichttiefe wächst.
-- **Status: explorativ.** Das Maß wurde nach Kenntnis der Daten definiert. Die Übereinstimmung über vier Läufe ist stark, ersetzt aber keinen konfirmatorischen Test — der muss aus einem neuen Lauf kommen (größere Modelle) und vorher präregistriert werden.
-- Die Neuberechnung ließ alle präregistrierten Zahlen unverändert (36 Einfügungen, null Löschungen in den vier Berichten); die neuen Bootstrap-Ziehungen stehen im Code hinter allen alten.
+**Hypothesentests am Attention Sink (präregistriert, README und PRAEREG_2–4):**
+- **H1 widerlegt** (GPT-2 und Pythia): Zerstörte Folge (B, D) *senkt* die Sink-Masse (GPT-2 etwa −0,08), zerstörte Art (C) hebt sie nur minimal.
+- **H2 als Test wertlos:** Das Schwerpunktmaß lieferte über vier Läufe beide Vorzeichen signifikant. Das Ersatzmaß |Δ| (explorativ) ist stabil: Folge wirkt tief, Art flach, und Art wirkt kaum (|ΔB| bis 0,22, |ΔC| bis 0,02).
+- **H3 widerlegt:** D − A bricht in der Trainingsmitte ein, statt nach dem Sink-Anstieg positiv zu werden. Neue Hypothese H3b in PRAEREG_2, ungeprüft.
+- **Replikation (Wikipedia ab 2024, nachweislich ungesehen):** R1 und R3 repliziert; R2 nur bei GPT-2 (Formulierungsfehler der Präregistrierung, so berichtet). Kopfkarten korrelieren zwischen Korpora mit r ≈ 0,9–0,99.
+- **C0-Kontrolle (präregistriert, beide Modelle):** Themenwechsel hebt die Sink-Masse (+0,010 / +0,007), Satzgrenzen senken sie (−0,004); die Anteile heben sich teilweise auf. An der Satzgrenze massiver lokaler Vorhersageschock (Loss-Differenz ≈ +1,9 bei d = 0).
+- Nachträgliche Deutung, ungeprüft: Der Sink als Ruheort der erfüllten Erwartung.
 
-### Schichtprofil (explorativ, Wikipedia-Korpus)
+**Valenz, Tripel-Ablation, Gewöhnung (PRAEREG_5–7):** Diese Präregistrierungen wurden erst zusammen mit den Ergebnissen committet (c4cc095, 4.10.2026; Valenzbericht vom 27.9.) und sind damit **nicht nachweislich vorab festgelegt**. Befunde nur als explorativ verwenden.
+- *Valenz:* Paradoxe Handlungen senken die MLP-Norm, knicken den Residual Stream ab und erhöhen die Sink-Masse am Folgetoken (V1–V3), V4 nicht bestätigt.
+- *Tripel-Ablation:* Die korrigierten Läufe (`runs/lauf_tripel_korr`, `runs/lauf_gewoehnung_korr`) gelten, nicht die ursprünglichen Zahlen. Das Design ist **nicht vollfaktoriell**: Mehrere Bedingungen fallen bauartbedingt zusammen (Pythia: T110 = T100 = T010 = T000, T011 = T001), daher ist die „Superadditivität“ keine unabhängige Evidenz für Synthese. GPT-2: Rangordnung der Schäden Zugleichsein > Folge > Art. Pythia: Rangordnung **gescheitert** (Art 4,75 > Zugleichsein 3,66 > Folge 2,32).
+- *Gewöhnung (Pythia, 11 Checkpoints):* Bei step0 liegt alles am Zufallsniveau; die Ablationsschäden wachsen von step512 an gemeinsam, Folge ist durchweg der kleinste. Die Sink-Masse kondensiert erst ab etwa step4000–8000. Eine Reihenfolge „erst Zugleichsein, dann Folge, dann Art“ ist durch die Daten nicht gedeckt.
 
-Mittleres |Δ| je Schicht, Schicht 0 bis 11:
+## Repository-Struktur
 
-| | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| GPT-2 \|ΔB\| | ,000 | ,000 | ,000 | ,014 | ,008 | ,069 | ,089 | ,143 | ,101 | ,140 | **,223** | ,200 |
-| GPT-2 \|ΔC\| | ,000 | ,000 | ,003 | ,018 | ,009 | ,022 | ,010 | ,009 | ,004 | ,003 | ,017 | ,003 |
-| Pythia \|ΔB\| | ,000 | ,004 | ,022 | ,000 | ,022 | ,054 | ,066 | ,037 | **,089** | ,063 | ,053 | ,005 |
-| Pythia \|ΔC\| | ,001 | ,005 | ,005 | ,003 | ,010 | ,001 | ,011 | ,011 | ,011 | ,008 | ,035 | ,011 |
-
-- **Die Tiefe ist nicht der Engpass.** Der Folge-Effekt steigt nicht bis zum Rand, sondern erreicht ein Maximum (GPT-2 Schicht 10, Pythia Schicht 8) und fällt danach ab, bei Pythia auf fast null. Die Folge wird innerhalb der verfügbaren Tiefe fertig konstituiert; „es fehlen die Durchläufe“ ist damit ausgeschlossen.
-- **Der Größenunterschied ist der eigentliche Befund:** |ΔB| erreicht 0,223, |ΔC| nur 0,022 — Faktor zehn. Zerstörte Art stört die Sink-Masse fast nicht. „Art wirkt flach“ heißt vor allem: Art wirkt kaum, und das Wenige liegt früh.
-- Das schränkt das Ersatzmaß-Ergebnis ein: Der Schwerpunkt von |ΔC| liegt stabil (7,02 / 6,89 / 7,10 / 7,04 über vier Läufe), aber über einem sehr kleinen Effekt.
-- Schichten 0 bis 2 zeigen unter beiden Bedingungen praktisch keine Veränderung. Ob das Invarianz der frühen Repräsentation anzeigt oder nur, dass frühe Köpfe den Sink ohnehin inhaltsunabhängig bedienen, ist mit diesem Maß nicht zu entscheiden.
-- **Offene theoretische Frage:** Wenn Sinn eine Folge von Gleichzeitigkeiten von *Gleichartigkeiten* ist, müsste zerstörte Gleichartigkeit die Warte erschüttern. Sie tut es fast nicht. Diese Asymmetrie muss die Theorie erklären — oder C misst nicht, was es messen soll (siehe C0).
-
-### C0-Kontrolle (`lauf_c0`, GPT-2 und Pythia-160m, präregistriert in `PRAEREG_4_c0.md`)
-
-Gültigkeitsprüfung bestanden: Die Sequenzen und Messwerte für A, B, B2, C und D sind für beide Modelle bit-genau identisch zu `lauf_wiki`; nur C0 kommt hinzu.
-
-| Modell | Vergleich | Differenz | 95%-KI | Vorhersage |
-|---|---|---|---|---|
-| **GPT-2** | C − C0 (Themenwechsel) | **+0,0104** | +0,0084 bis +0,0124 | V1 zutreffend |
-| | C0 − A (Satzgrenzen) | **−0,0040** | −0,0064 bis −0,0013 | V2 zutreffend |
-| | C − A (beides zusammen) | +0,0064 | +0,0041 bis +0,0087 | |
-| **Pythia-160m** | C − C0 (Themenwechsel) | **+0,0072** | +0,0046 bis +0,0097 | V1 zutreffend |
-| (step143000) | C0 − A (Satzgrenzen) | **−0,0038** | −0,0069 bis −0,0007 | V2 zutreffend |
-| | C − A (beides zusammen) | +0,0034 | +0,0002 bis +0,0065 | |
-
-Fall „ja / ja" der vorab festgelegten Deutungstabelle für **beide Modelle**: Beides wirkt. Entscheidend ist, **dass die beiden Anteile in beiden Modellen entgegengesetzte Vorzeichen haben**:
-
-- Der Themenwechsel **erhöht** die Sink-Masse (+0,0104 bei GPT-2, +0,0072 bei Pythia).
-- Das Satzgrenzen-Artefakt **senkt** sie (−0,0040 bei GPT-2, −0,0038 bei Pythia).
-- Sie heben sich teilweise auf, weshalb C − A (+0,0064 bzw. +0,0034) kleiner aussah als der Art-Effekt tatsächlich ist. Die bereinigte Art-Manipulation (Themenwechsel C − C0) ist bei GPT-2 rund 60 % und bei Pythia über 110 % stärker als der unbereinigte C − A-Effekt — bleibt aber weiterhin deutlich schwächer als die Folge-Manipulation (B − A = −0,082 bzw. −0,030).
-- C0 ist eine milde Folge-Störung (Sätze waren nie benachbart) und wirkt auch so: in dieselbe Richtung wie B, nur schwächer (Satzgrenzen-Effekt bei beiden Modellen stabil bei rund −0,004).
-- Beide Architekturen stützen die Deutung „Sink als Ruheort der erfüllten Erwartung": zerstörte Folge treibt die Aufmerksamkeit heraus (sie sucht), zerstörte Art zieht sie hinein (es gibt nichts zu binden).
-
-### Satzgrenzen-Dynamik (Erklärung der Asymmetrie zwischen Art und Folge)
-
-Positionsbezogene Auswertung relativ zum Abstand $d$ von der Satzgrenze ($d=0, \dots, 15$):
-
-- **Massiver lokaler Vorhersageschock:** An $d = 0$ (erstes Token) explodiert die Loss-Differenz $C - C0$ auf **$+1{,}85$** (GPT-2) bzw. **$+1{,}88$** (Pythia-160m). Das Modell erfährt an der Grenze eine massive Ent-Täuschung.
-- **Sink-Peak bei $d = 1$:** Die Sink-Differenz $C - C0$ erreicht exakt bei $d = 1$ ihr Maximum (**$+0{,}0199$** bei GPT-2, **$+0{,}0108$** bei Pythia).
-- **Verdünnungseffekt:** Bis $d = 15$ fällt der Loss-Unterschied um über 70 % ab (auf $+0{,}53$). Sobald die ersten Tokens stehen, konstituiert sich eine lokale Mikro-Warte. Da Sätze lang sind, liegen über 85 % aller Tokens bei $d \ge 5$. Folge ($B$) greift dagegen an jedem einzelnen Token — das erklärt die scheinbare Größenasymmetrie.
-
-### Valenz-Inkongruenz und Rekognition im Begriff (`PRAEREG_5_valenz.md`, `lauf_valenz`)
-
-Stimulus: $n = 100$ Minimalpaare mit festem Rahmen und archetypischer Erwartung.
-- **K1 (Konsistent):** *The devoted mother gently held her sick child and comforted its fragile body.*
-- **K2 (Paradox / Art zerstört, Folge intakt):** *... and strangled its fragile body.* (Handlungsvalenz invertiert: Fürsorge $\to$ Gewalt).
-- **K3 (Neutral / Kategoriefehler):** *... and measured its fragile body.*
-
-Messung der Rekognition (MLP-Zwischenschichten 4–8), des Residual Streams und der Attention:
-
-| Metrik | GPT-2 (K2 − K1) | 95%-KI | Pythia-160m (K2 − K1) | 95%-KI | Vorhersage |
-|---|---|---|---|---|---|
-| **V1 (MLP-Norm Mid)** | **−0,15** ($p = 0{,}009$) | −0,25 bis −0,04 | **−0,33** ($p = 0{,}0002$) | −0,48 bis −0,17 | V1 bestätigt |
-| **V2 (Residual Cos Drift)** | **−0,0122** ($p = 0{,}0006$) | −0,0188 bis −0,0056 | **−0,0093** ($p = 0{,}0186$) | −0,0179 bis −0,0009 | V2 bestätigt |
-| **V3 (Sink-Masse $t+1$)** | **+0,0032** ($p = 0{,}0188$) | +0,0004 bis +0,0062 | **+0,0076** ($p = 0{,}0002$) | +0,0042 bis +0,0111 | V3 bestätigt |
-| **V4 (Dissoziation K2 vs K3)**| −0,00 ($p = 0{,}517$) | −0,08 bis +0,07 | −0,14 ($p = 0{,}975$) | −0,29 bis −0,01 | V4 nicht bestätigt |
-
-**Theoretische Deutung (Fall „ja / ja“ der Deutungstabelle für beide Architekturen):**
-- **Volle Konfirmation:** Die Valenz-Paradoxie erschüttert sowohl die **begriffliche Rekognition** (MLPs) als auch die **situative Warte** (Attention Sink).
-- Bei paradoxen Handlungen bricht die MLP-Aktivierungsnorm in den mittleren Schichten signifikant ein: Die semantischen Schlüsselneuronen finden keine Resonanz im sedimentierten Vorrat.
-- Der Residual Stream knickt messbar von der Erwartungsrichtung ab (V2).
-- Die Aufmerksamkeit flieht am Folgetoken ($t+1$) signifikant in den Sink (V3), und die Ausgabe-Entropie steigt (von 2,39 auf 2,69 bei GPT-2; von 2,69 auf 2,95 bei Pythia).
-- V4-Erkenntnis: Die begriffliche Rekognition (MLP) bricht bei der affektlos neutralen Handlung (K3: *gemessen*) noch etwas tiefer ein als bei der paradoxen Handlung (K2: *erdrosselt*). Das Messen ist die *epistemische Zwischenstelle*: Es suspendiert die affektive Wertung der Warte.
-
-### Die faktorielle Ablations-Triade: Der Synthese-Beweis der Tripelstruktur (`PRAEREG_6_tripel.md`, `lauf_tripel`)
-
-Vollfaktorielle $2 \times 2 \times 2$-Intervention auf $n = 100$ Wikipedia-Sequenzen ($N = 128$).
-Messung der Vorhersage-Güte (Loss, Top-1, Perplexität) bei gezielter Ausschaltung von Art ($Q K^T = 0$), Folge ($\text{Pos} = 0$) und Zugleichsein ($\alpha_{ij} = \delta_{ij}$, Diagonale $V$):
-
-| Bedingung | Art | Folge | Zugleich | GPT-2 Loss (Top-1) | Pythia Loss (Top-1) | Theoretischer Zustand |
-|---|---|---|---|---|---|---|
-| **T111 (Voller Sinn)** | 1 | 1 | 1 | **3,33** (38,4%) | **3,21** (40,4%) | Vollzug aller drei Dimensionen |
-| **T011 (Ohne Art)** | 0 | 1 | 1 | **9,00** (4,2%) | **4,99** (22,1%) | Inhaltsblinde kausale Mischung |
-| **T101 (Ohne Folge)** | 1 | 0 | 1 | **9,80** (3,0%) | **5,54** (17,8%) | Zeitloses semantisches Set-Matching |
-| **T110 (Ohne Zugleichsein)** | 1 | 1 | 0 | **16,12** (0,0%) | **23,73** (0,0%) | Isolierte Tokens ohne Gemeinschaft |
-| **T001 (Nur Zugleichsein)** | 0 | 0 | 1 | **10,64** (4,1%) | **6,38** (14,3%) | Bag-of-Words Mittelwert |
-| **T000 (Vollständige Leere)** | 0 | 0 | 0 | **13,65** (1,6%) | **23,73** (0,0%) | Reine Einzel-Embeddings ohne Kontext |
-
-**Prüfung der Hypothesen (vollständig bestätigt über beide Architekturen, alle $p = 0{,}0002$):**
-- **H-Art bestätigt:** Abschalten der Art erhöht den Loss massiv ($+5{,}67$ bei GPT-2, $+1{,}77$ bei Pythia). Die Top-1-Genauigkeit stürzt von ~40 % auf 4 % bzw. 22 % ab.
-- **H-Folge bestätigt:** Abschalten der Zeitordnung erhöht den Loss noch stärker ($+6{,}47$ bei GPT-2, $+2{,}32$ bei Pythia).
-- **H-Zugleichsein bestätigt:** Das Fehlen der Gemeinschaft bricht die Sprachgenerierung vollständig ab (Loss $> 16$, Top-1 Acc $= 0{,}0\%$).
-- **Rangordnung der Schäden:** In beiden Modellen identisch: **Zugleichsein > Folge > Art**.
-- **H-Synthese (Superadditivität):** Der volle Sinn $T111$ leistet signifikant mehr als die Summe der drei isolierten Dimensionen ($+9{,}77$ Synergie-Gewinn bei GPT-2, $+3{,}17$ bei Pythia, $p = 0{,}0002$).
-
-**Philosophisches Fazit:** Sinn ist keine additive Eigenschaft, sondern eine **echte Emergenz/Synthese**: Erst wenn Erscheinungsprofil (Art), zeitliche Sukzession (Folge) und simultane Gemeinschaft (Zugleichsein) ineinandergreifen, kristallisiert Sinn im Residual Stream.
-
-### Ontogenese des Sinns durch Gewohnheit (PRAEREG_7_gewoehnung.md)
-- Messung der Tripelstruktur über alle 11 Checkpoints von `EleutherAI/pythia-160m` (`step0` bis `step143000`).
-- **H-Gewohnheit 1 (Kein Sinn vor aller Gewohnheit):** Bei `step 0` ist $H_{synthese} = +0{,}0073 \approx 0$ (Top-1: $0{,}0\%$, Loss $11{,}07$). Die leere Architektur besitzt vor aller Gewohnheit keinerlei Syntheseleistung.
-- **H-Gewohnheit 2 (Monotones Wachstum):** $H_{synthese}$ wächst streng monoton von $+0{,}007$ (`step 0`) über $+1{,}138$ (`step 1000`), $+2{,}067$ (`step 4000`) bis $+3{,}169$ Nats (`step 143000`). Sinn entsteht erst durch die Sedimentierung der Kookkurrenzen über Backpropagation.
-- **H-Gewohnheit 4 (Sink-Genese):** Bei `step 0` bis `step 1000` liegt die Sink-Masse auf Token 0 bei nur $\approx 0{,}02$ (kein Sink). Erst ab `step 4000` kondensiert der Sink ($0{,}08$) und stabilisiert sich ab `step 16000` bei $\approx 0{,}20$. Der Attention Sink ist eine erlernte Entlastungs-Warte.
-- Ergebnisse in `lauf_gewoehnung/analyse/bericht.md` und `lauf_gewoehnung/analyse/ontogenese_plot.png`.
-
+- **`chroma/`**: das Chroma-Experiment (Modell mit Arm-Schalter, Korpus, Training, Messung, Auswertung, Vorstudie, CLI). Einstieg: `python -m chroma --help`.
+- **`tests/`**: Tests zu `chroma/` (pytest).
+- **`docs/`**: `chroma_ideen.md` (Ideen und philosophische Fassung), `wissenschaft_fragen.md` (Fragen an die Gründungsschrift), `superpowers/specs/` und `superpowers/plans/` (Spec, Plan, Entscheidungsprotokoll), Hausarbeiten-Material, Literatur.
+- **`praereg/`**: Präregistrierungen (PRAEREG_2 bis 7; 8 und 9 folgen).
+- **`legacy_experiments/`**: vor-chromatische Experimentskripte (`sinn_experiment.py`, `tripel_experiment.py`, `gewoehnung_experiment.py`, `valenz_experiment.py`, `wiki_texte.py`) und der alte Chroma-Entwurf (`chroma_transformer_alt/`, Importe veraltet).
+- **`runs/`**: Läufe und Korpora der vor-chromatischen Experimente. Chroma-Läufe gehören nach `runs/chroma_*` (Korpusordner dort git-ignoriert).
+- **`theorie/`**: frühere, teils KI-generierte Dossiers (u. a. `GESAMTAUSARBEITUNG_RELEASE.md`, `SUPERLIGHT_FACTORY.md`). **Brainstorming, nicht Position**; enthält Überbehauptungen („Beweis“, „Isomorphismus“) und mit den Daten unvereinbare Aussagen.
 
 ## Offene Punkte
 
-1. **Instrumente reparieren**, bevor weitere Modelle gemessen werden — sonst nur mehr nicht deutbare Zahlen:
-   - H2 mit vorzeichenunabhängigem Maß neu fassen (z. B. Schwerpunkt von |Δ|). Dringend, weil das alte Maß je nach Lauf jedes Vorzeichen liefert.
-   - B2 wirksam machen; Satzwürfeln tut messbar nichts.
-   - C: Register ist als Erklärung raus (siehe Replikation), also offen, was C eigentlich variiert.
-2. **H3b prüfen** (`PRAEREG_2.md`): B − A und C − A je Checkpoint mit Bootstrap-KI. Kein neuer Messlauf nötig, Rohdaten liegen in `lauf/ergebnisse/`.
-3. **Größere Modelle** gegen die schwache externe Validität (GPT-2 medium/large, Pythia-410m/1.4b). Speicher ist der Engpass, weil `output_attentions` die vollen Matrizen erzwingt. Vorhersagen vorher festlegen, **alle** gelaufenen Modelle berichten.
-4. **Architekturskizze** Detektiv-Tor (Essayplan 5/6), hängt an keinem Messergebnis.
-5. **Weitere Erweiterungen**, jeweils mit eigener, vorher committeter Präregistrierung:
-   - Dosis-Wirkung: Würfeln innerhalb von Fenstern mit 2, 4, 8, 16 Wörtern. Vorhersage: Der Sink sinkt stetig mit der Fenstergröße.
-   - Wohin die Aufmerksamkeit geht: Attention-Entropie und mittlere Attention-Distanz pro Kopf messen. Vorhersage: In B und D verteilt sie sich auf nahe Tokens.
-   - Gegenpopulation der steigenden Köpfe gesondert untersuchen.
+1. PRAEREG_8 und PRAEREG_9 schreiben (siehe Chroma-Stand), dann Vorstudie, Pilot, Hauptlauf.
+2. Fragen an die Gründungsschrift weiter klären (`docs/wissenschaft_fragen.md`): Morphologie (B3), Psychologismus oder Übersetzung (F1), Maß der besseren Metapher (A3), Grenze der Experimentator-Warte (C3).
+3. Folge als eigene Studie (über Zeit und über Schichten).
+4. Spiel nach Schiller und Detektiv-Tor als Architekturskizzen (`chroma_ideen.md` § 12a): Welches Wahlkriterium macht Durchspielen zu Spiel statt zu Optimierung?
+5. Gewöhnung als Experimentfamilie: graduelle Fütterung (Curriculum Learning, BabyLM) zur Beobachtung entstehender Warten.
+6. Größere Modelle und Cloud-Skalierung, jeweils mit eigener Präregistrierung.
+7. Menschliche Daten als zweiter Fall.
 
 ## Arbeitsregeln
 
-- Präregistrierte Hypothesen und Entscheidungsregeln nie nachträglich ändern. Neue Hypothesen kommen in eine eigene Datei (z. B. `PRAEREG_2.md`) und werden *vor* dem Lauf committet.
-- Explorative Auswertungen im Bericht ausdrücklich als explorativ kennzeichnen.
-- Pilot und Hauptlauf in getrennten Ordnern halten (`--ordner`).
-- Nur frei lizenzierte Texte ins Repo committen (Wikipedia mit `quellen.csv` und `LIZENZ.md`).
-- Nach Codeänderungen `python sinn_experiment.py selbsttest` ausführen.
-- Literaturangaben vor der Verwendung prüfen. Ein früheres Mapping-Dokument enthielt falsche Titel und Zuordnungen (z. B. heißt Buckners Buch *From Deep Learning to Rational Machines*; Butlin et al. 2023 ist der Bewusstseinsbericht und hat nichts mit Kant zu tun).
+- Präregistrierte Hypothesen und Entscheidungsregeln nie nachträglich ändern. Neue Hypothesen in eine eigene Datei, *vor* dem Lauf committen.
+- Alle Läufe berichten, auch die unpassenden. Explorative Auswertungen ausdrücklich als explorativ kennzeichnen. Pilot und Hauptlauf in getrennten Ordnern; Pilotergebnisse werden nicht gedeutet.
+- Rohdaten und Deutungen getrennt halten, damit nach einer Umwälzung alte Experimente neu gedeutet werden können, ohne neu zu messen.
+- Überinterpretation widersprechen: Verfahrensintegrität ist nicht Validität; erst prüfen, ob das Instrument trägt.
+- Nur frei lizenzierte Texte ins Repo committen (Wikipedia mit `quellen.csv` und `LIZENZ.md`); WikiText-103 wird nur heruntergeladen.
+- Nach Codeänderungen an `chroma/`: `venv/bin/python -m pytest -q` und `venv/bin/python -m chroma selbsttest`. Für die Altskripte: `venv/bin/python legacy_experiments/sinn_experiment.py selbsttest`.
+- Literaturangaben vor der Verwendung prüfen. Ein früheres Mapping-Dokument enthielt falsche Titel und Zuordnungen (Buckners Buch heißt *From Deep Learning to Rational Machines*; Butlin et al. 2023 ist der Bewusstseinsbericht und hat nichts mit Kant zu tun).
 
 ## Literatur
 
 Geprüft:
 - Behrouz, Zhong, Mirrokni (2025): *Titans: Learning to Memorize at Test Time*, arXiv:2501.00663.
-- Qiu et al. (2025): *Gated Attention for Large Language Models: Non-linearity, Sparsity, and Attention-Sink-Free*, NeurIPS 2025 (Best Paper), arXiv:2505.06708.
+- Qiu et al. (2025): *Gated Attention for Large Language Models: Non-linearity, Sparsity, and Attention-Sink-Free*, NeurIPS 2025, arXiv:2505.06708.
 - Bondarenko, Nagel, Blankevoort (2023): *Quantizable Transformers: Removing Outliers by Helping Attention Heads Do Nothing*, NeurIPS 2023.
 - Barbero et al. (2025): *Why do LLMs attend to the first token?*, COLM 2025.
+- Anthropic (2023): *Privileged Bases in the Transformer Residual Stream*, transformer-circuits.pub/2023/privileged-basis.
+- Caples & Neuhaus: *Adam Optimizer Causes Privileged Basis in Transformer LM Residual Stream* (LessWrong, Blogpost, nicht begutachtet).
+- Kovaleva et al. (2021): *BERT Busters: Outlier Dimensions that Disrupt Transformers*, arXiv:2105.06990.
+- Puccetti et al. (2022): *Outlier Dimensions that Disrupt Transformers are Driven by Frequency*, arXiv:2205.11380.
 
-Noch zu prüfen: Geva et al. 2021 (FFN als Key-Value-Speicher); Meng et al. 2022 (ROME, Faktenwissen in mittleren MLPs — wird in „Der Transformer in diesen Begriffen“ bereits verwendet, Titel und Autorenschaft noch nicht geprüft); Tenney et al. 2019 (BERT-Pipeline); Olsson et al. 2022 (Induction Heads); Anthropic 2024 (Scaling Monosemanticity, Golden Gate Claude); Bender & Koller 2020; Butlin, Long et al. 2023 (*Consciousness in Artificial Intelligence*); Millière & Buckner 2024; Gadamer, *Wahrheit und Methode*; Carhart-Harris & Friston 2019 (REBUS: Psychedelika *lockern* Priors, im Widerspruch zu Hausarbeit 6.2 prüfen).
+Noch zu prüfen: Geva et al. 2021; Meng et al. 2022 (ROME); Tenney et al. 2019; Olsson et al. 2022; Anthropic 2024 (Scaling Monosemanticity); Bender & Koller 2020; Butlin, Long et al. 2023; Millière & Buckner 2024; Gadamer, *Wahrheit und Methode*; Carhart-Harris & Friston 2019; Lee & Seung 1999 (NMF); Grassberger & Procaccia 1983; Hill, Reichart & Korhonen 2015 (SimLex-999); Merity et al. 2016 (WikiText-103); Kant KrV B XIII/B XVIII; Hegel, Knotenlinie; Sartre, Brieföffner; D&G, Immanenzebene; Schiller, 15. Brief; Langton 1989; Vaihinger 1911; Spinoza, *Ethik* III; Bengio et al. 2009; Conrad 1958; Montague et al. 2012; Fletcher & Frith 2009; Kapur 2003; Heidegger, SuZ § 32.

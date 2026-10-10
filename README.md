@@ -1,6 +1,69 @@
-# Die Tripelstruktur des Sinns im Transformer
+# ggxtransformer: Sinn, Warte und Gleichartigkeit im Transformer
 
-Experiment zur These, dass der Attention Sink eines Sprachmodells eine verdrängte Asynchronizität ist: der Ort, an dem ein Attention-Kopf seine Aufmerksamkeit ablädt, wenn im Kontext nichts resoniert. Dazu werden die drei Dimensionen des Sinns (Art, Folge, Zugleichsein) in fünf Bedingungen gezielt zerstört.
+Philosophisch-experimentelles Projekt. Eine eigene Theorie der Sinnkonstitution (Warte, Tripelstruktur des Sinns aus Art, Folge und Zugleichsein, Synchronizität nach Jung) wird auf Sprachmodelle angewandt, und ihre Begriffe werden zu experimentellen Variablen. Ziel ist eine Wissenschaft des Geistes, die transzendentale Bestimmungen im gebauten System variiert, statt sie nur zu behaupten: *Transzendentalphilosophie als Experiment, um den Preis der Apodiktizität*.
+
+Begriffe und Stand der Theorie: `CLAUDE.md`. Gründungsfragen: `docs/wissenschaft_fragen.md`.
+
+## Aktuelle Hauptlinie: Chroma
+
+**Frage:** Braucht abgestufte Gleichartigkeit qualitativ verschiedene Dimensionen (eine bevorzugte Basis), oder genügt das Zugleichsein vieler Dimensionen?
+
+Dazu werden vier kleine Transformer mit sonst identischem Aufbau trainiert und bei gleichem Loss verglichen:
+
+| Arm | Optimierer | Farbe | bevorzugte Basis |
+|---|---|---|---|
+| A₀ | SGD | keine | nirgends |
+| A | AdamW | keine | kann durch das Training entstehen |
+| Bα | AdamW | nichtnegatives Embedding | im Archetyp eingebaut |
+| Bβ | AdamW | nichtnegative Lesung des Streams | im Vollzug eingebaut |
+
+Kernmaß ist die **Ersetzbarkeit**: Wie stark ändert sich die Erwartung des Modells, wenn man im Kontext ein Wort x durch y ersetzt? Der Gleichartigkeitsindex G misst, wie gut der Kosinus der Embeddings diese Ersetzbarkeit abgestuft vorhersagt. Eine Vorstudie misst die Basispräferenz in GPT-2 und Pythia-160m über deren Trainings-Checkpoints.
+
+- Spec: `docs/superpowers/specs/2026-10-10-chroma-gleichartigkeit-design.md`
+- Ideen und philosophische Fassung: `docs/chroma_ideen.md`
+- Implementierungsplan und Entscheidungsprotokoll: `docs/superpowers/plans/`
+
+**Stand:** Code fertig und getestet, noch keine Messung. Vor jedem Lauf wird die zugehörige Präregistrierung (`praereg/PRAEREG_8_achsen.md`, `praereg/PRAEREG_9_chroma.md`) committet.
+
+### Installation
+
+```bash
+python -m venv venv && source venv/bin/activate
+pip install -r requirements.txt
+python -m pytest -q             # Tests
+python -m chroma selbsttest     # Offline-Durchlauf mit winzigen Modellen, prüft nur den Code
+```
+
+### Befehle
+
+```bash
+python -m chroma korpus --ordner runs/chroma_korpus                      # WikiText-103 laden, BPE (8192) trainieren
+python -m chroma train --korpus runs/chroma_korpus --haupt runs/chroma_pilot \
+    --arm A --seed 0 --lr 3e-4 --stufen 5.0,4.5,4.0                     # ein Arm, ein Seed
+python -m chroma messen --ckpt runs/chroma_pilot/A/seed0/stufe_4.00.pt \
+    --korpus runs/chroma_korpus                                           # alle Maße eines Checkpoints
+python -m chroma auswerten --haupt runs/chroma_haupt                      # Entscheidungsregeln, bericht.md
+python -m chroma register --haupt runs/chroma_haupt --korpus runs/chroma_korpus --arm A --stufe 4.0
+python -m chroma vorstudie --modell EleutherAI/pythia-160m --revisionen pythia \
+    --seqs runs/lauf_wiki/korpus/seq__EleutherAI__pythia-160m__N256.npz
+python -m chroma vorstudie-bericht --v-schwelle <Wert aus PRAEREG_8>
+```
+
+Der Mess-Seed (`messen --seed`) muss für alle Läufe einer Studie gleich sein, sonst gilt die Auswertung als inkonsistent. Lernraten, Loss-Stufen und Budget (A₀ bis zum Fünffachen) werden im Pilot kalibriert und in PRAEREG_9 festgeschrieben.
+
+## Repository-Struktur
+
+- **`chroma/`**: das Chroma-Experiment (Modell, Korpus, Training, Messung, Auswertung, Vorstudie, CLI)
+- **`tests/`**: Tests zu `chroma/`
+- **`docs/`**: Ideen, Gründungsfragen, Spec, Plan, Hausarbeiten-Material, Literatur
+- **`praereg/`**: Präregistrierungen
+- **`legacy_experiments/`**: vor-chromatische Experimente (Attention Sink, Valenz, Tripel-Ablation, Gewöhnung) und der alte Chroma-Entwurf
+- **`runs/`**: Läufe und Korpora
+- **`theorie/`**: frühere Dossiers, Brainstorming und keine Position
+
+## Vor-chromatische Experimente: Attention Sink
+
+Das erste Experiment prüfte die These, dass der Attention Sink eine verdrängte Asynchronizität ist: der Ort, an dem ein Kopf seine Aufmerksamkeit ablädt, wenn im Kontext nichts resoniert. Dazu wurden Art und Folge in fünf Bedingungen gezielt zerstört.
 
 | Bedingung | Art | Folge | Konstruktion |
 |---|---|---|---|
@@ -10,90 +73,23 @@ Experiment zur These, dass der Attention Sink eines Sprachmodells eine verdräng
 | C disparat | ✗ | ✓ | Einzelsätze aus fremden Dokumenten |
 | D Rauschen | ✗ | ✗ | Zufallstokens nach Häufigkeit |
 
-## Installation
+**Ergebnis:** H1 und H3 sind widerlegt, und H2 ist als Test unbrauchbar, weil das Maß je nach Lauf beide Vorzeichen liefert. Zerstörte Folge *senkt* die Sink-Masse deutlich, zerstörte Art hebt sie nur minimal. Einzelheiten und Replikation: `CLAUDE.md`, Berichte in `runs/*/analyse/`.
+
+Ausführen (Skripte jetzt in `legacy_experiments/`):
 
 ```bash
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-python sinn_experiment.py selbsttest   # prüft den Code offline mit einem winzigen Zufallsmodell
+python legacy_experiments/sinn_experiment.py selbsttest
+python legacy_experiments/sinn_experiment.py --ordner runs/pilot --seed 99 korpus --n 30 --pool 50 --min-zeichen 2000
+python legacy_experiments/sinn_experiment.py --ordner runs/lauf messen --modell gpt2
+python legacy_experiments/sinn_experiment.py --ordner runs/lauf analyse --modell gpt2
+python legacy_experiments/sinn_experiment.py --ordner runs/lauf messen --modell EleutherAI/pythia-160m --revisionen pythia
+python legacy_experiments/sinn_experiment.py --ordner runs/lauf dynamik --modell EleutherAI/pythia-160m
+python legacy_experiments/wiki_texte.py --kontakt deine@mail.de --ziel 500 --ordner meine_texte
 ```
 
-## Ablauf
+Messgrößen: Sink-Masse (Anteil der Aufmerksamkeit auf das Start-Token, Query-Positionen ab 8), Ausgabe-Entropie, Loss. Statistik: einseitige Permutationstests, Perzentil-Bootstrap, Benjamini-Hochberg. Neue Wikipedia-Artikel (erste Version ab 2024) unter CC BY-SA 4.0 mit `quellen.csv` und `LIZENZ.md`.
 
-**1. Pilot** (separater Ordner und Seed, fließt nicht in die Hypothesentests ein):
-
-```bash
-python sinn_experiment.py --ordner pilot --seed 99 korpus --n 30 --pool 50 --min-zeichen 2000
-python sinn_experiment.py --ordner pilot --seed 99 messen --modell gpt2
-python sinn_experiment.py --ordner pilot --seed 99 analyse --modell gpt2 --permutationen 1000
-```
-
-Danach `pilot/korpus/beispiele__gpt2.txt` lesen: Sehen die Bedingungen so aus wie gedacht?
-
-**2. Präregistrierung:** Den Abschnitt unten ausfüllen und committen, *bevor* der Hauptlauf startet.
-
-**3. Hauptlauf** (H1, H2):
-
-```bash
-python sinn_experiment.py korpus --n 300 --pool 200 --min-zeichen 2000 --textordner meine_texte
-python sinn_experiment.py messen --modell gpt2
-python sinn_experiment.py analyse --modell gpt2
-```
-
-**4. Genese der Warte** (H3, Pythia-Checkpoints):
-
-```bash
-python sinn_experiment.py messen --modell EleutherAI/pythia-160m --revisionen pythia
-python sinn_experiment.py analyse --modell EleutherAI/pythia-160m --revision step143000
-python sinn_experiment.py dynamik --modell EleutherAI/pythia-160m
-```
-
-`--revisionen pythia` misst elf Checkpoints von Schritt 0 bis 143000. Jeder Checkpoint wird einzeln heruntergeladen (rund 300 MB bei Pythia-160M). Bereits gemessene Checkpoints werden übersprungen, ein abgebrochener Lauf kann also einfach neu gestartet werden.
-
-## Welche Texte?
-
-GPT-2 (2019) und Pythia (2020) haben Wikipedia und viele Webtexte im Training gesehen. Kohärente Texte, die sie auswendig kennen, würden Bedingung A verzerren. Für den Hauptlauf deshalb neue Wikipedia-Artikel verwenden, deren erste Version nach Ende 2023 angelegt wurde:
-
-```bash
-python wiki_texte.py --kontakt deine@mail.de --ziel 500 --ordner meine_texte
-python sinn_experiment.py korpus --n 300 --pool 200 --min-zeichen 2000 --textordner meine_texte
-```
-
-`wiki_texte.py` nutzt die offizielle Wikipedia-API mit einer Anfrage pro Sekunde und Kontaktangabe im User-Agent, wie Wikimedia es verlangt. Rechne mit etwa einer halben bis einer Stunde. Ein abgebrochener Lauf setzt beim erneuten Start fort. Für Themenvielfalt werden Artikel an zufälligen Zeitpunkten im Anlage-Log gezogen, mit höchstens drei Artikeln pro Zeitpunkt und pro anlegender Person. `quellen.csv` enthält Titel, Permalink und Anlagedatum; die Texte stehen unter CC BY-SA 4.0 und dürfen mit dieser Quellenangabe (siehe `LIZENZ.md`) im Repo veröffentlicht werden.
-
-Eine Restunschärfe bleibt: Ein neuer Artikel kann Absätze aus älteren Artikeln übernehmen, etwa bei Abspaltungen. Der Loss in Bedingung A dient als Kontrolle.
-
-Für den Pilot reicht ein schneller Web-Datensatz ohne eigenen Abruf, zum Beispiel FineWeb (den genauen Dump-Namen auf der Datensatzseite prüfen):
-
-```bash
-python sinn_experiment.py --ordner pilot --seed 99 korpus --n 30 --pool 50 --min-zeichen 2000 \
-  --hf-datensatz HuggingFaceFW/fineweb --hf-config CC-MAIN-2024-51
-```
-
-Englisch, weil beide Modelle fast nur auf Englisch trainiert sind.
-
-## Ausgaben
-
-- `korpus/texte.json` – die verwendeten Texte (gleich für alle Modelle)
-- `korpus/seq__<modell>__N256.npz` – Token-Sequenzen pro Tokenizer
-- `korpus/beispiele__<modell>.txt` – lesbare Beispiele jeder Bedingung
-- `ergebnisse/<modell>__<revision>.npz` – Sink-Masse [n, Schichten, Köpfe], Entropie und Loss pro Sequenz
-- `analyse/<modell>__<revision>/bericht.md` – Tabellen und Tests zu H1 und H2, Heatmaps, `koepfe.csv`
-- `analyse/<modell>__dynamik/` – Verlauf über das Training (H3)
-
-## Messgrößen
-
-- **Sink-Masse:** Anteil der Aufmerksamkeit eines Kopfes, der auf das feste Start-Token fällt, gemittelt über die Query-Positionen ab `--skip` (Standard 8).
-- **Ausgabe-Entropie:** Unsicherheit der Vorhersageverteilung, Asynchronizität auf der Ausgabeseite.
-- **Loss:** Kontrolle, ob die Bedingungen wirken. A sollte am niedrigsten, D am höchsten liegen.
-
-Statistik: einseitige Permutationstests, Perzentil-Bootstrap für Konfidenzintervalle, Benjamini-Hochberg-Korrektur für die kopfweisen Tests.
-
-## Rechenaufwand
-
-GPT-2 small und Pythia-160M laufen auf einer normalen CPU. Pro Bedingung und Checkpoint sind je nach Rechner einige Minuten zu erwarten. Mit Grafikkarte (oder Apple Silicon) geht es deutlich schneller. Bei Speicherproblemen `--batch 1` setzen.
-
-## Präregistrierung
+### Präregistrierung des ersten Hauptlaufs (unverändert)
 
 *Vor dem Hauptlauf ausfüllen und committen. Datum: 23. September 2026*
 
