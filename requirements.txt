@@ -4,3 +4,6 @@ datasets
 numpy
 matplotlib
 requests
+scipy
+scikit-learn
+pytest
