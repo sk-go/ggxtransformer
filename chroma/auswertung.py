@@ -88,7 +88,71 @@ def entscheide_p2(pr_b, pr_a_ica, g_b, g_a, delta=0.05, alpha=0.05):
             "preis_ok": preis_ok, "p_preis": float(p_preis)}
 
 
-def bericht(haupt, delta=0.05, alpha=0.05, schwelle_a0=2.0, schwelle_a=10.0):
+def seed_status(haupt, messungen, stufe, seeds=None, arme=tuple(ARME)):
+    """Je Arm: erwartete Seeds (aus den Trainingsordnern <haupt>/<arm>/seed*/, oder vorgegeben),
+    abgebrochene (abbruch.json), unfertige (ohne fertig.json) und Seeds ohne Messung der primären Stufe
+    (ohne gemeinsame Stufe: ohne jede Messung)."""
+    haupt = Path(haupt)
+    status = {}
+    for arm in arme:
+        if seeds is None:
+            erwartet = sorted(int(d.name[4:]) for d in haupt.glob(f"{arm}/seed*")
+                              if d.is_dir() and d.name[4:].isdigit())
+        else:
+            erwartet = sorted(int(s) for s in seeds)
+        gemessen = {s for a, s, st in messungen if a == arm and (stufe is None or st == stufe)}
+        ordner = {s: haupt / arm / f"seed{s}" for s in erwartet}
+        status[arm] = {
+            "erwartet": erwartet,
+            "abbruch": [s for s in erwartet if (ordner[s] / "abbruch.json").exists()],
+            "ohne_fertig": [s for s in erwartet if not (ordner[s] / "fertig.json").exists()],
+            "ohne_messung": [s for s in erwartet if s not in gemessen],
+        }
+    return status
+
+
+def _seed_status_zeilen(status, stufe):
+    messung = "Messung der primären Stufe" if stufe is not None else "jede Messung"
+    zeilen = ["## Seed-Status", ""]
+    for arm, st in status.items():
+        zeilen += [f"- {arm}: erwartet {st['erwartet']}",
+                   f"  - {arm}: abgebrochen (abbruch.json): {st['abbruch']}",
+                   f"  - {arm}: ohne fertig.json: {st['ohne_fertig']}",
+                   f"  - {arm}: ohne {messung}: {st['ohne_messung']}"]
+    return zeilen + [""]
+
+
+def pruefe_konsistenz(messungen, stufe, arme=tuple(ARME)):
+    """Alle Messungen einer Stufe müssen dieselbe Messkonfiguration haben und die Farbe ihres Arms tragen.
+    Rückgabe: Liste von Gründen (leer = konsistent)."""
+    gruende = []
+    eintraege = [((a, s), m) for (a, s, st), m in sorted(messungen.items()) if a in arme and st == stufe]
+    configs = {}
+    for (arm, seed), m in eintraege:
+        mc = (m.get("info") or {}).get("messconfig")
+        if mc is None:
+            gruende.append(f"Messkonfiguration fehlt: ({arm}, seed{seed})")
+        else:
+            configs.setdefault(json.dumps(mc, sort_keys=True), []).append(f"({arm}, seed{seed})")
+        if m.get("farbe") != ARME[arm]["farbe"]:
+            gruende.append(f"Farbe passt nicht zum Arm: ({arm}, seed{seed}) hat {m.get('farbe')!r}, "
+                           f"erwartet {ARME[arm]['farbe']!r}")
+    if len(configs) > 1:
+        gruppen = sorted(configs.values(), key=len, reverse=True)
+        abweichend = [x for g in gruppen[1:] for x in g]
+        gruende.append(f"Messkonfiguration uneinheitlich ({len(configs)} Varianten); abweichend: "
+                       + ", ".join(abweichend))
+    return gruende
+
+
+def _info(m, *pfad):
+    v = m
+    for k in pfad:
+        v = v.get(k) if isinstance(v, dict) else None
+    return v
+
+
+def bericht(haupt, delta=0.05, alpha=0.05, schwelle_a0=2.0, schwelle_a=10.0, seeds=None):
     haupt = Path(haupt)
     m = lade_messungen(haupt)
 
@@ -107,12 +171,16 @@ def bericht(haupt, delta=0.05, alpha=0.05, schwelle_a0=2.0, schwelle_a=10.0):
     erg["fehlende_stufen"] = {f"{arm}:{seed}": sorted(set(alle_stufen) - stufen_pro_seed.get((arm, seed), set()))
                               for arm, seed in stufen_pro_seed}
 
+    # Seed-Vollständigkeit: Was fehlt, wird ausdrücklich genannt
+    erg["seed_status"] = seed_status(haupt, m, stufe, seeds)
+
     if stufe is None:
         zeilen.append("**Es gibt keine gemeinsame Stufe**, die alle Seeds aller Arme erreicht haben. "
                       "Keine Entscheidung möglich; als Einschränkung berichten.")
+        zeilen.append("")
+        zeilen += _seed_status_zeilen(erg["seed_status"], stufe)
 
         # Berichte verfügbare und fehlende Stufen
-        zeilen.append("")
         zeilen.append("## Verfügbare Loss-Stufen pro Arm und Seed")
         zeilen.append("")
         for arm in sorted(set(a for a, _, _ in m)):
@@ -134,27 +202,62 @@ def bericht(haupt, delta=0.05, alpha=0.05, schwelle_a0=2.0, schwelle_a=10.0):
 
     zeilen.append(f"Primäre Loss-Stufe: {stufe:.2f}")
     zeilen.append("")
+    zeilen += _seed_status_zeilen(erg["seed_status"], stufe)
+
+    # Konsistenz: gleiche Messkonfiguration, Farbe passt zum Arm
+    erg["konsistenz"] = pruefe_konsistenz(m, stufe)
+    zeilen += ["## Konsistenzprüfung", ""]
+    if erg["konsistenz"]:
+        zeilen += ["**Nicht konsistent – P1/P2 nicht auswertbar:**", ""] + [f"- {g}" for g in erg["konsistenz"]]
+    else:
+        zeilen.append("Alle Messungen dieser Stufe haben dieselbe Messkonfiguration und die Farbe ihres Arms.")
+    zeilen.append("")
 
     # Manipulationsprüfung mit kurtosis_ohne_pos0 als Gate
     k_a0, verw_ka0_kurto = werte(m, "A0", stufe, "kurtosis")
     k_a, verw_ka_kurto = werte(m, "A", stufe, "kurtosis")
     k_a0_op, verw_ka0_op = werte(m, "A0", stufe, "kurtosis_ohne_pos0")
     k_a_op, verw_ka_op = werte(m, "A", stufe, "kurtosis_ohne_pos0")
+    kontrolle = {arm: werte(m, arm, stufe, "kurtosis_kontrolle")[0] for arm in ARME}
+    kontrolle_mittel = {arm: float(v.mean()) if len(v) else float("nan") for arm, v in kontrolle.items()}
 
-    bestanden = bool(len(k_a0_op) and len(k_a_op) and k_a0_op.mean() < schwelle_a0 and k_a_op.mean() > schwelle_a)
+    gate_daten = bool(len(k_a0_op) and len(k_a_op))
+    bestanden = bool(k_a0_op.mean() < schwelle_a0 and k_a_op.mean() > schwelle_a) if gate_daten else None
     erg["manipulation"] = {
         "bestanden": bestanden,
         "kurtosis_a0": k_a0.tolist(),
         "kurtosis_a": k_a.tolist(),
         "kurtosis_ohne_pos0_a0": k_a0_op.tolist(),
-        "kurtosis_ohne_pos0_a": k_a_op.tolist()
+        "kurtosis_ohne_pos0_a": k_a_op.tolist(),
+        "kurtosis_kontrolle": kontrolle_mittel,
     }
+    if bestanden is None:
+        gate_text = "nicht auswertbar – Kurtosiswerte (ohne Pos. 0) fehlen für A₀ oder A"
+    elif bestanden:
+        gate_text = "bestanden"
+    else:
+        gate_text = "NICHT bestanden – Verdikt nichtig"
     zeilen += ["## Manipulationsprüfung", "",
                f"Kurtosis (ohne Pos0) A₀: Mittel {k_a0_op.mean() if len(k_a0_op) else float('nan'):.3f} (Schwelle < {schwelle_a0}), "
                f"A: Mittel {k_a_op.mean() if len(k_a_op) else float('nan'):.3f} (Schwelle > {schwelle_a})",
                f"Kurtosis (alle) A₀: Mittel {k_a0.mean() if len(k_a0) else float('nan'):.3f}, "
                f"A: Mittel {k_a.mean() if len(k_a) else float('nan'):.3f}: "
-               f"**{'bestanden' if bestanden else 'NICHT bestanden – Verdikt nichtig'}**", ""]
+               f"**{gate_text}**",
+               "Drehungskontrolle (Kurtosis nach zufälliger Drehung, dieselben Zeilen ohne Pos. 0, "
+               "Mittel über Schichten): "
+               + ", ".join(f"{a} {v:.3f}" if np.isfinite(v) else f"{a} –" for a, v in kontrolle_mittel.items()),
+               ""]
+
+    # Was die Urteile P1/P2 aufhebt: Inkonsistenz oder fehlendes Gate → nicht auswertbar; Gate gescheitert → nichtig
+    if erg["konsistenz"]:
+        aufgehoben = "nicht auswertbar"
+    elif bestanden is None:
+        aufgehoben = "nicht auswertbar"
+    elif not bestanden:
+        aufgehoben = "nichtig"
+    else:
+        aufgehoben = None
+    erg["urteile_aufgehoben"] = aufgehoben
 
     # Zähle Ausfälle aller Maße
     erg["n"] = {}
@@ -179,12 +282,50 @@ def bericht(haupt, delta=0.05, alpha=0.05, schwelle_a0=2.0, schwelle_a=10.0):
         zeilen.append("| " + " | ".join(zeile_eintraege) + " |")
     zeilen.append("")
 
-    g = {arm: werte(m, arm, stufe, "G") for arm in ARME}
-    erg["p1"] = entscheide_p1(g["A0"][0], g["A"][0], delta, alpha)
+    # Gültige Paare je Arm und Seed (Mindestquote, siehe MessConfig.min_quote_paare)
+    zeilen += ["## Gültige Paare je Arm und Seed", "",
+               "| Arm | Seed | Paare gültig/gesamt | Quote | Anker gültig/gesamt | G verworfen (Quote) |",
+               "|---|---|---|---|---|---|"]
+    erg["paare"] = {}
+    for (arm, seed, st), mm in sorted(m.items()):
+        if arm not in ARME or st != stufe:
+            continue
+        pg, pges = _info(mm, "info", "paare_gueltig"), _info(mm, "info", "paare_gesamt")
+        ag, ages = _info(mm, "info", "anker", "paare_gueltig"), _info(mm, "info", "anker", "paare_gesamt")
+        verw = _info(mm, "info", "G_verworfen_quote")
+        erg["paare"][f"{arm}:{seed}"] = {"gueltig": pg, "gesamt": pges, "anker_gueltig": ag, "anker_gesamt": ages,
+                                         "G_verworfen_quote": verw}
+        quote = f"{pg / pges:.3f}" if pg is not None and pges else "–"
+        zeilen.append(f"| {arm} | {seed} | {pg if pg is not None else '–'}/{pges if pges is not None else '–'} | "
+                      f"{quote} | {ag if ag is not None else '–'}/{ages if ages is not None else '–'} | "
+                      f"{'–' if verw is None else ('ja' if verw else 'nein')} |")
+    zeilen.append("")
 
-    # Mache P1 nichtig wenn Manipulation fehlgeschlagen ist
-    if not bestanden:
-        erg["p1"]["urteil"] = "nichtig"
+    # ICA-Konvergenz: Werte aus nicht konvergierten Drehungen zählen, P2 ggf. als eingeschränkt markieren
+    erg["ica_nicht_konvergiert"] = {}
+    for arm in ARME:
+        zaehler = {"archetyp": 0, "strom": 0}
+        for (a, _, st), mm in m.items():
+            if a == arm and st == stufe:
+                for teil in zaehler:
+                    if _info(mm, "info", "ica_konvergiert", teil) is False:
+                        zaehler[teil] += 1
+        erg["ica_nicht_konvergiert"][arm] = zaehler
+    # In P2 gehen nur die ICA-Werte von A ein
+    erg["p2_eingeschraenkt"] = bool(sum(erg["ica_nicht_konvergiert"]["A"].values()) > 0)
+
+    g = {arm: werte(m, arm, stufe, "G") for arm in ARME}
+    erg["G"] = {arm: g[arm][0].tolist() for arm in ARME}
+    erg["p1"] = entscheide_p1(g["A0"][0], g["A"][0], delta, alpha)
+    if aufgehoben:
+        erg["p1"]["urteil"] = aufgehoben
+
+    zeilen += ["## Kernmaß G je Arm", ""]
+    for arm in ARME:
+        w, verw = g[arm]
+        mittel_g = f"{w.mean():.4f}" if len(w) else "–"
+        zeilen.append(f"- G({arm}) = {w.round(4).tolist()} (Mittel {mittel_g}, verworfen: {verw})")
+    zeilen.append("")
 
     zeilen += ["## P1 (Gerüstfrage)", "",
                f"G(A₀) = {g['A0'][0].round(4).tolist()} (verworfen: {g['A0'][1]}), "
@@ -199,16 +340,21 @@ def bericht(haupt, delta=0.05, alpha=0.05, schwelle_a0=2.0, schwelle_a=10.0):
         "Bb": entscheide_p2(werte(m, "Bb", stufe, "pr_strom_eigen")[0], pr_a_strom, g["Bb"][0], g["A"][0], delta, alpha),
     }
 
-    # Mache P2 nichtig wenn Manipulation fehlgeschlagen ist
-    if not bestanden:
+    if aufgehoben:
         for arm in erg["p2"]:
-            erg["p2"][arm]["lesbar"] = "nichtig"
-            erg["p2"][arm]["preis_ok"] = "nichtig"
+            erg["p2"][arm]["lesbar"] = aufgehoben
+            erg["p2"][arm]["preis_ok"] = aufgehoben
 
     zeilen += ["## P2 (Sichtbarkeitsfrage)", ""]
+    if erg["p2_eingeschraenkt"]:
+        nk = erg["ica_nicht_konvergiert"]["A"]
+        zeilen += [f"**P2 eingeschränkt:** Bei A stammen {nk['archetyp']} Archetyp- und {nk['strom']} "
+                   f"Strom-Werte aus nicht konvergierten ICA-Drehungen.", ""]
     for arm, e in erg["p2"].items():
         zeilen.append(f"- {arm}: lesbar = {e['lesbar']} (p = {e['p_lesbar']}), "
                       f"Preisprüfung bestanden = {e['preis_ok']} (p = {e['p_preis']})")
+    zeilen.append("- ICA nicht konvergiert (Archetyp/Strom) je Arm: "
+                  + ", ".join(f"{a} {v['archetyp']}/{v['strom']}" for a, v in erg["ica_nicht_konvergiert"].items()))
     zeilen.append("")
 
     koph = {arm: werte(m, arm, stufe, "kophenetisch")[0] for arm in ARME}

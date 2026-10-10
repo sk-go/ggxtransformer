@@ -5,11 +5,20 @@ import numpy as np
 from chroma import auswertung as aw
 
 
+MESSCONFIG = {"n_woerter": 2000, "n_paare": 20000, "seed": 0, "min_quote_paare": 0.9}
+
+
 def schreibe(haupt, arm, seed, stufe, **werte):
+    """Messdatei wie von messe_checkpoint: mit Farbe des Arms und info (Messkonfiguration, Paare, ICA)."""
     d = haupt / arm / f"seed{seed}"
     d.mkdir(parents=True, exist_ok=True)
-    basis = {"G": 0.5, "kurtosis": [0.0], "kurtosis_ohne_pos0": [0.0], "pr_archetyp_eigen": 50.0, "pr_archetyp_ica": 50.0,
-             "pr_strom_eigen": 50.0, "pr_strom_ica": 50.0, "kophenetisch": 0.5, "G_QK": 0.1, "G_top": 0.1}
+    basis = {"G": 0.5, "kurtosis": [0.0], "kurtosis_ohne_pos0": [0.0], "kurtosis_kontrolle": [0.0],
+             "pr_archetyp_eigen": 50.0, "pr_archetyp_ica": 50.0,
+             "pr_strom_eigen": 50.0, "pr_strom_ica": 50.0, "kophenetisch": 0.5, "G_QK": 0.1, "G_top": 0.1,
+             "farbe": aw.ARME.get(arm, {"farbe": "keine"})["farbe"],
+             "info": {"paare_gueltig": 19000, "paare_gesamt": 20000, "G_verworfen_quote": False,
+                      "anker": {"paare_gueltig": 11000, "paare_gesamt": 11175},
+                      "ica_konvergiert": {"archetyp": True, "strom": True}, "messconfig": dict(MESSCONFIG)}}
     basis.update(werte)
     (d / f"messung_stufe_{stufe:.2f}.json").write_text(json.dumps(basis))
 
@@ -188,3 +197,112 @@ def test_gemeinsame_stufe_ignoriert_unbekannte_arme(tmp_path):
     # Wenn wir X explizit fordern, sollte stufe None sein (5.0 und 4.0 passen nicht)
     stufe_mit_x = aw.gemeinsame_stufe(m, arme=("A0", "A", "Ba", "Bb", "X"))
     assert stufe_mit_x is None
+
+
+def fuelle(haupt, anpassen=lambda arm, seed, w: w, seeds=range(5)):
+    """Vollständige Studie (alle Arme, 5 Seeds), die die Manipulationsprüfung besteht und P1 bestätigt."""
+    rng = np.random.default_rng(0)
+    for seed in seeds:
+        w = {
+            "A0": dict(G=0.1 + 0.01 * rng.random(), kurtosis=[0.5 + 0.1 * rng.random()],
+                       kurtosis_ohne_pos0=[0.5 + 0.1 * rng.random()]),
+            "A": dict(G=0.5 + 0.01 * rng.random(), kurtosis=[40.0 + rng.random()],
+                      kurtosis_ohne_pos0=[40.0 + rng.random()], pr_archetyp_ica=80.0 + rng.random(),
+                      pr_strom_ica=80.0 + rng.random()),
+            "Ba": dict(G=0.5 + 0.01 * rng.random(), pr_archetyp_eigen=20.0 + rng.random()),
+            "Bb": dict(G=0.5 + 0.01 * rng.random(), pr_strom_eigen=20.0 + rng.random()),
+        }
+        for arm, werte_arm in w.items():
+            schreibe(haupt, arm, seed, 5.0, **anpassen(arm, seed, werte_arm))
+
+
+def test_seed_status_abbruch_und_ohne_fertig(tmp_path):
+    fuelle(tmp_path)
+    for arm in ("A0", "A", "Ba", "Bb"):
+        for seed in range(5):
+            (tmp_path / arm / f"seed{seed}" / "fertig.json").write_text("{}")
+    abgebrochen = tmp_path / "A0" / "seed5"  # Seed ohne Messung, mit abbruch.json
+    abgebrochen.mkdir()
+    (abgebrochen / "abbruch.json").write_text('{"grund": "Loss nicht endlich"}')
+    erg = aw.bericht(tmp_path)
+    st = erg["seed_status"]["A0"]
+    assert st["erwartet"] == [0, 1, 2, 3, 4, 5]
+    assert st["abbruch"] == [5] and st["ohne_fertig"] == [5] and st["ohne_messung"] == [5]
+    assert erg["seed_status"]["A"]["abbruch"] == [] and erg["seed_status"]["A"]["ohne_fertig"] == []
+    text = (tmp_path / "bericht.md").read_text()
+    assert "Seed-Status" in text and "A0: abgebrochen (abbruch.json): [5]" in text
+
+
+def test_seed_status_vorgegebene_seeds(tmp_path):
+    fuelle(tmp_path, seeds=range(4))
+    erg = aw.bericht(tmp_path, seeds=range(5))
+    assert erg["seed_status"]["A"]["ohne_messung"] == [4]
+
+
+def test_inkonsistente_messconfig_nicht_auswertbar(tmp_path):
+    def anpassen(arm, seed, w):
+        if arm == "A" and seed == 2:
+            w["info"] = {"messconfig": {**MESSCONFIG, "n_paare": 100}}
+        return w
+    fuelle(tmp_path, anpassen)
+    erg = aw.bericht(tmp_path)
+    assert erg["p1"]["urteil"] == "nicht auswertbar"
+    assert erg["p2"]["Ba"]["lesbar"] == "nicht auswertbar"
+    text = (tmp_path / "bericht.md").read_text()
+    assert "Messkonfiguration" in text and "(A, seed2)" in text
+
+
+def test_falsche_farbe_nicht_auswertbar(tmp_path):
+    def anpassen(arm, seed, w):
+        if arm == "Bb" and seed == 0:
+            w["farbe"] = "alpha"
+        return w
+    fuelle(tmp_path, anpassen)
+    erg = aw.bericht(tmp_path)
+    assert erg["p1"]["urteil"] == "nicht auswertbar"
+    assert erg["p2"]["Bb"]["preis_ok"] == "nicht auswertbar"
+    assert "Farbe" in (tmp_path / "bericht.md").read_text()
+
+
+def test_gate_ohne_daten_nicht_auswertbar(tmp_path):
+    def anpassen(arm, seed, w):
+        if arm == "A0":
+            w["kurtosis_ohne_pos0"] = None
+        return w
+    fuelle(tmp_path, anpassen)
+    erg = aw.bericht(tmp_path)
+    assert erg["manipulation"]["bestanden"] is None
+    assert erg["p1"]["urteil"] == "nicht auswertbar"
+    assert erg["p2"]["Ba"]["lesbar"] == "nicht auswertbar"
+    text = (tmp_path / "bericht.md").read_text()
+    assert "nichtig" not in text and "nicht auswertbar" in text
+
+
+def test_bericht_G_alle_arme_paare_kontrolle(tmp_path):
+    def anpassen(arm, seed, w):
+        w["kurtosis_kontrolle"] = [0.25, 0.75]
+        if arm == "Bb" and seed == 3:
+            w["info"] = {**w.get("info", {}), "paare_gueltig": 17000, "paare_gesamt": 20000}
+        return w
+    fuelle(tmp_path, anpassen)
+    erg = aw.bericht(tmp_path)
+    assert set(erg["G"]) == {"A0", "A", "Ba", "Bb"} and len(erg["G"]["Bb"]) == 5
+    assert erg["manipulation"]["kurtosis_kontrolle"]["A0"] == 0.5
+    text = (tmp_path / "bericht.md").read_text()
+    assert "G(Ba)" in text and "G(Bb)" in text
+    assert "Drehungskontrolle" in text
+    assert "| Bb | 3 | 17000/20000 |" in text
+
+
+def test_ica_nicht_konvergiert_schraenkt_p2_ein(tmp_path):
+    def anpassen(arm, seed, w):
+        if arm == "A" and seed == 1:
+            w["info"] = {**w.get("info", {}), "ica_konvergiert": {"archetyp": True, "strom": False}}
+        return w
+    fuelle(tmp_path, anpassen)
+    erg = aw.bericht(tmp_path)
+    assert erg["p2_eingeschraenkt"] is True
+    assert erg["ica_nicht_konvergiert"]["A"] == {"archetyp": 0, "strom": 1}
+    assert "eingeschränkt" in (tmp_path / "bericht.md").read_text()
+    fuelle(tmp_path / "ok")
+    assert aw.bericht(tmp_path / "ok")["p2_eingeschraenkt"] is False
