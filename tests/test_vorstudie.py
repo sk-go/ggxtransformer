@@ -51,9 +51,52 @@ def test_bericht(tmp_path):
         erg, E = vorstudie.messe_hf_modell(mini_gpt2(), seqs(), VOCAB, n_drehungen=2, n_woerter=10)
         (ordner / f"{rev}.json").write_text(json.dumps({**erg, "revision": rev}))
         np.save(ordner / f"{rev}_woerter.npy", E)
-    text = vorstudie.vorstudie_bericht(tmp_path)
+    text = vorstudie.vorstudie_bericht(tmp_path, v_schwelle=1.0)
     assert "V1" in text and "explorativ" in text and "E1" in text
+    assert "Festsetzung aus PRAEREG_8" in text
     assert (tmp_path / "bericht.md").exists()
+
+
+def test_bericht_ohne_schwelle_nur_rohwerte(tmp_path):
+    ordner = tmp_path / "mini"
+    ordner.mkdir()
+    for rev in ("step0", "step1"):
+        erg, E = vorstudie.messe_hf_modell(mini_gpt2(), seqs(), VOCAB, n_drehungen=2, n_woerter=10)
+        (ordner / f"{rev}.json").write_text(json.dumps({**erg, "revision": rev}))
+        np.save(ordner / f"{rev}_woerter.npy", E)
+    text = vorstudie.vorstudie_bericht(tmp_path)
+    assert "V-Schwelle nicht gesetzt (PRAEREG_8)" in text
+    assert "Festsetzung" not in text
+    assert "V1:" not in text and "V2 (" not in text and "| ja |" not in text and "| nein |" not in text
+    assert "Kurtosis" in text and "E1" in text  # Rohwerte und Explorativ bleiben
+
+
+def _schreibe_lauf(ordner, rev, kurt0, kmax):
+    n = len(kurt0)
+    e = {"revision": rev, "kurtosis": kurt0, "kurtosis_ohne_pos0": kurt0, "kontrolle": kmax, "kontrolle_max": kmax,
+         "v3_rho": None, "v3_p": None, "e4_rho": None, "effektiver_rang": 1.0, "korrelationsdimension": None}
+    (ordner / f"{rev}.json").write_text(json.dumps(e))
+    np.save(ordner / f"{rev}_woerter.npy", np.random.default_rng(len(rev)).standard_normal((5, 4)))
+    return n
+
+
+def test_v2_kontrollniveau_zweiseitig(tmp_path):
+    """Liegt step0 weit UNTER der Kontrolle (|Δ| > Schwelle), ist das nicht „auf Kontrollniveau“."""
+    ordner = tmp_path / "m"
+    ordner.mkdir()
+    _schreibe_lauf(ordner, "step0", [-5.0, 0.2], [0.0, 0.0])  # Schicht 0: Δ = −5, Schicht 1: Δ = 0,2
+    _schreibe_lauf(ordner, "step1", [5.0, 5.0], [0.0, 0.0])
+    text = vorstudie.vorstudie_bericht(tmp_path, v_schwelle=1.0)
+    assert "1 von 2 Schichten (Schichten: [1])" in text
+
+
+def test_lauf_vorstudie_prueft_sequenzdatei(tmp_path):
+    import pytest
+
+    falsch = tmp_path / "seq__gpt2__N256.npz"  # existiert nicht: die Prüfung muss vor dem Laden greifen
+    with pytest.raises(ValueError, match="EleutherAI__pythia-160m"):
+        vorstudie.lauf_vorstudie("EleutherAI/pythia-160m", ["step0"], falsch, tmp_path / "aus")
+    assert not (tmp_path / "aus").exists()
 
 
 def _bericht_fuer(m, tmp_path):
@@ -62,7 +105,7 @@ def _bericht_fuer(m, tmp_path):
     ordner.mkdir(parents=True)
     (ordner / "step0.json").write_text(json.dumps({**erg, "revision": "step0"}))
     np.save(ordner / "step0_woerter.npy", E)
-    return vorstudie.vorstudie_bericht(tmp_path)
+    return vorstudie.vorstudie_bericht(tmp_path, v_schwelle=1.0)
 
 
 def test_v1_je_schicht(tmp_path):

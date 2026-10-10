@@ -104,7 +104,7 @@ def cmd_vorstudie(a):
 def cmd_vorstudie_bericht(a):
     from .vorstudie import vorstudie_bericht
 
-    print(vorstudie_bericht(a.aus))
+    print(vorstudie_bericht(a.aus, v_schwelle=a.v_schwelle))
 
 
 def selbsttest(wurzel=None):
@@ -156,7 +156,8 @@ def selbsttest(wurzel=None):
         erg, E = messe_hf_modell(hf, rng.integers(0, 100, size=(6, 32)), vocab, n_drehungen=2, n_woerter=10)
         (vordner / f"{rev}.json").write_text(json.dumps({**erg, "revision": rev}))
         np.save(vordner / f"{rev}_woerter.npy", E)
-    vorstudie_bericht(wurzel / "vorstudie")
+    vorstudie_bericht(wurzel / "vorstudie")  # ohne Schwelle: nur Rohwerte
+    vorstudie_bericht(wurzel / "vorstudie", v_schwelle=1.0)  # mit Schwelle: Urteilszweig (Wert ohne Bedeutung)
     print(f"Selbsttest bestanden: {wurzel}")
 
 
@@ -212,13 +213,17 @@ def main():
     s = sub.add_parser("vorstudie")
     s.add_argument("--modell", required=True, help="gpt2 oder EleutherAI/pythia-160m")
     s.add_argument("--revisionen", default="main", help="main | pythia | pythia-dicht | step0,step512,...")
-    s.add_argument("--seqs", required=True, help="z. B. runs/lauf_wiki/korpus/seq__gpt2__N256.npz")
+    s.add_argument("--seqs", required=True,
+                   help="Sequenzen des passenden Tokenizers: runs/lauf_wiki/korpus/seq__<modell>__N256.npz, "
+                        "<modell> mit „__“ statt „/“ (wird geprüft)")
     s.add_argument("--aus", default="runs/chroma_vorstudie")
     s.add_argument("--geraet", default="auto")
     s.set_defaults(f=cmd_vorstudie)
 
     s = sub.add_parser("vorstudie-bericht")
     s.add_argument("--aus", default="runs/chroma_vorstudie")
+    s.add_argument("--v-schwelle", type=float, default=None,
+                   help="Festsetzung aus PRAEREG_8; ohne Angabe nur Rohwerte, keine V1/V2-Urteile")
     s.set_defaults(f=cmd_vorstudie_bericht)
 
     s = sub.add_parser("selbsttest")

@@ -139,6 +139,11 @@ def messe_hf_modell(model, seqs, vocab, device="cpu", batch=8, n_drehungen=10, s
 def lauf_vorstudie(modell_name, revisionen, seqs_pfad, aus_ordner, device="cpu"):
     from transformers import AutoModelForCausalLM, AutoTokenizer
 
+    kennung = modell_name.replace("/", "__")
+    if kennung not in Path(seqs_pfad).name:
+        raise ValueError(f"Sequenzdatei {seqs_pfad} gehört nicht zu {modell_name}: Der Dateiname muss "
+                         f"„{kennung}“ enthalten (Muster runs/lauf_wiki/korpus/seq__<modell>__N256.npz). "
+                         f"Token-IDs eines anderen Tokenizers ergäben sinnlose Messungen.")
     seqs = np.load(seqs_pfad)["A"]
     vocab = AutoTokenizer.from_pretrained(modell_name).get_vocab()
     ordner = Path(aus_ordner) / modell_name.replace("/", "__")
@@ -156,10 +161,13 @@ def _schritt(rev):
     return int(rev[4:]) if rev.startswith("step") else 10 ** 9
 
 
-def vorstudie_bericht(aus_ordner, v_schwelle=1.0):
+def vorstudie_bericht(aus_ordner, v_schwelle=None):
+    """Bericht der Vorstudie. Ohne v_schwelle nur Rohwerte (keine V1/V2-Urteile): Die Schwelle ist eine
+    Festsetzung aus PRAEREG_8 und wird nicht stillschweigend angenommen."""
     aus = Path(aus_ordner)
-    zeilen = ["# Vorstudie: Genealogie der Achsen", "",
-              f"V-Schwelle (Festsetzung aus PRAEREG_8): {v_schwelle}", ""]
+    kopf = (f"V-Schwelle (Festsetzung aus PRAEREG_8): {v_schwelle}" if v_schwelle is not None
+            else "V-Schwelle nicht gesetzt (PRAEREG_8): nur Rohwerte, keine Urteile zu V1/V2.")
+    zeilen = ["# Vorstudie: Genealogie der Achsen", "", kopf, ""]
     for ordner in sorted(p for p in aus.iterdir() if p.is_dir()):
         laeufe = sorted((json.loads(f.read_text()) for f in ordner.glob("*.json")), key=lambda e: _schritt(e["revision"]))
         if not laeufe:
@@ -172,20 +180,31 @@ def vorstudie_bericht(aus_ordner, v_schwelle=1.0):
             return np.array(e["kurtosis_ohne_pos0"]) - np.array(kmax)
 
         for e in laeufe:
-            ueber = delta(e) > v_schwelle
-            zeilen += [f"### {e['revision']}", "",
-                       "| Schicht | Kurtosis | ohne Pos. 0 | Kontrolle Mittel | Kontrolle Max | V1 |", "|---|---|---|---|---|---|"]
+            d = delta(e)
             kmax = e.get("kontrolle_max") or e["kontrolle"]
+            kopfzeile = "| Schicht | Kurtosis | ohne Pos. 0 | Kontrolle Mittel | Kontrolle Max | Δ (ohne Pos. 0 − Max) |"
+            trenner = "|---|---|---|---|---|---|"
+            if v_schwelle is not None:
+                kopfzeile += " V1 |"
+                trenner += "---|"
+            zeilen += [f"### {e['revision']}", "", kopfzeile, trenner]
             for l in range(n):
-                zeilen.append(f"| {l} | {e['kurtosis'][l]:.3f} | {e['kurtosis_ohne_pos0'][l]:.3f} | "
-                              f"{e['kontrolle'][l]:.3f} | {kmax[l]:.3f} | {'ja' if ueber[l] else 'nein'} |")
+                zeile = (f"| {l} | {e['kurtosis'][l]:.3f} | {e['kurtosis_ohne_pos0'][l]:.3f} | "
+                         f"{e['kontrolle'][l]:.3f} | {kmax[l]:.3f} | {d[l]:.3f} |")
+                if v_schwelle is not None:
+                    zeile += f" {'ja' if d[l] > v_schwelle else 'nein'} |"
+                zeilen.append(zeile)
             v3 = "–" if e["v3_rho"] is None else f"{e['v3_rho']:.3f} (p = {e['v3_p']:.3g})"
-            zeilen += ["", f"V1: {int(ueber.sum())} von {n} Schichten", f"V3 ρ (ohne Position 0): {v3}", ""]
-        if len(laeufe) > 1:
-            auf_niveau = delta(laeufe[0]) <= v_schwelle
+            zeilen.append("")
+            if v_schwelle is not None:
+                zeilen.append(f"V1: {int((d > v_schwelle).sum())} von {n} Schichten")
+            zeilen += [f"V3 ρ (ohne Position 0): {v3}", ""]
+        if len(laeufe) > 1 and v_schwelle is not None:
+            # auf Kontrollniveau: zweiseitig, |Δ| ≤ Schwelle; Anstieg: später Δ > Schwelle
+            auf_niveau = np.abs(delta(laeufe[0])) <= v_schwelle
             anstieg = np.any([delta(e) > v_schwelle for e in laeufe[1:]], axis=0)
             v2 = auf_niveau & anstieg
-            zeilen += [f"V2 (erster Checkpoint je Schicht auf Kontrollniveau, später Anstieg): "
+            zeilen += [f"V2 (erster Checkpoint je Schicht auf Kontrollniveau |Δ| ≤ Schwelle, später Anstieg): "
                        f"{int(v2.sum())} von {n} Schichten (Schichten: {np.flatnonzero(v2).tolist()})"]
         zeilen += ["", "### Weitere Maße (explorativ, nicht präregistriert entscheidend)", ""]
         mats = [np.load(ordner / f"{e['revision']}_woerter.npy") for e in laeufe]
@@ -197,7 +216,7 @@ def vorstudie_bericht(aus_ordner, v_schwelle=1.0):
             kd = e["korrelationsdimension"]
             dims = ", ".join(f"{v:.2f}" for v in kd["dimension"]) if kd else "–"
             zeilen.append(f"- E2/E4 {e['revision']}: Korrelationsdimension je Skala [{dims}]; E4 ρ = {e['e4_rho']}")
-        zeilen += ["- E3 Knotenlinie: Verlauf der Kurtosis-Spalte oben (dichtes Raster mit --dicht).", ""]
+        zeilen += ["- E3 Knotenlinie: Verlauf der Kurtosis-Spalte oben (dichtes Raster mit --revisionen pythia-dicht).", ""]
     text = "\n".join(zeilen) + "\n"
     (aus / "bericht.md").write_text(text, encoding="utf-8")
     return text
