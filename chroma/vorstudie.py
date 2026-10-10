@@ -39,6 +39,46 @@ def korrelationsdimension(P, n_skalen=8):
     return {"radien": r[ok].tolist(), "dimension": steigung.tolist()}
 
 
+def _spearman(x, y):
+    """Spearman-ρ; None, wenn weniger als 3 Paare oder eine Seite konstant ist (kein ConstantInputWarning)."""
+    x, y = np.asarray(x), np.asarray(y)
+    if len(x) < 3 or len(np.unique(x)) < 2 or len(np.unique(y)) < 2:
+        return None
+    return spearmanr(x, y)
+
+
+def _endlich(o):
+    """Nicht endliche Zahlen werden zu None, damit nie ungültiges JSON entsteht."""
+    if isinstance(o, dict):
+        return {k: _endlich(v) for k, v in o.items()}
+    if isinstance(o, (list, tuple)):
+        return [_endlich(v) for v in o]
+    if isinstance(o, (float, np.floating)):
+        return float(o) if np.isfinite(o) else None
+    return o
+
+
+def _v3_e4(strom, tokens, freq, n_ausreisser):
+    """V3 (Ausreißerdimensionen gegen Frequenz) und E4 (Participation Ratio gegen log-Frequenz) auf einem Strom."""
+    dims = np.argsort(-np.abs(strom).mean(axis=0))[:n_ausreisser]
+    betrag = np.abs(strom[:, dims]).sum(axis=1)
+    typen = np.unique(tokens)
+    mittel_betrag = np.array([betrag[tokens == t].mean() for t in typen])
+    v3 = _spearman(mittel_betrag, freq[typen])
+    pr = basis.participation_ratio(strom)
+    haeufig = typen[freq[typen] >= 5]
+    e4 = _spearman([pr[tokens == t].mean() for t in haeufig], np.log(freq[haeufig])) if len(haeufig) else None
+    return dims, v3, e4
+
+
+def _rho(r):
+    return float(r.statistic) if r is not None else None
+
+
+def _p(r):
+    return float(r.pvalue) if r is not None else None
+
+
 @torch.no_grad()
 def messe_hf_modell(model, seqs, vocab, device="cpu", batch=8, n_drehungen=10, seed=0, n_ausreisser=3,
                     n_woerter=2000):
@@ -48,7 +88,7 @@ def messe_hf_modell(model, seqs, vocab, device="cpu", batch=8, n_drehungen=10, s
     mitte = n_layer // 2
     seqs = np.asarray(seqs, dtype=np.int64)
     summe, summe0, zeilen, zeilen0 = np.zeros(n_layer), np.zeros(n_layer), 0, 0
-    kontrolle = None
+    kontrolle = kontrolle_max = None
     mitte_strom = []
     for i in range(0, len(seqs), batch):
         x = torch.as_tensor(seqs[i:i + batch], device=device)
@@ -63,24 +103,17 @@ def messe_hf_modell(model, seqs, vocab, device="cpu", batch=8, n_drehungen=10, s
         zeilen += x.numel()
         zeilen0 += x.shape[0] * (x.shape[1] - 1)
         if kontrolle is None:  # Drehungskontrolle auf dem ersten Batch
-            kontrolle = [float(np.mean(basis.kurtosis_kontrolle(h.double().cpu().numpy().reshape(-1, d), n_drehungen, rng)))
-                         for h in hs]
-    strom = np.concatenate(mitte_strom).reshape(-1, d)
-    tokens = seqs.reshape(-1)
+            ks = [np.asarray(basis.kurtosis_kontrolle(h.double().cpu().numpy().reshape(-1, d), n_drehungen, rng))
+                  for h in hs]
+            kontrolle = [float(k.mean()) for k in ks]
+            kontrolle_max = [float(k.max()) for k in ks]
+    strom_voll = np.concatenate(mitte_strom)  # (N, T, d)
     V = model.get_input_embeddings().weight.shape[0]
-    freq = np.bincount(tokens, minlength=V)
+    freq = np.bincount(seqs.reshape(-1), minlength=V)  # Korpus-Häufigkeiten aller Token
 
-    # V3: Ausreißerdimensionen (größter mittlerer Betrag in der mittleren Schicht) gegen Frequenz
-    dims = np.argsort(-np.abs(strom).mean(axis=0))[:n_ausreisser]
-    betrag = np.abs(strom[:, dims]).sum(axis=1)
-    typen = np.unique(tokens)
-    mittel_betrag = np.array([betrag[tokens == t].mean() for t in typen])
-    v3 = spearmanr(mittel_betrag, freq[typen])
-
-    # E4 (explorativ): Reflex – Participation Ratio kontextueller Repräsentationen gegen log-Frequenz
-    pr = basis.participation_ratio(strom)
-    haeufig = typen[freq[typen] >= 5]
-    e4 = spearmanr([pr[tokens == t].mean() for t in haeufig], np.log(freq[haeufig])) if len(haeufig) >= 3 else None
+    # V3/E4 primär ohne Position 0 (Sink-Position), zusätzlich mit
+    dims, v3, e4 = _v3_e4(strom_voll[:, 1:].reshape(-1, d), seqs[:, 1:].reshape(-1), freq, n_ausreisser)
+    dims_m, v3_m, e4_m = _v3_e4(strom_voll.reshape(-1, d), seqs.reshape(-1), freq, n_ausreisser)
 
     # E1/E2 (explorativ): Embedding der Wortliste
     W = model.get_input_embeddings().weight.double().cpu().numpy()
@@ -90,9 +123,12 @@ def messe_hf_modell(model, seqs, vocab, device="cpu", batch=8, n_drehungen=10, s
         "kurtosis": (summe / zeilen).tolist(),
         "kurtosis_ohne_pos0": (summe0 / zeilen0).tolist(),
         "kontrolle": kontrolle,
+        "kontrolle_max": kontrolle_max,
         "ausreisser_dims": dims.tolist(),
-        "v3_rho": float(v3.statistic), "v3_p": float(v3.pvalue),
-        "e4_rho": float(e4.statistic) if e4 is not None else None,
+        "ausreisser_dims_mit_pos0": dims_m.tolist(),
+        "v3_rho": _rho(v3), "v3_p": _p(v3),
+        "v3_rho_mit_pos0": _rho(v3_m), "v3_p_mit_pos0": _p(v3_m),
+        "e4_rho": _rho(e4), "e4_rho_mit_pos0": _rho(e4_m),
         "effektiver_rang": effektiver_rang(W),
         "korrelationsdimension": korrelationsdimension(E) if len(E) >= 3 else None,
         "n_woerter": len(woerter),
@@ -108,9 +144,10 @@ def lauf_vorstudie(modell_name, revisionen, seqs_pfad, aus_ordner, device="cpu")
     ordner = Path(aus_ordner) / modell_name.replace("/", "__")
     ordner.mkdir(parents=True, exist_ok=True)
     for rev in revisionen:
-        model = AutoModelForCausalLM.from_pretrained(modell_name, revision=rev)
+        model = AutoModelForCausalLM.from_pretrained(modell_name, revision=rev, dtype=torch.float32)
         erg, E = messe_hf_modell(model, seqs, vocab, device=device)
-        (ordner / f"{rev}.json").write_text(json.dumps({**erg, "modell": modell_name, "revision": rev}, indent=2))
+        text = json.dumps(_endlich({**erg, "modell": modell_name, "revision": rev}), indent=2, allow_nan=False)
+        (ordner / f"{rev}.json").write_text(text)
         np.save(ordner / f"{rev}_woerter.npy", E)
         del model
 
@@ -127,17 +164,29 @@ def vorstudie_bericht(aus_ordner, v_schwelle=1.0):
         laeufe = sorted((json.loads(f.read_text()) for f in ordner.glob("*.json")), key=lambda e: _schritt(e["revision"]))
         if not laeufe:
             continue
-        zeilen += [f"## {ordner.name}", "",
-                   "| Revision | Kurtosis | ohne Pos. 0 | Kontrolle | V1 | V3 ρ (p) |", "|---|---|---|---|---|---|"]
+        zeilen += [f"## {ordner.name}", ""]
+        n = len(laeufe[0]["kurtosis"])
+
+        def delta(e):  # Abstand ohne Pos. 0 zur Kontrollobergrenze je Schicht
+            kmax = e.get("kontrolle_max") or e["kontrolle"]
+            return np.array(e["kurtosis_ohne_pos0"]) - np.array(kmax)
+
         for e in laeufe:
-            k, k0, c = np.mean(e["kurtosis"]), np.mean(e["kurtosis_ohne_pos0"]), np.mean(e["kontrolle"])
-            v1 = "ja" if k0 - max(e["kontrolle"]) > v_schwelle else "nein"
-            zeilen.append(f"| {e['revision']} | {k:.3f} | {k0:.3f} | {c:.3f} | {v1} | {e['v3_rho']:.3f} ({e['v3_p']:.3g}) |")
+            ueber = delta(e) > v_schwelle
+            zeilen += [f"### {e['revision']}", "",
+                       "| Schicht | Kurtosis | ohne Pos. 0 | Kontrolle Mittel | Kontrolle Max | V1 |", "|---|---|---|---|---|---|"]
+            kmax = e.get("kontrolle_max") or e["kontrolle"]
+            for l in range(n):
+                zeilen.append(f"| {l} | {e['kurtosis'][l]:.3f} | {e['kurtosis_ohne_pos0'][l]:.3f} | "
+                              f"{e['kontrolle'][l]:.3f} | {kmax[l]:.3f} | {'ja' if ueber[l] else 'nein'} |")
+            v3 = "–" if e["v3_rho"] is None else f"{e['v3_rho']:.3f} (p = {e['v3_p']:.3g})"
+            zeilen += ["", f"V1: {int(ueber.sum())} von {n} Schichten", f"V3 ρ (ohne Position 0): {v3}", ""]
         if len(laeufe) > 1:
-            erst = laeufe[0]
-            v2 = abs(np.mean(erst["kurtosis_ohne_pos0"]) - np.mean(erst["kontrolle"])) <= v_schwelle and any(
-                np.mean(e["kurtosis_ohne_pos0"]) - np.mean(e["kontrolle"]) > v_schwelle for e in laeufe[1:])
-            zeilen += ["", f"V2 (erster Checkpoint auf Kontrollniveau, danach Anstieg): **{'ja' if v2 else 'nein'}**"]
+            auf_niveau = delta(laeufe[0]) <= v_schwelle
+            anstieg = np.any([delta(e) > v_schwelle for e in laeufe[1:]], axis=0)
+            v2 = auf_niveau & anstieg
+            zeilen += [f"V2 (erster Checkpoint je Schicht auf Kontrollniveau, später Anstieg): "
+                       f"{int(v2.sum())} von {n} Schichten (Schichten: {np.flatnonzero(v2).tolist()})"]
         zeilen += ["", "### Weitere Maße (explorativ, nicht präregistriert entscheidend)", ""]
         mats = [np.load(ordner / f"{e['revision']}_woerter.npy") for e in laeufe]
         for (e1, m1), (e2, m2) in zip(zip(laeufe, mats), zip(laeufe[1:], mats[1:])):

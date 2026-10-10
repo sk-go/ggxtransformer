@@ -16,7 +16,9 @@ def mini_gpt2():
 
 
 def seqs():
-    return np.random.default_rng(0).integers(0, 100, size=(6, 32))
+    rng = np.random.default_rng(0)  # schiefe Verteilung: Häufigkeiten variieren
+    w = 1.0 / np.arange(1, 101)
+    return rng.choice(100, size=(6, 32), p=w / w.sum())
 
 
 def test_messe_hf_modell_struktur():
@@ -26,6 +28,10 @@ def test_messe_hf_modell_struktur():
         assert k in erg
     assert len(erg["kurtosis"]) == 2 and len(erg["kontrolle"]) == 2
     assert E.shape[1] == 32
+    assert isinstance(erg["e4_rho"], float) and np.isfinite(erg["e4_rho"])
+    assert len(erg["kontrolle_max"]) == 2
+    assert all(m >= k for m, k in zip(erg["kontrolle_max"], erg["kontrolle"]))
+    assert "v3_rho_mit_pos0" in erg
 
 
 def test_eingepflanzte_achse_wird_gefunden():
@@ -47,3 +53,29 @@ def test_bericht(tmp_path):
     text = vorstudie.vorstudie_bericht(tmp_path)
     assert "V1" in text and "explorativ" in text and "E1" in text
     assert (tmp_path / "bericht.md").exists()
+
+
+def _bericht_fuer(m, tmp_path):
+    erg, E = vorstudie.messe_hf_modell(m, seqs(), VOCAB, n_drehungen=3, n_woerter=10)
+    ordner = tmp_path / "mini"
+    ordner.mkdir(parents=True)
+    (ordner / "step0.json").write_text(json.dumps({**erg, "revision": "step0"}))
+    np.save(ordner / "step0_woerter.npy", E)
+    return vorstudie.vorstudie_bericht(tmp_path)
+
+
+def test_v1_je_schicht(tmp_path):
+    # Die Achse in wte läuft über den Residualstrom in alle Blöcke: beide Schichten gelten als V1 "ja".
+    m = mini_gpt2()
+    with torch.no_grad():
+        m.transformer.wte.weight[:, 0] += 20.0
+    text = _bericht_fuer(m, tmp_path / "a")
+    assert "V1: 2 von 2 Schichten" in text
+    assert [z for z in text.splitlines() if z.startswith("| 0 |")][0].endswith("| ja |")
+    # Ohne eingepflanzte Achse: keine Schicht
+    text = _bericht_fuer(mini_gpt2(), tmp_path / "b")
+    assert "V1: 0 von 2 Schichten" in text
+
+
+def test_json_ohne_nan():
+    assert vorstudie._endlich({"a": float("nan"), "b": [1.0, float("inf")]}) == {"a": None, "b": [1.0, None]}
