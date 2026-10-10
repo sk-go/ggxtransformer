@@ -8,3 +8,8 @@ venv/
 # Die Lizenz haengt an der jeweiligen Quelle; die Wikipedia-Texte liegen mit
 # quellen.csv und LIZENZ.md im Textordner und sind dort nachgewiesen.
 */korpus/
+
+# Korpus-Ordner der Chroma-Läufe (runs/chroma_*/korpus/): Tokenizer, Splits und Sequenzen aus
+# WikiText-103 werden nur heruntergeladen und lokal gebaut, nie committet. Bewusst eng gefasst,
+# damit die übrigen Korpusordner unter runs/ unberührt bleiben.
+runs/chroma_*/korpus/
